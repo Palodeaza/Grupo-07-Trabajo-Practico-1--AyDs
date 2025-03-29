@@ -24,7 +24,7 @@ public class Controlador {
         this.contactView = contact;
         this.chatView = chat;
         this.modelo = modelo;
-
+        this.modelo.setMensajeListener(mensaje -> mostrarMensajeEnChat(mensaje));
         this.loginView.getLoginButton().addActionListener(e -> autenticarUsuario());
 
         this.contactView.getNewContactButton().addMouseListener(new java.awt.event.MouseAdapter() {
@@ -67,10 +67,6 @@ public class Controlador {
             JOptionPane.showMessageDialog(loginView, "El puerto debe ser un número válido.");
         }
     }
-
-    private void mostrarVista(javax.swing.JFrame vista) {
-        vista.setVisible(true);
-    }
     
     private void agregarNuevoContacto() {
         String nombre = contactView.getNameTxtField().getText().trim();
@@ -105,7 +101,7 @@ public class Controlador {
                     String ip = datosContacto[0];
                     int puerto = Integer.parseInt(datosContacto[1]);
 
-                    modelo.iniciarConexionCliente(ip, puerto);
+                    modelo.iniciarConexionCliente(contactoSeleccionado, ip, puerto);
 
                     chatView.setVisible(false);
                 } else {
@@ -115,6 +111,19 @@ public class Controlador {
                 JOptionPane.showMessageDialog(chatView, "Ya tienes una conversación activa con este contacto.");
             }
         }
+    }
+    
+        private void mostrarMensajeEnChat(String mensaje) {
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            javax.swing.JLabel mensajeLabel = new javax.swing.JLabel(mensaje);
+            mensajeLabel.setOpaque(true);
+            mensajeLabel.setBackground(java.awt.Color.LIGHT_GRAY);
+            mensajeLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10));
+
+            initView.getChatPanel().add(mensajeLabel);
+            initView.getChatPanel().revalidate();
+            initView.getChatPanel().repaint();
+        });
     }
 }
 
