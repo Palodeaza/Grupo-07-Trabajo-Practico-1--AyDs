@@ -3,7 +3,10 @@ package modelo;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Modelo {
@@ -11,7 +14,15 @@ public class Modelo {
     private Map<String, String[]> contactos = new HashMap<>();
     private Map<String, Socket> conexionesActivas = new HashMap<>();
     private Map<String, ObjectOutputStream> flujosSalida = new HashMap<>();
+    private Map<String, List<String>> mensajes = new HashMap<>();//clave: nombre contacto/valor: lista de mensajes
     private MensajeListener mensajeListener; 
+    
+    public Modelo(){
+    mensajes.put("Feli", new ArrayList<>(Arrays.asList("Hola Feli, ¿cómo estás?","¿Todo bien por allá?","¡Nos vemos pronto!")));
+    mensajes.put("Palo", new ArrayList<>(Arrays.asList("¡Hola Palo!","¿Qué tal el fin de semana?","¡Te llamo después!")));
+    mensajes.put("Marcus", new ArrayList<>(Arrays.asList("¡Qué onda Marcus!","¿Vienes a la fiesta?","¿Nos encontramos en el bar?")));
+    
+    }
 
     public interface MensajeListener {
         void onMensajeRecibido(String mensaje);
@@ -133,8 +144,11 @@ public class Modelo {
             } catch (IOException | ClassNotFoundException e) {
                 System.err.println("Cliente desconectado: " + e.getMessage());
             } finally {
-                cerrarConexion(nombreCliente);
+                //cerrarConexion(nombreCliente); // da error porque nombreCliente esta declarado en el try, no se como haria para solucionarlo
             }
         }
+    }
+    public Map<String, List<String>> getMensajes(){
+        return this.mensajes;
     }
 }

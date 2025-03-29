@@ -2,6 +2,7 @@
 package controlador;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import javax.swing.JOptionPane;
 import modelo.Modelo;
 import vistas.Init;
@@ -119,11 +120,20 @@ public class Controlador {
             mensajeLabel.setOpaque(true);
             mensajeLabel.setBackground(java.awt.Color.LIGHT_GRAY);
             mensajeLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10));
-
+ 
             initView.getChatPanel().add(mensajeLabel);
+            
+        }); 
+        }
+        
+        public void actualizaChatPanel(String nombre){
+            List<String> listamensajes = modelo.getMensajes().get(nombre);
+            initView.getChatPanel().removeAll();
+            for (String mensaje: listamensajes){
+                this.mostrarMensajeEnChat(mensaje);
+            } 
             initView.getChatPanel().revalidate();
             initView.getChatPanel().repaint();
-        });
-    }
+        }
 }
 

@@ -8,6 +8,7 @@ public class Init extends javax.swing.JFrame {
     public Init() {
         initComponents();
         DefaultListModel<String> modeloConversaciones = new DefaultListModel<>();
+        DefaultListModel<String> mensajesList = new DefaultListModel<>();
         chatList.setModel(modeloConversaciones); // Configurar modelo dinámico
         modeloConversaciones.addElement("Feli");
         modeloConversaciones.addElement("Palo");
@@ -201,6 +202,7 @@ public class Init extends javax.swing.JFrame {
             getMsgTextField().setForeground(Color.BLACK);          
        }
     }//GEN-LAST:event_msgTextFieldMouseClicked
+    
 
     /**
      * @param args the command line arguments
@@ -294,4 +296,8 @@ public class Init extends javax.swing.JFrame {
     public javax.swing.JLabel getSendMsgTxtButton() {
         return sendMsgTxtButton;
     }
+    public javax.swing.JPanel getChatPanel(){
+        return jPanel1;
+    }
+    
 }
