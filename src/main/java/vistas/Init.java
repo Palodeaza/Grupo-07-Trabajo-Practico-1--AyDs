@@ -16,14 +16,13 @@ public class Init extends javax.swing.JFrame {
         chatList.setCellRenderer(new ConversacionRenderer());
         chatList.setFixedCellHeight(30);
         chatList.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-        @Override
-        public void mouseMoved(java.awt.event.MouseEvent evt) {
-            int index = getChatList().locationToIndex(evt.getPoint());
-            ((ConversacionRenderer) getChatList().getCellRenderer()).setHoveredIndex(index);
+            @Override
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                int index = getChatList().locationToIndex(evt.getPoint());
+                ((ConversacionRenderer) getChatList().getCellRenderer()).setHoveredIndex(index);
                 getChatList().repaint();
-        }
+            }
         });
-        
     }
 
     /**
@@ -172,37 +171,36 @@ public class Init extends javax.swing.JFrame {
     }//GEN-LAST:event_msgTextFieldActionPerformed
 
     private void newConvButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newConvButtonMouseEntered
-        getNewConvButton().setBackground(new Color(0,102,204));
+        getNewConvButton().setBackground(new Color(0, 102, 204));
     }//GEN-LAST:event_newConvButtonMouseEntered
 
     private void newConvButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newConvButtonMouseExited
-        getNewConvButton().setBackground(new Color(0,0,102));
+        getNewConvButton().setBackground(new Color(0, 0, 102));
     }//GEN-LAST:event_newConvButtonMouseExited
 
     private void newContactButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newContactButtonMouseEntered
-        getNewContactButton().setBackground(new Color(0,102,204));
+        getNewContactButton().setBackground(new Color(0, 102, 204));
 
     }//GEN-LAST:event_newContactButtonMouseEntered
 
     private void newContactButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newContactButtonMouseExited
-        getNewContactButton().setBackground(new Color(0,0,102));
+        getNewContactButton().setBackground(new Color(0, 0, 102));
     }//GEN-LAST:event_newContactButtonMouseExited
 
     private void sendMsgTxtButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sendMsgTxtButtonMouseEntered
-        getSendMsgTxtButton().setBackground(new Color(0,102,204));
+        getSendMsgTxtButton().setBackground(new Color(0, 102, 204));
     }//GEN-LAST:event_sendMsgTxtButtonMouseEntered
 
     private void sendMsgTxtButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sendMsgTxtButtonMouseExited
-        getSendMsgTxtButton().setBackground(new Color(0,0,102));
+        getSendMsgTxtButton().setBackground(new Color(0, 0, 102));
     }//GEN-LAST:event_sendMsgTxtButtonMouseExited
 
     private void msgTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_msgTextFieldMouseClicked
-       if (getMsgTextField().getText().equals("  Mensaje...")){
+        if (getMsgTextField().getText().equals("  Mensaje...")) {
             getMsgTextField().setText("  ");
-            getMsgTextField().setForeground(Color.BLACK);          
-       }
+            getMsgTextField().setForeground(Color.BLACK);
+        }
     }//GEN-LAST:event_msgTextFieldMouseClicked
-    
 
     /**
      * @param args the command line arguments
@@ -296,8 +294,9 @@ public class Init extends javax.swing.JFrame {
     public javax.swing.JLabel getSendMsgTxtButton() {
         return sendMsgTxtButton;
     }
-    public javax.swing.JPanel getChatPanel(){
+
+    public javax.swing.JPanel getChatPanel() {
         return jPanel1;
     }
-    
+
 }

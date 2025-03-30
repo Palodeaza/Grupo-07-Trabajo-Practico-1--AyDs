@@ -1,11 +1,14 @@
 package vistas;
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ConversacionRenderer extends JPanel implements ListCellRenderer<String> {
     private JLabel nombreContacto;
     private JLabel mensajeIndicador;
-    private int hoveredIndex = -1; // Índice del elemento resaltado
+    private int hoveredIndex = -1;
+    private Map<String, Boolean> mensajesNoLeidos = new HashMap<>();
 
     public ConversacionRenderer() {
         setLayout(new BorderLayout());
@@ -27,26 +30,26 @@ public class ConversacionRenderer extends JPanel implements ListCellRenderer<Str
     }
 
     public void setHoveredIndex(int index) {
-        this.hoveredIndex = index;
+        hoveredIndex = index;
+    }
+
+    public void setMensajeNoLeido(String contacto, boolean noLeido) {
+        mensajesNoLeidos.put(contacto, noLeido);
     }
 
     @Override
-    public Component getListCellRendererComponent(
-            JList<? extends String> list, String value, int index, boolean isSelected, boolean cellHasFocus) {
-
+    public Component getListCellRendererComponent(JList<? extends String> list, String value, int index, boolean isSelected, boolean cellHasFocus) {
         nombreContacto.setText(value);
-        mensajeIndicador.setVisible(index % 2 == 0);
-
+        boolean tieneMensajesNoLeidos = mensajesNoLeidos.getOrDefault(value, false);
+        mensajeIndicador.setVisible(tieneMensajesNoLeidos);
         setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.WHITE));
-
         if (isSelected) {
-            setBackground(new Color(0, 102, 204)); // Azul al seleccionar
+            setBackground(new Color(0, 102, 204)); 
         } else if (index == hoveredIndex) {
-            setBackground(new Color(50, 50, 150)); // Azul más claro al pasar el mouse
+            setBackground(new Color(50, 50, 150)); 
         } else {
-            setBackground(new Color(0, 0, 102)); // Azul oscuro por defecto
+            setBackground(new Color(0, 0, 102)); 
         }
-
         return this;
     }
 }

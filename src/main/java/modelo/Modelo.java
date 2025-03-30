@@ -14,18 +14,11 @@ public class Modelo {
     private Map<String, String[]> contactos = new HashMap<>();
     private Map<String, Socket> conexionesActivas = new HashMap<>();
     private Map<String, ObjectOutputStream> flujosSalida = new HashMap<>();
-    private Map<String, List<String>> mensajes = new HashMap<>();//clave: nombre contacto/valor: lista de mensajes
+    private Map<String, List<Mensaje>> mensajes = new HashMap<>();//clave: nombre contacto/valor: lista de mensajes
     private MensajeListener mensajeListener; 
-    
-    public Modelo(){
-    mensajes.put("Feli", new ArrayList<>(Arrays.asList("Hola Feli, ¿cómo estás?","¿Todo bien por allá?","¡Nos vemos pronto!")));
-    mensajes.put("Palo", new ArrayList<>(Arrays.asList("¡Hola Palo!","¿Qué tal el fin de semana?","¡Te llamo después!")));
-    mensajes.put("Marcus", new ArrayList<>(Arrays.asList("¡Qué onda Marcus!","¿Vienes a la fiesta?","¿Nos encontramos en el bar?")));
-    
-    }
 
     public interface MensajeListener {
-        void onMensajeRecibido(String mensaje);
+        void onMensajeRecibido(Mensaje mensaje);
     }
 
     public void setMensajeListener(MensajeListener listener) {
@@ -113,8 +106,9 @@ public class Modelo {
         }
     }
 
-    private class ClientHandler implements Runnable {
+    private class ClientHandler implements Runnable { // tarea para otro dia... meterlo en otro archivo tomson vago de los cojones
         private Socket socket;
+        private String nombreCliente;
         
         public ClientHandler(Socket socket) {
             this.socket = socket;
@@ -125,30 +119,42 @@ public class Modelo {
             try {
                 ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
                 ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
-                String nombreCliente = (String) inputStream.readObject();
-                if (!conversacionActiva(nombreCliente)) {  
-                    conexionesActivas.put(nombreCliente, socket);
-                    flujosSalida.put(nombreCliente, outputStream);
-                }
-
-                System.out.println(nombreCliente + " se ha conectado desde " + socket.getInetAddress());
-
-                while (true) {
-                    Object mensaje = inputStream.readObject();
-                    System.out.println("Mensaje de " + nombreCliente + ": " + mensaje.toString());
-
+                Object mensaje = inputStream.readObject();
+                if (mensaje instanceof Mensaje) { //manejo de errores viejo..
+                    Mensaje mensajeRecibido = (Mensaje) mensaje;
+                    nombreCliente = mensajeRecibido.getEmisor();
+                    if (!conversacionActiva(nombreCliente)) {
+                        conexionesActivas.put(nombreCliente, socket);
+                        flujosSalida.put(nombreCliente, outputStream);
+                    }
+                    System.out.println(nombreCliente + " se ha conectado desde " + socket.getInetAddress());
                     if (mensajeListener != null) {
-                        mensajeListener.onMensajeRecibido("[" + nombreCliente + "]: " + mensaje.toString());
+                        mensajeListener.onMensajeRecibido(mensajeRecibido);
+                    }
+                    mensajes.computeIfAbsent(nombreCliente, k -> new ArrayList<>()).add(mensajeRecibido);
+                }
+                while (true) {
+                    mensaje = inputStream.readObject();
+                    if (mensaje instanceof Mensaje) {
+                        Mensaje mensajeRecibido = (Mensaje) mensaje;
+                        if (mensajeListener != null) {
+                            mensajeListener.onMensajeRecibido(mensajeRecibido);
+                        }
+                        mensajes.computeIfAbsent(nombreCliente, k -> new ArrayList<>()).add(mensajeRecibido);//agrega la lista si no existe
+                    } else {
+                        System.err.println("Objeto recibido no es un mensaje válido.");
                     }
                 }
             } catch (IOException | ClassNotFoundException e) {
                 System.err.println("Cliente desconectado: " + e.getMessage());
             } finally {
-                //cerrarConexion(nombreCliente); // da error porque nombreCliente esta declarado en el try, no se como haria para solucionarlo
+                if (nombreCliente != null) {
+                    cerrarConexion(nombreCliente);
+                }
             }
         }
     }
-    public Map<String, List<String>> getMensajes(){
+    public Map<String, List<Mensaje>> getMensajes(){
         return this.mensajes;
     }
 }
