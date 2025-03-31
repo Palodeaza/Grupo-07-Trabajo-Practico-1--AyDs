@@ -2,8 +2,10 @@ package modelo;
 
 import controlador.Controlador;
 import java.io.*;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -72,6 +74,19 @@ private Controlador controlador;
 
     public boolean conversacionActiva(String contacto) {
         return conexionesActivas.containsKey(contacto);
+    }
+    
+    public String obtenerIPLocal() {
+        try {
+            return InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+            return "Desconocido";
+        }
+    }
+    
+    public String buscaContacto(String ip, String puerto){
+        return "";
     }
 
     public void iniciarConexionCliente(String nombre, String ip, int puerto) {
@@ -142,7 +157,9 @@ private Controlador controlador;
 
                 String mensajeInicial = inputStream.readLine();
                 System.out.println("Mensaje recibido: " + mensajeInicial);
-                nombreCliente = mensajeInicial;  // Esto ya no sirve asi
+                String[] partes = mensajeInicial.split(";", 2);
+                String[] datos = partes[0].split(":",2); // datos[0]=ip / datos[1]=puerto
+                nombreCliente = buscaContacto(datos[0], datos[1]);
                 if (!conversacionActiva(nombreCliente)) {
                     //conexionesActivas.put(nombreCliente, socket);
                     flujosSalida.put(nombreCliente, outputStream);
@@ -162,7 +179,7 @@ private Controlador controlador;
                         if (mensajeListener != null) {
                             mensajeListener.onMensajeRecibido(mensaje);
                         }
-                        mensajes.computeIfAbsent(nombreCliente, k -> new ArrayList<>()).add(mensaje);
+                        mensajes.computeIfAbsent(nombreCliente, k -> new ArrayList<>()).add(mensaje);// esta no haria falta creo
                     } catch (IOException e) {
                         e.printStackTrace();
                         System.out.println("Error en la recepción del mensaje: " + e.getMessage());
@@ -170,7 +187,7 @@ private Controlador controlador;
                     }
                 }
             } catch (IOException e) {
-                e.printStackTrace();// PORQUE TE ROMPEEEEEES
+                e.printStackTrace();
                 System.out.println("Error en la conexión con el cliente: " + e.getMessage());
             } finally {
                 if (nombreCliente != null) { // cambiar esto

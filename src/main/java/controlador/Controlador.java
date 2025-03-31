@@ -1,5 +1,6 @@
 package controlador;
 
+import java.awt.Color;
 import java.util.List;
 import javax.swing.JOptionPane;
 import modelo.Modelo;
@@ -155,17 +156,23 @@ public class Controlador {
             return;
         }
 
-        modelo.enviarMensaje(receptor, mensajeTexto);
-        mostrarMensajeEnChat(mensajeTexto);
+        String ipEmisor = modelo.obtenerIPLocal();
+        String mensajeFormateado = ipEmisor + ":" + puertoActual + ";" + mensajeTexto;
+
+        modelo.enviarMensaje(receptor, mensajeFormateado);
+        mostrarMensajeEnChat(mensajeFormateado);
         initView.getMsgTextField().setText("  Mensaje...");
+        initView.getMsgTextField().setForeground(new Color(204,204,204));
     }
 
     private void mostrarMensajeEnChat(String mensaje) {
         String receptoractual = initView.getChatList().getSelectedValue();
         modelo.getMensajes().computeIfAbsent(receptoractual, k -> new java.util.ArrayList<>()).add(mensaje);
-        if (receptoractual != null && receptoractual.equals(mensaje)) {
+        String[] partes = mensaje.split(";", 2);
+        String[] datos = partes[0].split(":",2); // datos[0]=ip / datos[1]=puerto
+        if (receptoractual != null && receptoractual.equals(mensaje)) {//aca habria que cambiarlo para que busque el receptor
             javax.swing.SwingUtilities.invokeLater(() -> {
-                javax.swing.JLabel mensajeLabel = new javax.swing.JLabel(mensaje);
+                javax.swing.JLabel mensajeLabel = new javax.swing.JLabel(partes[1]);
                 mensajeLabel.setOpaque(true);
                 mensajeLabel.setBackground(java.awt.Color.LIGHT_GRAY);
                 mensajeLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10));
