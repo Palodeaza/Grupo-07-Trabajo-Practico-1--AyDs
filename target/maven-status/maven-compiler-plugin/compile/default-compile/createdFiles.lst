@@ -9,6 +9,7 @@ vistas\newChat.class
 vistas\newContact$1.class
 vistas\Login$2.class
 vistas\newChat$1.class
+vistas\RoundedPanel.class
 controlador\Controlador$2.class
 vistas\Login$6.class
 vistas\Login$7.class
@@ -30,4 +31,6 @@ vistas\Init$6.class
 vistas\newContact$6.class
 vistas\Login.class
 controlador\Controlador$3.class
+vistas\newContact$7.class
+vistas\Login$8.class
 vistas\Login$5.class

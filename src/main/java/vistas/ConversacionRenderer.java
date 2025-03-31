@@ -40,6 +40,9 @@ public class ConversacionRenderer extends JPanel implements ListCellRenderer<Str
     @Override
     public Component getListCellRendererComponent(JList<? extends String> list, String value, int index, boolean isSelected, boolean cellHasFocus) {
         nombreContacto.setText(value);
+        if (isSelected) {
+            mensajesNoLeidos.put(value, false);
+        }
         boolean tieneMensajesNoLeidos = mensajesNoLeidos.getOrDefault(value, false);
         mensajeIndicador.setVisible(tieneMensajesNoLeidos);
         setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.WHITE));

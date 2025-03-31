@@ -45,6 +45,12 @@ public class newContact extends javax.swing.JFrame {
      */
     public newContact() {
         initComponents();
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowOpened(java.awt.event.WindowEvent e) {
+                bg.requestFocusInWindow();
+            }
+        });
     }
 
     /**
@@ -72,7 +78,7 @@ public class newContact extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         newContactButton = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
 
         bg.setBackground(new java.awt.Color(255, 255, 255));

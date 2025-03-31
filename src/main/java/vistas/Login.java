@@ -1,22 +1,17 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package vistas;
 
 import java.awt.Color;
 
-/**
- *
- * @author tomas
- */
 public class Login extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Login
-     */
     public Login() {
         initComponents();
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowOpened(java.awt.event.WindowEvent e) {
+                bg.requestFocusInWindow();
+            }
+        });
     }
 
     /**
@@ -64,7 +59,7 @@ public class Login extends javax.swing.JFrame {
                 userTxtActionPerformed(evt);
             }
         });
-        bg.add(userTxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 200, 250, -1));
+        bg.add(userTxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 200, 320, -1));
 
         portTxt.setForeground(new java.awt.Color(204, 204, 204));
         portTxt.setText("Ingrese el puerto a escuchar...");
@@ -79,7 +74,7 @@ public class Login extends javax.swing.JFrame {
                 portTxtActionPerformed(evt);
             }
         });
-        bg.add(portTxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 300, 250, 20));
+        bg.add(portTxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 300, 320, 20));
 
         IniciarSesion.setFont(new java.awt.Font("Roboto", 1, 24)); // NOI18N
         IniciarSesion.setText("INICIAR SESION");
@@ -181,8 +176,8 @@ public class Login extends javax.swing.JFrame {
             getPortTxt().setForeground(Color.BLACK);          
        }
        if (userTxt.getText().isEmpty()){
-           portTxt.setText("Ingrese su nombre de usuario...");
-           portTxt.setForeground(new Color(204,204,204));
+           userTxt.setText("Ingrese su nombre de usuario...");
+           userTxt.setForeground(new Color(204,204,204));
        }
     }//GEN-LAST:event_portTxtMouseClicked
 

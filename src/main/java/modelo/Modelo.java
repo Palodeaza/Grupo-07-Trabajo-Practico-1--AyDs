@@ -107,7 +107,7 @@ private Controlador controlador;
                 Socket socket = new Socket(ip, puerto);                
                 conexionesActivas.put(nombre, socket);
                 controlador.refreshConversaciones();
-                System.out.println("AGREGO A CONEXIONES ACTIVAS A " + ip + ":" + puerto);
+                controlador.getInitView().getChatList().setSelectedValue(nombre, true);
                 PrintWriter outputStream = new PrintWriter(socket.getOutputStream(), true); 
                 BufferedReader inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 flujosSalida.put(nombre, outputStream);
