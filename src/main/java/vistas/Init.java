@@ -300,8 +300,9 @@ public class Init extends javax.swing.JFrame {
     public void actualizaChats(List<String> listaConexiones) {
     DefaultListModel<String> modeloConversaciones = (DefaultListModel<String>) chatList.getModel();
     modeloConversaciones.clear(); // Limpiar la lista actual
-
+    System.out.println("TENGO QUE AGREGAR: " + listaConexiones.toString());
     for (String conexion : listaConexiones) {
+        System.out.println("AGREGO LA SIGUIENTE CONEXION A LA PANTALLA: " + conexion);
         modeloConversaciones.addElement(conexion); // Agregar nuevas conversaciones
     }
     chatList.revalidate(); // Vuelve a validar la lista

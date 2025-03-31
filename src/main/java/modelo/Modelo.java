@@ -1,5 +1,6 @@
 package modelo;
 
+import controlador.Controlador;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -15,11 +16,15 @@ private Map<String, Socket> conexionesActivas = new HashMap<>();
 private Map<String, PrintWriter> flujosSalida = new HashMap<>();
 private Map<String, List<String>> mensajes = new HashMap<>(); 
 private MensajeListener mensajeListener;
+private Controlador controlador;
 
     public interface MensajeListener {
         void onMensajeRecibido(String mensaje); 
     }
-
+    public void setControlador(Controlador controlador){
+        this.controlador = controlador;
+    }
+    
     public void setMensajeListener(MensajeListener listener) {
         this.mensajeListener = listener;
     }
@@ -72,8 +77,10 @@ private MensajeListener mensajeListener;
     public void iniciarConexionCliente(String nombre, String ip, int puerto) {
         new Thread(() -> {
             try {
-                Socket socket = new Socket(ip, puerto);
+                Socket socket = new Socket(ip, puerto);                
                 conexionesActivas.put(nombre, socket);
+                controlador.refreshConversaciones();
+                System.out.println("AGREGO A CONEXIONES ACTIVAS A " + ip + ":" + puerto);
                 PrintWriter outputStream = new PrintWriter(socket.getOutputStream(), true); 
                 BufferedReader inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 String mensajeInicial = "Conexion establecida con " + nombre;
@@ -137,7 +144,7 @@ private MensajeListener mensajeListener;
                 System.out.println("Mensaje recibido: " + mensajeInicial);
                 nombreCliente = mensajeInicial;  // Esto ya no sirve asi
                 if (!conversacionActiva(nombreCliente)) {
-                    conexionesActivas.put(nombreCliente, socket);
+                    //conexionesActivas.put(nombreCliente, socket);
                     flujosSalida.put(nombreCliente, outputStream);
                 }
                 System.out.println(nombreCliente + " se ha conectado desde " + socket.getInetAddress());

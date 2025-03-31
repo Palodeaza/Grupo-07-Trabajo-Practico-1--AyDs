@@ -18,6 +18,7 @@ public class prueba {
     newContact newContact = new newContact();
     newChat newChat = new newChat();
     Controlador controlador = new Controlador(login,init ,newContact, newChat , modelo);
+    modelo.setControlador(controlador);
     login.setVisible(true);
     }
 }

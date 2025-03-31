@@ -129,8 +129,9 @@ public class Controlador {
                     String ip = datosContacto[0];
                     int puerto = Integer.parseInt(datosContacto[1]);
                     modelo.iniciarConexionCliente(contactoSeleccionado, ip, puerto);
+                    System.out.println("YA SE CONECTO CLIENTE");
                     chatView.setVisible(false);
-                    initView.actualizaChats(modelo.getListaConexiones());
+                    //initView.actualizaChats(modelo.getListaConexiones());
                 } else {
                     JOptionPane.showMessageDialog(chatView, "No se encontraron datos del contacto.");
                 }
@@ -193,4 +194,8 @@ public class Controlador {
         initView.getChatPanel().revalidate();
         initView.getChatPanel().repaint();
     }
+    public void refreshConversaciones(){
+        initView.actualizaChats(modelo.getListaConexiones());
+    }
+    
 }
