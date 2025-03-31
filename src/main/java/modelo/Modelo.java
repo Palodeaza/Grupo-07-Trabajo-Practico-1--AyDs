@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class Modelo {
 private ServerSocket serverSocket;
-private Map<String, String[]> contactos = new HashMap<>();
+private ArrayList<Contacto> contactos = new ArrayList<>();
 private Map<String, Socket> conexionesActivas = new HashMap<>();
 private Map<String, PrintWriter> flujosSalida = new HashMap<>();
 private Map<String, List<String>> mensajes = new HashMap<>(); 
@@ -23,6 +23,7 @@ private Controlador controlador;
     public interface MensajeListener {
         void onMensajeRecibido(String mensaje); 
     }
+
     public void setControlador(Controlador controlador){
         this.controlador = controlador;
     }
@@ -52,24 +53,30 @@ private Controlador controlador;
     }
 
     public boolean agregarContacto(String nombre, String ip, int puerto) {
-        if (!contactos.containsKey(nombre)) {
-            contactos.put(nombre, new String[]{ip, String.valueOf(puerto)});
-            System.out.println("Agregado");
-            return true;
+        for (Contacto c: contactos){
+            if (c.getNombre().equalsIgnoreCase(nombre) || (c.getIp().equalsIgnoreCase(ip) && (c.getPuerto() == puerto))){
+                return false;
+            }
         }
-        return false;
+        Contacto c = new Contacto(nombre,ip,puerto);
+        contactos.add(c);
+        return true;
     }
 
-    public String[] obtenerDatosContacto(String nombre) {
-        return contactos.get(nombre);
+    public String[] obtenerDatosContacto(String contactoSeleccionado) {
+        for (Contacto c : contactos) {
+            if (c.getNombre().equalsIgnoreCase(contactoSeleccionado))
+                return new String[]{c.getIp(), String.valueOf(c.getPuerto())};
+            }
+        return null;
     }
 
     public List<String> getListaConexiones() {
         return new ArrayList<>(conexionesActivas.keySet()); // Devuelve solo los nombres de los contactos
     }
 
-    public List<String> getListaContactos() {
-        return new ArrayList<>(contactos.keySet()); // Devuelve solo los nombres de los contactos
+    public List<Contacto> getListaContactos() {
+        return this.contactos; // Devuelve solo los nombres de los contactos
     }
 
     public boolean conversacionActiva(String contacto) {
@@ -85,8 +92,13 @@ private Controlador controlador;
         }
     }
     
-    public String buscaContacto(String ip, String puerto){
-        return "";
+    public String buscaContacto(String ip, String puerto) {
+        for (Contacto contacto : this.contactos) {
+            if ((contacto.getIp().equals(ip) || contacto.getIp().equals("localhost")) && String.valueOf(contacto.getPuerto()).equals(puerto)) {
+                return contacto.getNombre();
+            }
+        }
+        return null;
     }
 
     public void iniciarConexionCliente(String nombre, String ip, int puerto) {
@@ -98,8 +110,6 @@ private Controlador controlador;
                 System.out.println("AGREGO A CONEXIONES ACTIVAS A " + ip + ":" + puerto);
                 PrintWriter outputStream = new PrintWriter(socket.getOutputStream(), true); 
                 BufferedReader inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                String mensajeInicial = "Conexion establecida con " + nombre;
-                outputStream.println(mensajeInicial);
                 flujosSalida.put(nombre, outputStream);
                 new Thread(new ClientHandler(socket)).start();
                 System.out.println("Conectado con " + ip + ":" + puerto);
@@ -158,17 +168,18 @@ private Controlador controlador;
                 String mensajeInicial = inputStream.readLine();
                 System.out.println("Mensaje recibido: " + mensajeInicial);
                 String[] partes = mensajeInicial.split(";", 2);
-                String[] datos = partes[0].split(":",2); // datos[0]=ip / datos[1]=puerto
+                String[] datos = partes[0].split(":",2); //datos[0]=ip / datos[1]=puerto
                 nombreCliente = buscaContacto(datos[0], datos[1]);
                 if (!conversacionActiva(nombreCliente)) {
-                    //conexionesActivas.put(nombreCliente, socket);
+                    conexionesActivas.put(nombreCliente, socket);
                     flujosSalida.put(nombreCliente, outputStream);
+                    controlador.refreshConversaciones();
                 }
                 System.out.println(nombreCliente + " se ha conectado desde " + socket.getInetAddress());
+                mensajes.computeIfAbsent(nombreCliente, k -> new ArrayList<>()).add(mensajeInicial);
                 if (mensajeListener != null) {
                     mensajeListener.onMensajeRecibido(mensajeInicial);
                 }
-                mensajes.computeIfAbsent(nombreCliente, k -> new ArrayList<>()).add(mensajeInicial);
                 while (true) {
                     try {
                         String mensaje = inputStream.readLine();
@@ -176,10 +187,10 @@ private Controlador controlador;
                             break;
                         }
                         System.out.println("Mensaje recibido dentro del while: " + mensaje);
+                        mensajes.computeIfAbsent(nombreCliente, k -> new ArrayList<>()).add(mensaje);
                         if (mensajeListener != null) {
                             mensajeListener.onMensajeRecibido(mensaje);
                         }
-                        mensajes.computeIfAbsent(nombreCliente, k -> new ArrayList<>()).add(mensaje);// esta no haria falta creo
                     } catch (IOException e) {
                         e.printStackTrace();
                         System.out.println("Error en la recepción del mensaje: " + e.getMessage());
@@ -190,7 +201,7 @@ private Controlador controlador;
                 e.printStackTrace();
                 System.out.println("Error en la conexión con el cliente: " + e.getMessage());
             } finally {
-                if (nombreCliente != null) { // cambiar esto
+                if (nombreCliente != null) { //cambiar esto
                     cerrarConexion(nombreCliente);
                 }
             }

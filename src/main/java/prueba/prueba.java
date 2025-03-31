@@ -1,3 +1,4 @@
+package prueba;
 import controlador.Controlador;
 import modelo.Modelo;
 import modelo.Mensaje;

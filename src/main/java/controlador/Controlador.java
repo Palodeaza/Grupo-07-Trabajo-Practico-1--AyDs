@@ -122,7 +122,6 @@ public class Controlador {
 
     private void iniciarChatConSeleccion() {
         String contactoSeleccionado = chatView.getContactList().getSelectedValue();
-
         if (contactoSeleccionado != null) {
             if (!modelo.conversacionActiva(contactoSeleccionado)) {
                 String[] datosContacto = modelo.obtenerDatosContacto(contactoSeleccionado);
@@ -169,8 +168,10 @@ public class Controlador {
         String receptoractual = initView.getChatList().getSelectedValue();
         modelo.getMensajes().computeIfAbsent(receptoractual, k -> new java.util.ArrayList<>()).add(mensaje);
         String[] partes = mensaje.split(";", 2);
-        String[] datos = partes[0].split(":",2); // datos[0]=ip / datos[1]=puerto
-        if (receptoractual != null && receptoractual.equals(mensaje)) {//aca habria que cambiarlo para que busque el receptor
+        String[] datos = partes[0].split(":", 2); //datos[0]=ip / datos[1]=puerto
+        String receptor = modelo.buscaContacto(datos[0], datos[1]);
+        if (receptoractual != null && receptoractual.equals(receptor)) {
+            System.out.println("Este mensaje es para este chat");
             javax.swing.SwingUtilities.invokeLater(() -> {
                 javax.swing.JLabel mensajeLabel = new javax.swing.JLabel(partes[1]);
                 mensajeLabel.setOpaque(true);
@@ -182,6 +183,7 @@ public class Controlador {
                 initView.getChatPanel().repaint();
             });
         } else {
+            System.out.println("Este mensaje no es para este chat");
             ((ConversacionRenderer) initView.getChatList().getCellRenderer()).setMensajeNoLeido(mensaje, true);
             initView.getChatList().repaint();
         }

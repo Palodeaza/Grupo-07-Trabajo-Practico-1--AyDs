@@ -7,6 +7,8 @@ package vistas;
 import java.util.List;
 import javax.swing.DefaultListModel;
 
+import modelo.Contacto;
+
 /**
  *
  * @author tomas
@@ -49,13 +51,12 @@ public class newChat extends javax.swing.JFrame {
         
     }
     //FALTA  HACER QUE UNA VEZ HACES NUEVO CHAT, QUE APAREZCA EN INITVIEW
-    public void actualizarListaContactos(List<String> nuevosContactos) {
-    DefaultListModel<String> modeloConversaciones = (DefaultListModel<String>) contactList.getModel();
-    modeloConversaciones.clear(); // Limpiar la lista actual
-
-    for (String contacto : nuevosContactos) {
-        modeloConversaciones.addElement(contacto); // Agregar nuevos contactos
-    }
+    public void actualizarListaContactos(List<Contacto> nuevosContactos) {
+        DefaultListModel<String> modeloConversaciones = (DefaultListModel<String>) contactList.getModel();
+        modeloConversaciones.clear(); // Limpiar la lista actual
+        for (Contacto contacto : nuevosContactos) {
+            modeloConversaciones.addElement(contacto.getNombre()); // Agregar nuevos contactos
+        }
 }
 
     /**
