@@ -21,6 +21,12 @@ public class Init extends javax.swing.JFrame {
                 getChatList().repaint();
             }
         });
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowOpened(java.awt.event.WindowEvent e) {
+                bg.requestFocusInWindow();
+            }
+        });
     }
 
     /**
