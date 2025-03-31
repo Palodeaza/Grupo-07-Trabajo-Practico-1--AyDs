@@ -24,7 +24,8 @@ public class Modelo {
     public void setMensajeListener(MensajeListener listener) {
         this.mensajeListener = listener;
     }
-    public boolean validarCredenciales(String usuario, int puerto) {
+    
+    public boolean validarCredenciales(String usuario, int puerto){ //porque valida modelo ? rar ?
         return !usuario.isEmpty() && puerto > 0;
     }
 
@@ -34,7 +35,7 @@ public class Modelo {
                 serverSocket = new ServerSocket(puerto);
                 System.out.println("Servidor iniciado en el puerto " + puerto);
                 while (true) {
-                    Socket clientSocket = serverSocket.accept();
+                    Socket clientSocket = serverSocket.accept(); // por cada cliente que se quiera conectar, le doy un socket
                     System.out.println("Nueva conexión desde " + clientSocket.getInetAddress());
                     new Thread(new ClientHandler(clientSocket)).start();
                 }
@@ -47,6 +48,7 @@ public class Modelo {
     public boolean agregarContacto(String nombre, String ip, int puerto) {
         if (!contactos.containsKey(nombre)) {
             contactos.put(nombre, new String[]{ip, String.valueOf(puerto)});
+            System.out.println("Agregado");
             return true;
         }
         return false;
@@ -55,7 +57,12 @@ public class Modelo {
     public String[] obtenerDatosContacto(String nombre) {
         return contactos.get(nombre);
     }
-
+    public List<String> getListaConexiones() {
+    return new ArrayList<>(conexionesActivas.keySet()); // Devuelve solo los nombres de los contactos
+    }
+    public List<String> getListaContactos() {
+    return new ArrayList<>(contactos.keySet()); // Devuelve solo los nombres de los contactos
+    }
     public boolean conversacionActiva(String contacto) {
         return conexionesActivas.containsKey(contacto);
     }
@@ -71,6 +78,7 @@ public class Modelo {
                 System.out.println("Conectado con " + ip + ":" + puerto);
             } catch (IOException e) {
                 System.err.println("Error al conectar con el contacto: " + e.getMessage());
+               
             }
         }).start();
     }
@@ -106,7 +114,7 @@ public class Modelo {
         }
     }
 
-    private class ClientHandler implements Runnable { // tarea para otro dia... meterlo en otro archivo tomson vago de los cojones
+    private class ClientHandler implements Runnable { //representa la ejecucion de cada cliente que se conecta a mi servidor
         private Socket socket;
         private String nombreCliente;
         
@@ -117,11 +125,14 @@ public class Modelo {
         @Override
         public void run() {
             try {
+                System.out.println("LLEGUE HASTA ACA UNO");
                 ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
+                System.out.println("LLEGUE HASTA ACA DOS");
                 ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
-                Object mensaje = inputStream.readObject();
+                System.out.println("LLEGUE HASTA ACA TRES");
+                Object mensaje = inputStream.readObject(); // PORQUE ME DA ERROR ACA???
                 if (mensaje instanceof Mensaje) { //manejo de errores viejo..
-                    Mensaje mensajeRecibido = (Mensaje) mensaje;
+                     Mensaje mensajeRecibido = (Mensaje) mensaje;
                     nombreCliente = mensajeRecibido.getEmisor();
                     if (!conversacionActiva(nombreCliente)) {
                         conexionesActivas.put(nombreCliente, socket);
@@ -146,7 +157,7 @@ public class Modelo {
                     }
                 }
             } catch (IOException | ClassNotFoundException e) {
-                System.err.println("Cliente desconectado: " + e.getMessage());
+                System.out.println("Cliente desconectado: " + e.getMessage());
             } finally {
                 if (nombreCliente != null) {
                     cerrarConexion(nombreCliente);

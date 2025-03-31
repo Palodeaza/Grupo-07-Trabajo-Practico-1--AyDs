@@ -55,6 +55,18 @@ public class Controlador {
                 }
             }
         });
+        this.initView.getNewContactButton().addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                contactView.setVisible(true);
+            }
+        });
+        this.initView.getNewConvButton().addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                chat.setVisible(true);
+            }
+        });
     }
 
     private void autenticarUsuario() {
@@ -88,7 +100,7 @@ public class Controlador {
         String nombre = contactView.getNameTxtField().getText().trim();
         String ip = contactView.getIpTxtField().getText().trim();
         String puertoStr = contactView.getPortTxtField().getText().trim();
-
+        
         if (nombre.isEmpty() || ip.isEmpty() || puertoStr.isEmpty()) { //falta agregar los mensajes base... maldito vago...
             JOptionPane.showMessageDialog(contactView, "Todos los campos son obligatorios.");
             return;
@@ -98,6 +110,7 @@ public class Controlador {
             int puerto = Integer.parseInt(puertoStr);
             if (modelo.agregarContacto(nombre, ip, puerto)) {
                 JOptionPane.showMessageDialog(contactView, "Contacto agregado exitosamente.");
+                this.chatView.actualizarListaContactos(modelo.getListaContactos());
                 contactView.setVisible(false);
             } else {
                 JOptionPane.showMessageDialog(contactView, "El contacto ya existe.");
@@ -108,6 +121,7 @@ public class Controlador {
     }
 
     private void iniciarChatConSeleccion() {
+        
         String contactoSeleccionado = chatView.getContactList().getSelectedValue();
 
         if (contactoSeleccionado != null) {
@@ -116,10 +130,9 @@ public class Controlador {
                 if (datosContacto != null) {
                     String ip = datosContacto[0];
                     int puerto = Integer.parseInt(datosContacto[1]);
-
                     modelo.iniciarConexionCliente(contactoSeleccionado, ip, puerto);
-
                     chatView.setVisible(false);
+                    initView.actualizaChats(modelo.getListaConexiones());
                 } else {
                     JOptionPane.showMessageDialog(chatView, "No se encontraron datos del contacto.");
                 }

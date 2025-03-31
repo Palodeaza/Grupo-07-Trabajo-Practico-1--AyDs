@@ -4,6 +4,7 @@
  */
 package vistas;
 
+import java.util.List;
 import javax.swing.DefaultListModel;
 
 /**
@@ -35,9 +36,6 @@ public class newChat extends javax.swing.JFrame {
         initComponents();
         DefaultListModel<String> modeloConversaciones = new DefaultListModel<>();
         contactList.setModel(modeloConversaciones); // Configurar modelo dinámico
-        modeloConversaciones.addElement("Feli");
-        modeloConversaciones.addElement("Palo");
-        modeloConversaciones.addElement("Marcus");
         contactList.setCellRenderer(new ConversacionRenderer());
         contactList.setFixedCellHeight(30);
         contactList.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
@@ -48,7 +46,17 @@ public class newChat extends javax.swing.JFrame {
                 getContactList().repaint();
         }
         });
+        
     }
+    //FALTA  HACER QUE UNA VEZ HACES NUEVO CHAT, QUE APAREZCA EN INITVIEW
+    public void actualizarListaContactos(List<String> nuevosContactos) {
+    DefaultListModel<String> modeloConversaciones = (DefaultListModel<String>) contactList.getModel();
+    modeloConversaciones.clear(); // Limpiar la lista actual
+
+    for (String contacto : nuevosContactos) {
+        modeloConversaciones.addElement(contacto); // Agregar nuevos contactos
+    }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -144,4 +152,6 @@ public class newChat extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
+
+    
 }

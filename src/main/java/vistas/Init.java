@@ -1,6 +1,7 @@
 package vistas;
 
 import java.awt.Color;
+import java.util.List;
 import javax.swing.DefaultListModel;
 
 public class Init extends javax.swing.JFrame {
@@ -10,9 +11,6 @@ public class Init extends javax.swing.JFrame {
         DefaultListModel<String> modeloConversaciones = new DefaultListModel<>();
         DefaultListModel<String> mensajesList = new DefaultListModel<>();
         chatList.setModel(modeloConversaciones); // Configurar modelo dinámico
-        modeloConversaciones.addElement("Feli");
-        modeloConversaciones.addElement("Palo");
-        modeloConversaciones.addElement("Marcus");
         chatList.setCellRenderer(new ConversacionRenderer());
         chatList.setFixedCellHeight(30);
         chatList.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
@@ -299,4 +297,14 @@ public class Init extends javax.swing.JFrame {
         return jPanel1;
     }
 
+    public void actualizaChats(List<String> listaConexiones) {
+    DefaultListModel<String> modeloConversaciones = (DefaultListModel<String>) chatList.getModel();
+    modeloConversaciones.clear(); // Limpiar la lista actual
+
+    for (String conexion : listaConexiones) {
+        modeloConversaciones.addElement(conexion); // Agregar nuevas conversaciones
+    }
+    chatList.revalidate(); // Vuelve a validar la lista
+    chatList.repaint(); // Redibuja la lista
+    }
 }

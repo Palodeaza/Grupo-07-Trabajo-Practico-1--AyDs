@@ -1,10 +1,12 @@
 package modelo;
 
+import java.io.Serializable;
+
 /**
  *
  * @author tomas
  */
-public class Mensaje {
+public class Mensaje implements Serializable {
     private String emisor;
     private String receptor;
     private String contenido;
