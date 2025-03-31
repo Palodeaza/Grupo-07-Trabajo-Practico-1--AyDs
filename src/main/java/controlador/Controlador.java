@@ -2,7 +2,6 @@ package controlador;
 
 import java.util.List;
 import javax.swing.JOptionPane;
-import modelo.Mensaje;
 import modelo.Modelo;
 import vistas.ConversacionRenderer;
 import vistas.Init;
@@ -95,13 +94,13 @@ public class Controlador {
             JOptionPane.showMessageDialog(loginView, "El puerto debe ser un número válido.");
         }
     }
-    
+
     private void agregarNuevoContacto() {
         String nombre = contactView.getNameTxtField().getText().trim();
         String ip = contactView.getIpTxtField().getText().trim();
         String puertoStr = contactView.getPortTxtField().getText().trim();
-        
-        if (nombre.isEmpty() || ip.isEmpty() || puertoStr.isEmpty()) { //falta agregar los mensajes base... maldito vago...
+
+        if (nombre.isEmpty() || ip.isEmpty() || puertoStr.isEmpty()) {
             JOptionPane.showMessageDialog(contactView, "Todos los campos son obligatorios.");
             return;
         }
@@ -116,12 +115,11 @@ public class Controlador {
                 JOptionPane.showMessageDialog(contactView, "El contacto ya existe.");
             }
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(contactView, "El puerto debe ser un numero vlido.");
+            JOptionPane.showMessageDialog(contactView, "El puerto debe ser un numero válido.");
         }
     }
 
     private void iniciarChatConSeleccion() {
-        
         String contactoSeleccionado = chatView.getContactList().getSelectedValue();
 
         if (contactoSeleccionado != null) {
@@ -141,7 +139,7 @@ public class Controlador {
             }
         }
     }
-    
+
     private void enviarMensaje() {
         String mensajeTexto = initView.getMsgTextField().getText().trim();
         String receptor = initView.getChatList().getSelectedValue();
@@ -152,23 +150,21 @@ public class Controlador {
         }
 
         if (mensajeTexto.isEmpty()) {
-            JOptionPane.showMessageDialog(initView, "El mensaje no puede estar vacio.");
+            JOptionPane.showMessageDialog(initView, "El mensaje no puede estar vacío.");
             return;
         }
 
-        Mensaje mensaje = new Mensaje(usuarioActual, receptor, mensajeTexto, new java.util.Date().toString());
-        modelo.getMensajes().computeIfAbsent(receptor, k -> new java.util.ArrayList<>()).add(mensaje); //crea lista si no existe
-        modelo.enviarMensaje(receptor, mensaje);
-        mostrarMensajeEnChat(mensaje);
+        modelo.enviarMensaje(receptor, mensajeTexto);
+        mostrarMensajeEnChat(mensajeTexto);
         initView.getMsgTextField().setText("  Mensaje...");
     }
-    
-    private void mostrarMensajeEnChat(Mensaje mensaje) {
+
+    private void mostrarMensajeEnChat(String mensaje) {
         String receptoractual = initView.getChatList().getSelectedValue();
-        modelo.getMensajes().computeIfAbsent(mensaje.getEmisor(), k -> new java.util.ArrayList<>()).add(mensaje);
-        if (receptoractual != null && receptoractual.equals(mensaje.getEmisor())) {
+        modelo.getMensajes().computeIfAbsent(receptoractual, k -> new java.util.ArrayList<>()).add(mensaje);
+        if (receptoractual != null && receptoractual.equals(mensaje)) {
             javax.swing.SwingUtilities.invokeLater(() -> {
-                javax.swing.JLabel mensajeLabel = new javax.swing.JLabel(mensaje.getContenido());
+                javax.swing.JLabel mensajeLabel = new javax.swing.JLabel(mensaje);
                 mensajeLabel.setOpaque(true);
                 mensajeLabel.setBackground(java.awt.Color.LIGHT_GRAY);
                 mensajeLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10));
@@ -177,26 +173,24 @@ public class Controlador {
                 initView.getChatPanel().revalidate();
                 initView.getChatPanel().repaint();
             });
-        }
-        else {
-            ((ConversacionRenderer) initView.getChatList().getCellRenderer()).setMensajeNoLeido(mensaje.getEmisor(), true);//pone el puntito d msj sin leer
+        } else {
+            ((ConversacionRenderer) initView.getChatList().getCellRenderer()).setMensajeNoLeido(mensaje, true);
             initView.getChatList().repaint();
         }
     }
 
     public void actualizaChatPanel(String nombre) {
-        List<Mensaje> listamensajes = modelo.getMensajes().get(nombre);
+        List<String> listamensajes = modelo.getMensajes().get(nombre);
         initView.getChatPanel().removeAll();
         if (listamensajes == null || listamensajes.isEmpty()) {
             initView.getChatPanel().revalidate();
             initView.getChatPanel().repaint();
             return;
         }
-        for (Mensaje mensaje : listamensajes) {
+        for (String mensaje : listamensajes) {
             this.mostrarMensajeEnChat(mensaje);
         }
         initView.getChatPanel().revalidate();
         initView.getChatPanel().repaint();
     }
 }
-

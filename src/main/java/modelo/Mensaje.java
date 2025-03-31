@@ -7,6 +7,7 @@ import java.io.Serializable;
  * @author tomas
  */
 public class Mensaje implements Serializable {
+    private static final long serialVersionUID = 1L; // Asegura compatibilidad en la serialización
     private String emisor;
     private String receptor;
     private String contenido;
