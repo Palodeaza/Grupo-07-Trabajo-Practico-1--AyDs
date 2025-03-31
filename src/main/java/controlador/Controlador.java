@@ -157,7 +157,7 @@ public class Controlador {
 
         String ipEmisor = modelo.obtenerIPLocal();
         String mensajeFormateado = ipEmisor + ":" + puertoActual + ";" + mensajeTexto;
-
+        modelo.getMensajes().computeIfAbsent(receptor, k -> new java.util.ArrayList<>()).add(mensajeFormateado);
         modelo.enviarMensaje(receptor, mensajeFormateado);
         mostrarMensajeEnChat(mensajeFormateado);
         initView.getMsgTextField().setText("  Mensaje...");
@@ -170,7 +170,7 @@ public class Controlador {
         String[] partes = mensaje.split(";", 2);
         String[] datos = partes[0].split(":", 2); //datos[0]=ip / datos[1]=puerto
         String receptor = modelo.buscaContacto(datos[0], datos[1]);
-        if (receptoractual != null && receptoractual.equals(receptor)) {
+        if ((receptoractual != null && receptoractual.equals(receptor)) || (datos[0].equals(modelo.obtenerIPLocal()) && datos[1].equals(String.valueOf(puertoActual)))) {
             System.out.println("Este mensaje es para este chat");
             javax.swing.SwingUtilities.invokeLater(() -> {
                 javax.swing.JLabel mensajeLabel = new javax.swing.JLabel(partes[1]);

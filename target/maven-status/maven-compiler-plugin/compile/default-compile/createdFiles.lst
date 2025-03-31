@@ -1,6 +1,7 @@
 modelo\Mensaje.class
 modelo\Modelo.class
 vistas\newContact$3.class
+prueba\prueba.class
 vistas\Init$5.class
 vistas\jListMensajes.class
 vistas\newContact$5.class
@@ -27,7 +28,6 @@ vistas\newContact$2.class
 modelo\Modelo$ClientHandler.class
 vistas\Init$6.class
 vistas\newContact$6.class
-prueba.class
 vistas\Login.class
 controlador\Controlador$3.class
 vistas\Login$5.class

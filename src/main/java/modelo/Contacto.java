@@ -22,6 +22,4 @@ public class Contacto {
     public String getIp(){
         return this.ip;
     }
-   
-    
 }
