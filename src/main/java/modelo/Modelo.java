@@ -168,8 +168,12 @@ private Controlador controlador;
                 String mensajeInicial = inputStream.readLine();
                 System.out.println("Mensaje recibido: " + mensajeInicial);
                 String[] partes = mensajeInicial.split(";", 3);
-                String[] datos = partes[0].split(":",2); //datos[0]=ip / datos[1]=puerto
-                nombreCliente = buscaContacto(datos[0], datos[1]);
+                String[] datos = partes[0].split(":",3); //datos[0]=nombre / datos[1]=ip / datos[2]=puerto
+                nombreCliente = buscaContacto(datos[1], datos[2]);
+                if (nombreCliente==null){// si me llega mensaje desconocido, lo agendo
+                    agregarContacto(datos[0],datos[1],Integer.parseInt(datos[2]));
+                    nombreCliente = datos[0];
+                }
                 if (!conversacionActiva(nombreCliente)) {
                     conexionesActivas.put(nombreCliente, socket);
                     flujosSalida.put(nombreCliente, outputStream);
