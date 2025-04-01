@@ -145,12 +145,12 @@ public class Init extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Segoe UI Semilight", 1, 24)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("SMI");
-        bg.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 20, 60, 40));
+        bg.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 20, 50, 40));
 
         jLabel3.setBackground(new java.awt.Color(255, 255, 255));
         jLabel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         jLabel3.setOpaque(true);
-        bg.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 58, 170, -1));
+        bg.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 58, 160, -1));
 
         jLabel1.setBackground(new java.awt.Color(0, 0, 102));
         jLabel1.setText("jLabel1");

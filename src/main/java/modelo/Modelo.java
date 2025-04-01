@@ -167,7 +167,7 @@ private Controlador controlador;
 
                 String mensajeInicial = inputStream.readLine();
                 System.out.println("Mensaje recibido: " + mensajeInicial);
-                String[] partes = mensajeInicial.split(";", 2);
+                String[] partes = mensajeInicial.split(";", 3);
                 String[] datos = partes[0].split(":",2); //datos[0]=ip / datos[1]=puerto
                 nombreCliente = buscaContacto(datos[0], datos[1]);
                 if (!conversacionActiva(nombreCliente)) {

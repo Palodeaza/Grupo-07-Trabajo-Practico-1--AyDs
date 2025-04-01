@@ -163,8 +163,11 @@ public class Controlador {
             return;
         }
 
+        String horaActual = new java.text.SimpleDateFormat("HH:mm").format(new java.util.Date());
         String ipEmisor = modelo.obtenerIPLocal();
-        String mensajeFormateado = ipEmisor + ":" + puertoActual + ";" + mensajeTexto;
+
+        String mensajeFormateado = ipEmisor + ":" + puertoActual + ";" + mensajeTexto + ";" + horaActual;
+
         modelo.getMensajes().computeIfAbsent(receptor, k -> new java.util.ArrayList<>()).add(mensajeFormateado);
         modelo.enviarMensaje(receptor, mensajeFormateado);
         mostrarMensajeEnChat(mensajeFormateado);
@@ -175,42 +178,66 @@ public class Controlador {
     private void mostrarMensajeEnChat(String mensaje) {
         String receptoractual = getInitView().getChatList().getSelectedValue();
         modelo.getMensajes().computeIfAbsent(receptoractual, k -> new java.util.ArrayList<>()).add(mensaje);
-
-        String[] partes = mensaje.split(";", 2);
-        if (partes.length < 2) {
+        String[] partes = mensaje.split(";", 3);
+        if (partes.length < 3) {
             System.out.println("Error: Formato de mensaje incorrecto.");
             return;
         }
-
+        String mensajeTexto = partes[1];
+        String horaMensaje = partes[2];
         String[] datos = partes[0].split(":", 2); // datos[0]=ip, datos[1]=puerto
         if (datos.length < 2) {
             System.out.println("Error: Datos de remitente incompletos.");
             return;
         }
+        String remitente = modelo.buscaContacto(datos[0], datos[1]); // método que retorna el nombre según ip y puerto
 
-        String receptor = modelo.buscaContacto(datos[0], datos[1]);
         boolean esMensajePropio = datos[0].equals(modelo.obtenerIPLocal()) && datos[1].equals(String.valueOf(puertoActual));
 
-        if ((receptoractual != null && receptoractual.equals(receptor)) || esMensajePropio) {
-            javax.swing.SwingUtilities.invokeLater(() -> {
-                javax.swing.JLabel mensajeLabel = new javax.swing.JLabel("<html><body style='width:200px; margin: 2px; padding: 2px;'>" + partes[1] + "</body></html>");
-                mensajeLabel.setForeground(java.awt.Color.WHITE);
-                mensajeLabel.setOpaque(false);
-                mensajeLabel.setFont(new Font("Roboto", Font.PLAIN, 14));
-                RoundedPanel bubblePanel = new RoundedPanel(15, new java.awt.Color(0, 0, 102));
-                bubblePanel.setLayout(new java.awt.FlowLayout(FlowLayout.CENTER, 5, 2));
-                bubblePanel.add(mensajeLabel);
-                javax.swing.JPanel wrapper = new javax.swing.JPanel(new java.awt.FlowLayout(esMensajePropio ? FlowLayout.RIGHT : FlowLayout.LEFT, 5, 2));
-                wrapper.setOpaque(false);
-                wrapper.add(bubblePanel);
-                getInitView().getChatPanel().add(wrapper);
-                getInitView().getChatPanel().revalidate();
-                getInitView().getChatPanel().repaint();
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            javax.swing.JLabel mensajeLabel = new javax.swing.JLabel("<html><body style='width:200px; margin: 2px; padding: 2px;'>" + mensajeTexto + "</body></html>");
+            mensajeLabel.setForeground(java.awt.Color.WHITE);
+            mensajeLabel.setOpaque(false);
+            mensajeLabel.setFont(new Font("Roboto", Font.PLAIN, 14));
+
+            javax.swing.JLabel horaLabel = new javax.swing.JLabel(horaMensaje);
+            horaLabel.setForeground(java.awt.Color.GRAY);
+            horaLabel.setOpaque(false);
+            horaLabel.setFont(new Font("Roboto", Font.ITALIC, 10));
+            horaLabel.setVisible(false);
+
+            javax.swing.JPanel messagePanel = new javax.swing.JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 5, 2));
+            messagePanel.setOpaque(false);
+            messagePanel.add(mensajeLabel);
+            messagePanel.add(horaLabel);
+
+            messagePanel.addMouseListener(new java.awt.event.MouseAdapter() {
+                @Override
+                public void mouseEntered(java.awt.event.MouseEvent e) {
+                    horaLabel.setVisible(true);
+                    messagePanel.revalidate();
+                    messagePanel.repaint();
+                }
+                @Override
+                public void mouseExited(java.awt.event.MouseEvent e) {
+                    horaLabel.setVisible(false);
+                    messagePanel.revalidate();
+                    messagePanel.repaint();
+                }
             });
-        } else {
-            ((ConversacionRenderer) getInitView().getChatList().getCellRenderer()).setMensajeNoLeido(receptor, true);
-            getInitView().getChatList().repaint();
-        }
+
+            RoundedPanel bubblePanel = new RoundedPanel(15, new java.awt.Color(0, 0, 102));
+            bubblePanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 5, 2));
+            bubblePanel.add(messagePanel);
+
+            javax.swing.JPanel wrapper = new javax.swing.JPanel(new java.awt.FlowLayout(esMensajePropio ? java.awt.FlowLayout.RIGHT : java.awt.FlowLayout.LEFT, 5, 2));
+            wrapper.setOpaque(false);
+            wrapper.add(bubblePanel);
+
+            getInitView().getChatPanel().add(wrapper);
+            getInitView().getChatPanel().revalidate();
+            getInitView().getChatPanel().repaint();
+        });
     }
 
     public void actualizaChatPanel(String nombre) {
@@ -235,5 +262,4 @@ public class Controlador {
     public Init getInitView() {
         return initView;
     }
-
 }

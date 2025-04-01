@@ -1,34 +1,18 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package vistas;
 
 import java.awt.Color;
 
-/**
- *
- * @author tomas
- */
 public class newContact extends javax.swing.JFrame {
 
-    /**
-     * @return the ipTxtField
-     */
+
     public javax.swing.JTextField getIpTxtField() {
         return ipTxtField;
     }
 
-    /**
-     * @return the nameTxtField
-     */
     public javax.swing.JTextField getNameTxtField() {
         return nameTxtField;
     }
 
-    /**
-     * @return the newContactButton
-     */
     public javax.swing.JLabel getNewContactButton() {
         return newContactButton;
     }
