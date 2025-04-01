@@ -16,7 +16,7 @@ public class prueba {
     Modelo modelo = new Modelo();
     Login login = new Login();
     Init init = new Init();
-    newContact newContact = new newContact();
+    newContact newContact = new newContact(); 
     newChat newChat = new newChat();
     Controlador controlador = new Controlador(login,init ,newContact, newChat , modelo);
     modelo.setControlador(controlador);

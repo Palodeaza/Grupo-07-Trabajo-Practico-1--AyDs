@@ -114,7 +114,8 @@ private Controlador controlador;
                 new Thread(new ClientHandler(socket)).start();
                 System.out.println("Conectado con " + ip + ":" + puerto);
             } catch (IOException e) {
-                System.err.println("Error al conectar con el contacto: " + e.getMessage());
+                System.err.println("Error al conectar con el contacto: " + e.getMessage()); //agregar cartel de error al conectar aca
+                controlador.mostrarCartelErrorConexion();
             }
         }).start();
     }

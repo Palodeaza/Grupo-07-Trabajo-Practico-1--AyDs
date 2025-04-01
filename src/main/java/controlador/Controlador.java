@@ -126,9 +126,13 @@ public class Controlador {
             } else {
                 JOptionPane.showMessageDialog(contactView, "El contacto ya existe.");
             }
+            contactView.limpiarTextFields();
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(contactView, "El puerto debe ser un numero válido.");
         }
+    }
+    public void mostrarCartelErrorConexion(){
+        JOptionPane.showMessageDialog(chatView, "Error al conectar con el contacto.\nSeleccione otro contacto.");
     }
 
     private void iniciarChatConSeleccion() {

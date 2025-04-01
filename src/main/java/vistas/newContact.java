@@ -228,6 +228,15 @@ public class newContact extends javax.swing.JFrame {
        }
     }//GEN-LAST:event_portTxtFieldMouseClicked
 
+    public void limpiarTextFields(){
+      nameTxtField.setText("Ingrese el nombre del contacto...");
+      nameTxtField.setForeground(new Color(204,204,204));
+      ipTxtField.setText("Ingrese la direccion IP del contacto...");
+      ipTxtField.setForeground(new Color(204,204,204));
+      portTxtField.setText("Ingrese el puerto del contacto...");
+      portTxtField.setForeground(new Color(204,204,204));
+    }
+
     /**
      * @param args the command line arguments
      */
