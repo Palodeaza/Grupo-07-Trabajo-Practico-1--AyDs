@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.swing.JOptionPane;
 
 public class Modelo {
 private ServerSocket serverSocket;
@@ -130,7 +131,7 @@ private Controlador controlador;
                 new Thread(new ClientHandler(socket)).start();
                 System.out.println("Conectado con " + ip + ":" + puerto);
             } catch (IOException e) {
-                System.err.println("Error al conectar con el contacto: " + e.getMessage()); //agregar cartel de error al conectar aca
+                System.err.println("Error al conectar con el contacto: " + e.getMessage()); 
                 controlador.mostrarCartelErrorConexion();
             }
         }).start();
@@ -140,13 +141,14 @@ private Controlador controlador;
         PrintWriter outputStream = flujosSalida.get(contacto);
         if (outputStream != null) {
             try {
-                outputStream.println(mensaje); 
+                outputStream.println(mensaje);
             } catch (Exception e) {
                 System.err.println("Error al enviar mensaje: " + e.getMessage());
                 cerrarConexion(contacto);
+                JOptionPane.showMessageDialog(null, "No se pudo enviar el mensaje. El usuario \"" + contacto + "\" no está conectado.");
             }
         } else {
-            System.err.println("No hay conexion activa con " + contacto);
+            System.err.println("No hay conexión activa con " + contacto);
         }
     }
 
@@ -160,7 +162,6 @@ private Controlador controlador;
                 conexionesActivas.get(contacto).close();
                 conexionesActivas.remove(contacto);
             }
-            System.out.println("Conexion con " + contacto + " cerrada.");
         } catch (IOException e) {
             System.err.println("Error al cerrar conexion: " + e.getMessage());
         }

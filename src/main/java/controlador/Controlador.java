@@ -6,6 +6,8 @@ import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JLabel;
@@ -123,6 +125,16 @@ public class Controlador {
 
         try {
             int puerto = Integer.parseInt(puertoStr);
+            if (puerto < 1 || puerto > 65535) {
+                JOptionPane.showMessageDialog(contactView, "El puerto debe estar entre 1 y 65535.");
+                return;
+            }
+            try {
+                InetAddress.getByName(ip); // Si no lanza excepcion, es valida
+            } catch (UnknownHostException e) {
+                JOptionPane.showMessageDialog(contactView, "La dirección IP no es válida.");
+                return;
+            }
             if (modelo.agregarContacto(nombre, ip, puerto)) {
                 JOptionPane.showMessageDialog(contactView, "Contacto agregado exitosamente.");
                 this.chatView.actualizarListaContactos(modelo.getListaContactos());
@@ -135,8 +147,9 @@ public class Controlador {
             JOptionPane.showMessageDialog(contactView, "El puerto debe ser un numero válido.");
         }
     }
+    
     public void mostrarCartelErrorConexion(){
-        JOptionPane.showMessageDialog(chatView, "Error al conectar con el contacto.\nSeleccione otro contacto.");
+        JOptionPane.showMessageDialog(chatView, "Contacto no conectado.");
     }
 
     private void iniciarChatConSeleccion() {
