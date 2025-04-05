@@ -12,6 +12,9 @@ public class Login extends javax.swing.JFrame {
                 bg.requestFocusInWindow();
             }
         });
+        loginButton = new AnimatedButton("INGRESAR");
+        loginButton.setBounds(160, 350, 100, 30);
+        bg.add(loginButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 350, 100, 30));
     }
 
     /**
@@ -35,7 +38,6 @@ public class Login extends javax.swing.JFrame {
         lineaPuerto = new javax.swing.JLabel();
         panelNaranja = new javax.swing.JLabel();
         lineaInicioSesion = new javax.swing.JLabel();
-        loginButton = new javax.swing.JButton();
 
         jScrollPane1.setViewportView(jTextPane1);
 
@@ -102,27 +104,6 @@ public class Login extends javax.swing.JFrame {
         lineaInicioSesion.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 102)));
         bg.add(lineaInicioSesion, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 142, 200, -1));
 
-        loginButton.setBackground(new java.awt.Color(0, 0, 102));
-        loginButton.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        loginButton.setForeground(new java.awt.Color(255, 255, 255));
-        loginButton.setText("INGRESAR");
-        loginButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        loginButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        loginButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                loginButtonMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                loginButtonMouseExited(evt);
-            }
-        });
-        loginButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                loginButtonActionPerformed(evt);
-            }
-        });
-        bg.add(loginButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 350, 100, 30));
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -146,18 +127,6 @@ public class Login extends javax.swing.JFrame {
     private void portTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_portTxtActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_portTxtActionPerformed
-
-    private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_loginButtonActionPerformed
-
-    private void loginButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loginButtonMouseEntered
-        getLoginButton().setBackground(new Color(0,102,204));        // TODO add your handling code here:
-    }//GEN-LAST:event_loginButtonMouseEntered
-
-    private void loginButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loginButtonMouseExited
-        getLoginButton().setBackground(new Color(0,0,102));        // TODO add your handling code here:
-    }//GEN-LAST:event_loginButtonMouseExited
 
     private void userTxtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_userTxtMouseClicked
        if (getUserTxt().getText().equals("Ingrese su nombre de usuario...")){
@@ -226,11 +195,11 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JTextPane jTextPane1;
     private javax.swing.JLabel lineaInicioSesion;
     private javax.swing.JLabel lineaPuerto;
-    private javax.swing.JButton loginButton;
     private javax.swing.JLabel panelNaranja;
     private javax.swing.JTextField portTxt;
     private javax.swing.JTextField userTxt;
     // End of variables declaration//GEN-END:variables
+    private AnimatedButton loginButton;
 
     /**
      * @return the loginButton

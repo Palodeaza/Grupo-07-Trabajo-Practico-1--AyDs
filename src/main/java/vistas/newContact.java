@@ -29,6 +29,9 @@ public class newContact extends javax.swing.JFrame {
      */
     public newContact() {
         initComponents();
+        newContactButton = new vistas.AnimatedLabel("AGREGAR");
+        bg.add(newContactButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 270, 90, 40));
+
         addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowOpened(java.awt.event.WindowEvent e) {
@@ -60,7 +63,6 @@ public class newContact extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
-        newContactButton = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -140,23 +142,6 @@ public class newContact extends javax.swing.JFrame {
         jLabel10.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 102)));
         bg.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 60, 190, -1));
 
-        newContactButton.setBackground(new java.awt.Color(0, 0, 102));
-        newContactButton.setFont(new java.awt.Font("Roboto", 1, 18)); // NOI18N
-        newContactButton.setForeground(new java.awt.Color(255, 255, 255));
-        newContactButton.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        newContactButton.setText("Agregar");
-        newContactButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        newContactButton.setOpaque(true);
-        newContactButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                newContactButtonMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                newContactButtonMouseExited(evt);
-            }
-        });
-        bg.add(newContactButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 260, 90, 40));
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -174,14 +159,6 @@ public class newContact extends javax.swing.JFrame {
     private void nameTxtFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameTxtFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_nameTxtFieldActionPerformed
-
-    private void newContactButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newContactButtonMouseEntered
-        getNewContactButton().setBackground(new Color(0,102,204));
-    }//GEN-LAST:event_newContactButtonMouseEntered
-
-    private void newContactButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newContactButtonMouseExited
-        getNewContactButton().setBackground(new Color(0,0,102));
-    }//GEN-LAST:event_newContactButtonMouseExited
 
     private void nameTxtFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nameTxtFieldMouseClicked
        if (getNameTxtField().getText().equals("Ingrese el nombre del contacto...")){
@@ -286,7 +263,7 @@ public class newContact extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JTextField nameTxtField;
-    private javax.swing.JLabel newContactButton;
     private javax.swing.JTextField portTxtField;
     // End of variables declaration//GEN-END:variables
+    private AnimatedLabel newContactButton;
 }

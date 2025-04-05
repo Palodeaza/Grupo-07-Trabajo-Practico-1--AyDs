@@ -4,9 +4,13 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import modelo.Modelo;
 import vistas.ConversacionRenderer;
 import vistas.Init;
@@ -100,7 +104,7 @@ public class Controlador {
                 initView.setLocation(posicionActual);
                 getInitView().setVisible(true);
             } else {
-                JOptionPane.showMessageDialog(loginView, "Usuario o contraseña incorrectos.");
+                JOptionPane.showMessageDialog(loginView, "Puerto invalido o en uso.");
             }
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(loginView, "El puerto debe ser un número válido.");
@@ -268,45 +272,45 @@ public class Controlador {
         if ((receptoractual != null && receptoractual.equals(remitente) )|| esMensajePropio) {
 
         javax.swing.SwingUtilities.invokeLater(() -> {
-            javax.swing.JLabel mensajeLabel = new javax.swing.JLabel("<html><body style='width:200px; margin: 2px; padding: 2px;'>" + mensajeTexto + "</body></html>");
-            mensajeLabel.setForeground(java.awt.Color.WHITE);
-            mensajeLabel.setOpaque(false);
+            JLabel mensajeLabel = new JLabel("<html><body style='width:200px; margin:2px; padding:2px;'>" 
+                                             + mensajeTexto + "</body></html>");
+            mensajeLabel.setForeground(Color.WHITE);
             mensajeLabel.setFont(new Font("Roboto", Font.PLAIN, 14));
 
-            javax.swing.JLabel horaLabel = new javax.swing.JLabel(horaMensaje);
-            horaLabel.setForeground(java.awt.Color.GRAY);
-            horaLabel.setOpaque(false);
+            JLabel horaLabel = new JLabel(horaMensaje);
+            horaLabel.setForeground(Color.GRAY);
             horaLabel.setFont(new Font("Roboto", Font.ITALIC, 10));
             horaLabel.setVisible(false);
 
-            javax.swing.JPanel messagePanel = new javax.swing.JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 5, 2));
-            messagePanel.setOpaque(false);
-            messagePanel.add(mensajeLabel);
-            messagePanel.add(horaLabel);
+            RoundedPanel bubblePanel = new RoundedPanel(15, new Color(0, 0, 102));
+            bubblePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 2));
+            bubblePanel.add(mensajeLabel);
+            bubblePanel.setOpaque(false);
 
-            messagePanel.addMouseListener(new java.awt.event.MouseAdapter() {
+            bubblePanel.addMouseListener(new MouseAdapter() {
                 @Override
-                public void mouseEntered(java.awt.event.MouseEvent e) {
+                public void mouseEntered(MouseEvent e) {
                     horaLabel.setVisible(true);
-                    messagePanel.revalidate();
-                    messagePanel.repaint();
                 }
                 @Override
-                public void mouseExited(java.awt.event.MouseEvent e) {
+                public void mouseExited(MouseEvent e) {
                     horaLabel.setVisible(false);
-                    messagePanel.revalidate();
-                    messagePanel.repaint();
                 }
             });
 
-            RoundedPanel bubblePanel = new RoundedPanel(15, new java.awt.Color(0, 0, 102));
-            bubblePanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 5, 2));
-            bubblePanel.add(messagePanel);
-
-            javax.swing.JPanel wrapper = new javax.swing.JPanel(new java.awt.FlowLayout(esMensajePropio ? java.awt.FlowLayout.RIGHT : java.awt.FlowLayout.LEFT, 5, 2));
+            JPanel wrapper = new JPanel(new FlowLayout(
+                    esMensajePropio ? FlowLayout.RIGHT : FlowLayout.LEFT, 
+                    5, 2));
             wrapper.setOpaque(false);
-            wrapper.add(bubblePanel);
-            
+
+            if (esMensajePropio) {
+                wrapper.add(horaLabel);
+                wrapper.add(bubblePanel);
+            } else {
+                wrapper.add(bubblePanel);
+                wrapper.add(horaLabel);
+            }
+
             getInitView().getChatPanel().add(wrapper);
             getInitView().getChatPanel().revalidate();
             getInitView().getChatPanel().repaint();
@@ -327,7 +331,6 @@ public class Controlador {
             return;
         }
         for (String mensaje : listamensajes) {
-            System.out.println("VOY A MOSTRAR EL MENSAJE: " + mensaje);
             this.mostrarMensajeEnChat2(mensaje);
             }
         getInitView().getChatPanel().revalidate();

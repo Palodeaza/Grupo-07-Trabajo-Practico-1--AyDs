@@ -32,8 +32,24 @@ private Controlador controlador;
         this.mensajeListener = listener;
     }
 
-    public boolean validarCredenciales(String usuario, int puerto){
-        return !usuario.isEmpty() && puerto > 0;
+    public boolean validarCredenciales(String usuario, int puerto) {
+        if (usuario.isEmpty() || puerto <= 0) {
+            return false;
+        }
+
+        ServerSocket testSocket = null;
+        try {
+            testSocket = new ServerSocket(puerto);
+            return true; // Puerto disponible
+        } catch (IOException e) {
+            return false; // Puerto en uso
+        } finally {
+            if (testSocket != null) {
+                try {
+                    testSocket.close();
+                } catch (IOException ignored) {}
+            }
+        }
     }
 
     public void iniciarServidor(int puerto) {

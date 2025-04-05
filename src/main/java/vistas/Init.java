@@ -8,6 +8,14 @@ public class Init extends javax.swing.JFrame {
 
     public Init() {
         initComponents();
+        newContactButton = new AnimatedLabel("Nuevo Contacto");
+        bg.add(newContactButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 440, 130, 60));
+
+        newConvButton = new AnimatedLabel("Nuevo Chat");
+        bg.add(newConvButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 440, 130, 60));
+
+        sendMsgTxtButton = new AnimatedLabel("Enviar");
+        bg.add(sendMsgTxtButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 440, 90, 60));
         DefaultListModel<String> modeloConversaciones = new DefaultListModel<>();
         DefaultListModel<String> mensajesList = new DefaultListModel<>();
         chatList.setModel(modeloConversaciones); // Configurar modelo dinámico
@@ -27,6 +35,12 @@ public class Init extends javax.swing.JFrame {
                 bg.requestFocusInWindow();
             }
         });
+        chatList.addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                String sel = chatList.getSelectedValue();
+                selectedContactLabel.setText(sel != null ? "  " + sel : "");
+            }
+        });
     }
 
     /**
@@ -44,10 +58,7 @@ public class Init extends javax.swing.JFrame {
         chatList = new javax.swing.JList<>();
         msgScrollPane = new javax.swing.JScrollPane();
         jPanel1 = new javax.swing.JPanel();
-        newContactButton = new javax.swing.JLabel();
-        newConvButton = new javax.swing.JLabel();
-        sendMsgTxtButton = new javax.swing.JLabel();
-        SendMsgColor = new javax.swing.JLabel();
+        selectedContactLabel = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
@@ -79,67 +90,19 @@ public class Init extends javax.swing.JFrame {
         bg.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 90, 260, 350));
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
         jPanel1.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.Y_AXIS));
         msgScrollPane.setViewportView(jPanel1);
 
-        bg.add(msgScrollPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 0, 440, 440));
+        bg.add(msgScrollPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 50, 440, 390));
 
-        newContactButton.setBackground(new java.awt.Color(0, 0, 102));
-        newContactButton.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        newContactButton.setForeground(new java.awt.Color(255, 255, 255));
-        newContactButton.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        newContactButton.setText("Nuevo Contacto");
-        newContactButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        newContactButton.setOpaque(true);
-        newContactButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                newContactButtonMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                newContactButtonMouseExited(evt);
-            }
-        });
-        bg.add(newContactButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 440, 130, 60));
-
-        newConvButton.setBackground(new java.awt.Color(0, 0, 102));
-        newConvButton.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        newConvButton.setForeground(new java.awt.Color(255, 255, 255));
-        newConvButton.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        newConvButton.setText("Nuevo Chat");
-        newConvButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        newConvButton.setOpaque(true);
-        newConvButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                newConvButtonMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                newConvButtonMouseExited(evt);
-            }
-        });
-        bg.add(newConvButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 440, 130, 60));
-
-        sendMsgTxtButton.setBackground(new java.awt.Color(0, 0, 102));
-        sendMsgTxtButton.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
-        sendMsgTxtButton.setForeground(new java.awt.Color(255, 255, 255));
-        sendMsgTxtButton.setText("     Enviar");
-        sendMsgTxtButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        sendMsgTxtButton.setOpaque(true);
-        sendMsgTxtButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                sendMsgTxtButtonMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                sendMsgTxtButtonMouseExited(evt);
-            }
-        });
-        bg.add(sendMsgTxtButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 442, 90, 60));
-
-        SendMsgColor.setBackground(new java.awt.Color(0, 0, 102));
-        SendMsgColor.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
-        SendMsgColor.setForeground(new java.awt.Color(255, 255, 255));
-        SendMsgColor.setOpaque(true);
-        bg.add(SendMsgColor, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 440, 90, 60));
+        selectedContactLabel.setBackground(new java.awt.Color(0, 0, 102));
+        selectedContactLabel.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
+        selectedContactLabel.setForeground(new java.awt.Color(255, 255, 255));
+        selectedContactLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        selectedContactLabel.setOpaque(true);
+        bg.add(selectedContactLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 0, 440, 50));
 
         jLabel2.setBackground(new java.awt.Color(255, 255, 255));
         jLabel2.setFont(new java.awt.Font("Segoe UI Semilight", 1, 24)); // NOI18N
@@ -156,7 +119,7 @@ public class Init extends javax.swing.JFrame {
         jLabel1.setText("jLabel1");
         jLabel1.setBorder(javax.swing.BorderFactory.createCompoundBorder());
         jLabel1.setOpaque(true);
-        bg.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -10, 700, 510));
+        bg.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -10, 700, 450));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -175,31 +138,6 @@ public class Init extends javax.swing.JFrame {
     private void msgTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_msgTextFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_msgTextFieldActionPerformed
-
-    private void newConvButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newConvButtonMouseEntered
-        getNewConvButton().setBackground(new Color(0, 102, 204));
-    }//GEN-LAST:event_newConvButtonMouseEntered
-
-    private void newConvButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newConvButtonMouseExited
-        getNewConvButton().setBackground(new Color(0, 0, 102));
-    }//GEN-LAST:event_newConvButtonMouseExited
-
-    private void newContactButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newContactButtonMouseEntered
-        getNewContactButton().setBackground(new Color(0, 102, 204));
-
-    }//GEN-LAST:event_newContactButtonMouseEntered
-
-    private void newContactButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newContactButtonMouseExited
-        getNewContactButton().setBackground(new Color(0, 0, 102));
-    }//GEN-LAST:event_newContactButtonMouseExited
-
-    private void sendMsgTxtButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sendMsgTxtButtonMouseEntered
-        getSendMsgTxtButton().setBackground(new Color(0, 102, 204));
-    }//GEN-LAST:event_sendMsgTxtButtonMouseEntered
-
-    private void sendMsgTxtButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sendMsgTxtButtonMouseExited
-        getSendMsgTxtButton().setBackground(new Color(0, 0, 102));
-    }//GEN-LAST:event_sendMsgTxtButtonMouseExited
 
     private void msgTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_msgTextFieldMouseClicked
         if (getMsgTextField().getText().equals("  Mensaje...")) {
@@ -244,7 +182,6 @@ public class Init extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel SendMsgColor;
     private javax.swing.JPanel bg;
     private javax.swing.JList<String> chatList;
     private javax.swing.JLabel jLabel1;
@@ -254,11 +191,11 @@ public class Init extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane msgScrollPane;
     private javax.swing.JTextField msgTextField;
-    private javax.swing.JLabel newContactButton;
-    private javax.swing.JLabel newConvButton;
-    private javax.swing.JLabel sendMsgTxtButton;
+    private javax.swing.JLabel selectedContactLabel;
     // End of variables declaration//GEN-END:variables
-
+    private AnimatedLabel newContactButton;
+    private AnimatedLabel newConvButton;
+    private AnimatedLabel sendMsgTxtButton;
     /**
      * @return the chatList
      */
