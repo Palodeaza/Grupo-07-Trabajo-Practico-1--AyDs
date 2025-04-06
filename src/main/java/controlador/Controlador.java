@@ -152,7 +152,7 @@ public class Controlador {
     }
     
     public void mostrarCartelErrorConexion(){
-        JOptionPane.showMessageDialog(chatView, "Contacto no conectado.");
+        JOptionPane.showMessageDialog(chatView, "Contacto desconectado.");
     }
 
     private void iniciarChatConSeleccion() {

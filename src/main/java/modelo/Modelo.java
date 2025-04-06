@@ -142,7 +142,6 @@ private Controlador controlador;
             } catch (Exception e) {
                 System.err.println("Error al enviar mensaje: " + e.getMessage());
                 cerrarConexion(contacto);
-                JOptionPane.showMessageDialog(null, "No se pudo enviar el mensaje. El usuario \"" + contacto + "\" no está conectado.");
             }
         } else {
             System.err.println("No hay conexión activa con " + contacto);
@@ -159,6 +158,7 @@ private Controlador controlador;
                 conexionesActivas.get(contacto).close();
                 conexionesActivas.remove(contacto);
             }
+            controlador.refreshConversaciones();
         } catch (IOException e) {
             System.err.println("Error al cerrar conexion: " + e.getMessage());
         }
@@ -216,8 +216,10 @@ private Controlador controlador;
             } catch (IOException e) {
                 e.printStackTrace();
                 System.err.println("Error en la conexión con el cliente: " + e.getMessage());
+                controlador.mostrarCartelErrorConexion();
+                cerrarConexion(nombreCliente);
             } finally {
-                if (nombreCliente != null) { //cambiar esto
+                if (nombreCliente != null) { 
                     cerrarConexion(nombreCliente);
                 }
             }
