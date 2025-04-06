@@ -136,7 +136,12 @@ public class Init extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void msgTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_msgTextFieldActionPerformed
-        // TODO add your handling code here:
+        sendMsgTxtButton.dispatchEvent(new java.awt.event.MouseEvent(
+            sendMsgTxtButton,
+            java.awt.event.MouseEvent.MOUSE_CLICKED,
+            System.currentTimeMillis(),
+            0, 0, 0, 1, false
+        ));
     }//GEN-LAST:event_msgTextFieldActionPerformed
 
     private void msgTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_msgTextFieldMouseClicked

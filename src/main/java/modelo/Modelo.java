@@ -119,7 +119,8 @@ private Controlador controlador;
     public void iniciarConexionCliente(String nombre, String ip, int puerto) {
         new Thread(() -> {
             try {
-                Socket socket = new Socket(ip, puerto);                
+                Socket socket = new Socket(ip, puerto);      
+                System.out.println(nombre);
                 conexionesActivas.put(nombre, socket);
                 controlador.refreshConversaciones();
                 controlador.getInitView().getChatList().setSelectedValue(nombre, true);
