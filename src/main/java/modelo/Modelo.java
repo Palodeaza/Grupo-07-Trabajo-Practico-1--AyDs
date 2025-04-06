@@ -158,7 +158,8 @@ private Controlador controlador;
                 conexionesActivas.get(contacto).close();
                 conexionesActivas.remove(contacto);
             }
-            controlador.borraChat();
+            controlador.mostrarCartelErrorConexion();
+            controlador.borraChat(contacto);
             controlador.refreshConversaciones();
         } catch (IOException e) {
             System.err.println("Error al cerrar conexion: " + e.getMessage());
@@ -217,7 +218,6 @@ private Controlador controlador;
             } catch (IOException e) {
                 e.printStackTrace();
                 System.err.println("Error en la conexión con el cliente: " + e.getMessage());
-                controlador.mostrarCartelErrorConexion();
                 cerrarConexion(nombreCliente);
             } finally {
                 if (nombreCliente != null) { 

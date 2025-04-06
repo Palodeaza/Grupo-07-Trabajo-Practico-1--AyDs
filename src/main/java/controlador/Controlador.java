@@ -205,10 +205,13 @@ public class Controlador {
 
     }
 
-    public void borraChat() {
+    public void borraChat(String contacto) {
+        String receptoractual = getInitView().getChatList().getSelectedValue();
+        if (receptoractual.equals(contacto)){
         getInitView().getChatPanel().removeAll();
         getInitView().getChatPanel().revalidate();
         getInitView().getChatPanel().repaint();
+        }
     }
 
     private void mostrarMensajeEnChat2(String mensaje) {
