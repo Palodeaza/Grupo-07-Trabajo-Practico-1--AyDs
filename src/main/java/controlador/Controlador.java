@@ -172,6 +172,7 @@ public class Controlador {
                 JOptionPane.showMessageDialog(chatView, "Ya tienes una conversación activa con este contacto.");
             }
         }
+        chatView.getContactList().clearSelection();
     }
 
     private void enviarMensaje() {
@@ -207,10 +208,12 @@ public class Controlador {
 
     public void borraChat(String contacto) {
         String receptoractual = getInitView().getChatList().getSelectedValue();
+        if (!(receptoractual == null)){
         if (receptoractual.equals(contacto)){
         getInitView().getChatPanel().removeAll();
         getInitView().getChatPanel().revalidate();
         getInitView().getChatPanel().repaint();
+        }
         }
     }
 

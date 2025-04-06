@@ -126,7 +126,7 @@ private Controlador controlador;
                 PrintWriter outputStream = new PrintWriter(socket.getOutputStream(), true); 
                 BufferedReader inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 flujosSalida.put(nombre, outputStream);
-                new Thread(new ClientHandler(socket)).start();
+                new Thread(new ClientHandler(socket, nombre)).start();
             } catch (IOException e) {
                 System.err.println("Error al conectar con el contacto: " + e.getMessage()); 
                 controlador.mostrarCartelErrorConexion();
@@ -150,6 +150,8 @@ private Controlador controlador;
 
     public void cerrarConexion(String contacto) {
         try {
+            System.out.println("QUIERO CERRAR CONEXION CON: "+ contacto );
+            System.out.println("LISTA DE CONEXIONES ACTIVAS: " + flujosSalida.toString());
             if (flujosSalida.containsKey(contacto)) {
                 flujosSalida.get(contacto).close();
                 flujosSalida.remove(contacto);
@@ -172,10 +174,13 @@ private Controlador controlador;
         private PrintWriter outputStream;
         private String nombreCliente;
 
+        public ClientHandler(Socket socket, String nombre) {
+            this.socket = socket;
+            this.nombreCliente = nombre;
+        }
         public ClientHandler(Socket socket) {
             this.socket = socket;
         }
-
         @Override
         public void run() {
             try {
@@ -212,6 +217,7 @@ private Controlador controlador;
                     } catch (IOException e) {
                         e.printStackTrace();
                         System.err.println("Error en la recepción del mensaje: " + e.getMessage());
+                        cerrarConexion(nombreCliente);
                         break;
                     }
                 }
