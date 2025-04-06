@@ -150,8 +150,6 @@ private Controlador controlador;
 
     public void cerrarConexion(String contacto) {
         try {
-            System.out.println("QUIERO CERRAR CONEXION CON: "+ contacto );
-            System.out.println("LISTA DE CONEXIONES ACTIVAS: " + flujosSalida.toString());
             if (flujosSalida.containsKey(contacto)) {
                 flujosSalida.get(contacto).close();
                 flujosSalida.remove(contacto);
@@ -191,8 +189,9 @@ private Controlador controlador;
                 String[] partes = mensajeInicial.split(";", 3);
                 String[] datos = partes[0].split(":",3); //datos[0]=nombre / datos[1]=ip / datos[2]=puerto
                 nombreCliente = buscaContacto(datos[1], datos[2]);
-                if (nombreCliente==null){// si me llega mensaje desconocido, lo agendo
+                if (nombreCliente==null){// si me llega mensaje desconocido, lo agendo                  
                     agregarContacto(datos[0],datos[1],Integer.parseInt(datos[2]));
+                    controlador.actualizaListaContactos();
                     nombreCliente = datos[0];
                 }
                 if (!conversacionActiva(nombreCliente)) {
@@ -227,7 +226,8 @@ private Controlador controlador;
                 cerrarConexion(nombreCliente);
             } finally {
                 if (nombreCliente != null) { 
-                    cerrarConexion(nombreCliente);
+                    //System.out.println("CIERRO CONEXION"); NO ERA NECESARIO ACA ???
+                    //cerrarConexion(nombreCliente);
                 }
             }
         }

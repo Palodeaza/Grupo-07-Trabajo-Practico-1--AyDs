@@ -115,7 +115,9 @@ public class Controlador {
             JOptionPane.showMessageDialog(loginView, "El puerto debe ser un número válido.");
         }
     }
-
+    public void actualizaListaContactos(){
+        this.chatView.actualizarListaContactos(modelo.getListaContactos());
+    }
     private void agregarNuevoContacto() {
         String nombre = contactView.getNameTxtField().getText().trim();
         String ip = contactView.getIpTxtField().getText().trim();
@@ -140,7 +142,7 @@ public class Controlador {
             }
             if (modelo.agregarContacto(nombre, ip, puerto)) {
                 JOptionPane.showMessageDialog(contactView, "Contacto agregado exitosamente.");
-                this.chatView.actualizarListaContactos(modelo.getListaContactos());
+                actualizaListaContactos();
                 contactView.setVisible(false);
             } else {
                 JOptionPane.showMessageDialog(contactView, "El contacto ya existe.");
