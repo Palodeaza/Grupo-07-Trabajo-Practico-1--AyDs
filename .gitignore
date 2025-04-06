@@ -1,0 +1,5 @@
+/target/
+/src/main/.vscode/
+/src/main/java/libs/
+/build.bat
+/run.bat
