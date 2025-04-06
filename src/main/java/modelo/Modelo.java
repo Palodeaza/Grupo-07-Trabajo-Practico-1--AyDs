@@ -119,8 +119,7 @@ private Controlador controlador;
     public void iniciarConexionCliente(String nombre, String ip, int puerto) {
         new Thread(() -> {
             try {
-                Socket socket = new Socket(ip, puerto);      
-                System.out.println(nombre);
+                Socket socket = new Socket(ip, puerto);                
                 conexionesActivas.put(nombre, socket);
                 controlador.refreshConversaciones();
                 controlador.getInitView().getChatList().setSelectedValue(nombre, true);
@@ -159,6 +158,7 @@ private Controlador controlador;
                 conexionesActivas.get(contacto).close();
                 conexionesActivas.remove(contacto);
             }
+            controlador.borraChat();
             controlador.refreshConversaciones();
         } catch (IOException e) {
             System.err.println("Error al cerrar conexion: " + e.getMessage());

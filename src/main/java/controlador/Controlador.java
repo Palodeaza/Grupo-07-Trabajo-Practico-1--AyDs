@@ -205,6 +205,12 @@ public class Controlador {
 
     }
 
+    public void borraChat() {
+        getInitView().getChatPanel().removeAll();
+        getInitView().getChatPanel().revalidate();
+        getInitView().getChatPanel().repaint();
+    }
+
     private void mostrarMensajeEnChat2(String mensaje) {
         String receptoractual = getInitView().getChatList().getSelectedValue();
         String[] partes = mensaje.split(";", 3);
