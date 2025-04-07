@@ -103,7 +103,7 @@ public class Controlador {
                 this.usuarioActual = usuario;
                 this.puertoActual = puerto;
 
-                //modelo.iniciarServidor(puerto);
+                modelo.usuarioOnline(usuario);
                 Point posicionActual = loginView.getLocation();
                 loginView.setVisible(false);
                 initView.setLocation(posicionActual);
@@ -165,7 +165,7 @@ public class Controlador {
                 if (datosContacto != null) {
                     String ip = datosContacto[0];
                     int puerto = Integer.parseInt(datosContacto[1]);
-                    modelo.iniciarConexionCliente(contactoSeleccionado, ip, puerto);
+                    modelo.iniciarConexionCliente(contactoSeleccionado, ip, puerto, usuarioActual);
                     chatView.setVisible(false);
                 } else {
                     JOptionPane.showMessageDialog(chatView, "No se encontraron datos del contacto.");
@@ -195,7 +195,7 @@ public class Controlador {
         String ipEmisor = modelo.obtenerIPLocal();
         String nombre = this.usuarioActual;
 
-        String mensajeFormateado = nombre + ":" + ipEmisor + ":" + puertoActual + ";" + mensajeTexto + ";" + horaActual;
+        String mensajeFormateado = nombre + ":" + ipEmisor + ":" + puertoActual + ";" + mensajeTexto + ";" + horaActual + ";" + receptor;
 
         modelo.getMensajes().computeIfAbsent(receptor, k -> new java.util.ArrayList<>()).add(mensajeFormateado);
         modelo.enviarMensaje(receptor, mensajeFormateado);
@@ -221,7 +221,7 @@ public class Controlador {
 
     private void mostrarMensajeEnChat2(String mensaje) {
         String receptoractual = getInitView().getChatList().getSelectedValue();
-        String[] partes = mensaje.split(";", 3);
+        String[] partes = mensaje.split(";", 4);
         if (partes.length < 3) {
             System.err.println("Error: Formato de mensaje incorrecto.");
             return;

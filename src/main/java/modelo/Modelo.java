@@ -20,6 +20,7 @@ private Map<String, PrintWriter> flujosSalida = new HashMap<>();
 private Map<String, List<String>> mensajes = new HashMap<>(); 
 private MensajeListener mensajeListener;
 private Controlador controlador;
+private Socket socket;
 
     public interface MensajeListener {
         void onMensajeRecibido(String mensaje); 
@@ -116,21 +117,30 @@ private Controlador controlador;
         return null;
     }
 
-    public void iniciarConexionCliente(String nombre, String ip, int puerto) {
-        new Thread(() -> {
-            try {
-                Socket socket = new Socket("localhost", 3333); //se crea el socket del servidor               
-                conexionesActivas.put(nombre, socket);
-                controlador.refreshConversaciones();
-                controlador.getInitView().getChatList().setSelectedValue(nombre, true);
-                PrintWriter outputStream = new PrintWriter(socket.getOutputStream(), true); 
-                flujosSalida.put(nombre, outputStream);
-                new Thread(new MessageHandler(socket, nombre)).start();
-            } catch (IOException e) {
-                System.err.println("Error al conectar con el contacto: " + e.getMessage()); 
-                controlador.mostrarCartelErrorConexion();
-            }
-        }).start();
+    public void usuarioOnline(String emisor) {
+        try {
+            Socket socket = new Socket("localhost", 3333); //se crea el socket hacia el servidor
+            this.socket = socket;               
+            PrintWriter outputStream = new PrintWriter(socket.getOutputStream(), true); 
+            outputStream.println(emisor);
+            new Thread(new MessageHandler(socket)).start();
+        } catch (IOException e) {
+            System.err.println("Error al conectar: " + e.getMessage()); 
+            controlador.mostrarCartelErrorConexion();
+        }
+    }
+
+    public void iniciarConexionCliente(String nombre, String ip, int puerto, String emisor) {
+        try {              
+            PrintWriter outputStream = new PrintWriter(socket.getOutputStream(), true); 
+            conexionesActivas.put(nombre, socket);
+            controlador.refreshConversaciones();
+            controlador.getInitView().getChatList().setSelectedValue(nombre, true);
+            flujosSalida.put(nombre, outputStream);
+        } catch (IOException e) {
+            System.err.println("Error al conectar con el contacto: " + e.getMessage()); 
+            controlador.mostrarCartelErrorConexion();
+        }
     }
 
     public void enviarMensaje(String contacto, String mensaje) {
@@ -143,7 +153,7 @@ private Controlador controlador;
                 cerrarConexion(contacto);
             }
         } else {
-            System.err.println("No hay conexión activa con " + contacto);
+            System.err.println("No hay conexion activa con " + contacto);
         }
     }
 
@@ -185,8 +195,10 @@ private Controlador controlador;
                 outputStream = new PrintWriter(socket.getOutputStream(), true); 
 
                 String mensajeInicial = inputStream.readLine();
-                String[] partes = mensajeInicial.split(";", 3);
-                String[] datos = partes[0].split(":",3); //datos[0]=nombre / datos[1]=ip / datos[2]=puerto
+                System.out.println("en el MessageHandler de Modelo, msjInicial: "+mensajeInicial);
+                String[] partes = mensajeInicial.split(";", 4);
+                String[] datos = partes[0].split(":", 3); //datos[0]=nombre / datos[1]=ip / datos[2]=puerto
+
                 nombreCliente = buscaContacto(datos[1], datos[2]);
                 if (nombreCliente==null){// si me llega mensaje desconocido, lo agendo                  
                     agregarContacto(datos[0],datos[1],Integer.parseInt(datos[2]));

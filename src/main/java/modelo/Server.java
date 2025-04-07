@@ -1,6 +1,6 @@
 package modelo;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -16,15 +16,19 @@ public class Server {
     }
     
     public void iniciarServidor(){
-        try {
-            while (true) {
-                Socket clientSocket = serverSocket.accept(); // por cada cliente que se quiera conectar, le doy un socket
-                String user = "";
-                new Thread(new ClientHandler(clientSocket, user)).start(); // como cojones sacamos el user? podemos mandar un mensaje default
+        new Thread(() -> {
+            try {
+                while (true) {
+                    Socket clientSocket = serverSocket.accept(); // por cada cliente que se quiera conectar, le doy un socket
+                    BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                    String user = input.readLine();
+                    System.out.println("Soy el server y me llego:" + user);
+                    new Thread(new ClientHandler(clientSocket, user)).start(); // como cojones sacamos el user? podemos mandar un mensaje default
+                }
+            } catch (IOException e) {
+                System.err.println("Error en el servidor: " + e.getMessage());
             }
-        } catch (IOException e) {
-            System.err.println("Error en el servidor: " + e.getMessage());
-        }
+        }).start();
     }
     
     public static void main(String[] args) {

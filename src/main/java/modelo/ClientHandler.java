@@ -33,9 +33,10 @@ public class ClientHandler implements Runnable{
         while (socket.isConnected()){
             try{
                 mensaje = inputStream.readLine();
-                String[] partes = mensaje.split(";", 3);
-                String[] datos = partes[0].split(":",3); //datos[0]=nombre / datos[1]=ip / datos[2]=puerto
-                enviaMensaje(datos[0], partes[1]); //TENEMOS QUE MANDAR EL RECEPTOR EN EL MENSAJE
+                System.out.println("[ClientHandler] Me llego el mensaje: "+mensaje);
+                String[] partes = mensaje.split(";", 4);
+                String[] datos = partes[0].split(":", 3); //datos[0]=nombre / datos[1]=ip / datos[2]=puerto
+                enviaMensaje(partes[3], mensaje); //TENEMOS QUE MANDAR EL RECEPTOR EN EL MENSAJE
             }
             catch(IOException e){
                 cierraConexion(socket, inputStream, outputStream);
@@ -46,9 +47,11 @@ public class ClientHandler implements Runnable{
     }
 
     private void enviaMensaje(String receptor, String mensaje) { //MANDAR EL RECEPTOR EN EL MENSAJE
+        System.out.println("Receptor: "+receptor+" Mensaje: "+mensaje);
         for (ClientHandler c : clientHandlers) {
             try {
-                if (c.user.equals(receptor)){ // Faltaria implementar que guarde el mensaje si el receptor no esta conectado
+                System.out.println("[ClientHandler]: Nombre de cliente:"+c.user);
+                if (c.user.equals(receptor) && !c.user.equals(user)){ // Faltaria implementar que guarde el mensaje si el receptor no esta conectado
                     c.outputStream.println(mensaje); 
                 }   
             }
