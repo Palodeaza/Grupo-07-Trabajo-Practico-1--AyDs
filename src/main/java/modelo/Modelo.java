@@ -52,7 +52,7 @@ private Controlador controlador;
             }
         }
     }
-
+/*
     public void iniciarServidor(int puerto) {
         new Thread(() -> {
             try {
@@ -66,7 +66,7 @@ private Controlador controlador;
             }
         }).start();
     }
-
+*/
     public boolean agregarContacto(String nombre, String ip, int puerto) {
         for (Contacto c: contactos){
             if (c.getNombre().equalsIgnoreCase(nombre) || (c.getIp().equalsIgnoreCase(ip) && (c.getPuerto() == puerto))){
@@ -119,14 +119,13 @@ private Controlador controlador;
     public void iniciarConexionCliente(String nombre, String ip, int puerto) {
         new Thread(() -> {
             try {
-                Socket socket = new Socket(ip, puerto);                
+                Socket socket = new Socket("localhost", 3333); //se crea el socket del servidor               
                 conexionesActivas.put(nombre, socket);
                 controlador.refreshConversaciones();
                 controlador.getInitView().getChatList().setSelectedValue(nombre, true);
                 PrintWriter outputStream = new PrintWriter(socket.getOutputStream(), true); 
-                BufferedReader inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 flujosSalida.put(nombre, outputStream);
-                new Thread(new ClientHandler(socket, nombre)).start();
+                new Thread(new MessageHandler(socket, nombre)).start();
             } catch (IOException e) {
                 System.err.println("Error al conectar con el contacto: " + e.getMessage()); 
                 controlador.mostrarCartelErrorConexion();
@@ -166,17 +165,17 @@ private Controlador controlador;
         }
     }
 
-    private class ClientHandler implements Runnable {
+    private class MessageHandler implements Runnable {
         private Socket socket;
         private BufferedReader inputStream;
         private PrintWriter outputStream;
         private String nombreCliente;
 
-        public ClientHandler(Socket socket, String nombre) {
+        public MessageHandler(Socket socket, String nombre) {
             this.socket = socket;
             this.nombreCliente = nombre;
         }
-        public ClientHandler(Socket socket) {
+        public MessageHandler(Socket socket) {
             this.socket = socket;
         }
         @Override
@@ -226,7 +225,6 @@ private Controlador controlador;
                 cerrarConexion(nombreCliente);
             } finally {
                 if (nombreCliente != null) { 
-                    //System.out.println("CIERRO CONEXION"); NO ERA NECESARIO ACA ???
                     //cerrarConexion(nombreCliente);
                 }
             }

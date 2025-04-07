@@ -103,7 +103,7 @@ public class Controlador {
                 this.usuarioActual = usuario;
                 this.puertoActual = puerto;
 
-                modelo.iniciarServidor(puerto);
+                //modelo.iniciarServidor(puerto);
                 Point posicionActual = loginView.getLocation();
                 loginView.setVisible(false);
                 initView.setLocation(posicionActual);
@@ -154,7 +154,7 @@ public class Controlador {
     }
     
     public void mostrarCartelErrorConexion(){
-        JOptionPane.showMessageDialog(chatView, "Contacto desconectado.");
+        JOptionPane.showMessageDialog(chatView, "Servidor desconectado.");
     }
 
     private void iniciarChatConSeleccion() {
