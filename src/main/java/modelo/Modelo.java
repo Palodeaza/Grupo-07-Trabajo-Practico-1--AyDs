@@ -195,6 +195,9 @@ private Socket socket;
                 outputStream = new PrintWriter(socket.getOutputStream(), true); 
 
                 String mensajeInicial = inputStream.readLine();
+                if (mensajeInicial == null){
+                    throw new IOException (); //DA null cuando me cierran el socket por ser duplicado el nickname
+                }
                 System.out.println("en el MessageHandler de Modelo, msjInicial: "+mensajeInicial);
                 String[] partes = mensajeInicial.split(";", 4);
                 String[] datos = partes[0].split(":", 3); //datos[0]=nombre / datos[1]=ip / datos[2]=puerto
@@ -233,7 +236,7 @@ private Socket socket;
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-                System.err.println("Error en la conexión con el cliente: " + e.getMessage());
+                System.err.println("Error en la conexión con el servidor: " + e.getMessage());
                 cerrarConexion(nombreCliente);
             } finally {
                 if (nombreCliente != null) { 

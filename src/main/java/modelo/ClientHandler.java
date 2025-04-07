@@ -8,13 +8,34 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 public class ClientHandler implements Runnable{
+
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public BufferedReader getInputStream() {
+        return inputStream;
+    }
+
+    public PrintWriter getOutputStream() {
+        return outputStream;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public Server getServidor() {
+        return servidor;
+    }
     private Socket socket;
     private BufferedReader inputStream;
     private PrintWriter outputStream;
     private String user;
-    private static ArrayList<ClientHandler> clientHandlers = new ArrayList<>();
+    private Server servidor;
+    public static ArrayList<ClientHandler> clientHandlers = new ArrayList<>();
     
-    public ClientHandler(Socket socket, String nombre){
+    public ClientHandler(Socket socket, String nombre, Server servidor){
         try {
             this.socket = socket;
             this.inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -39,7 +60,7 @@ public class ClientHandler implements Runnable{
                 enviaMensaje(partes[3], mensaje); //TENEMOS QUE MANDAR EL RECEPTOR EN EL MENSAJE
             }
             catch(IOException e){
-                cierraConexion(socket, inputStream, outputStream);
+                cierraConexion(socket, inputStream, outputStream); // aca ejecuta cuando se desconecta un cliente
                 e.printStackTrace();
                 break;
             }
