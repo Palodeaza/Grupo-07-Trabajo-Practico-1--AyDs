@@ -2,4 +2,8 @@
 /src/main/.vscode/
 /src/main/java/libs/
 /build.bat
-/run.bat
+/run-server.bat
+/run-client.bat
+/build.sh
+/run-server.sh
+/run-client.sh

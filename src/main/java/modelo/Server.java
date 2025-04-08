@@ -4,12 +4,13 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Server {
     private ServerSocket serverSocket;
     private ArrayList<String> dir = new ArrayList<>();
-    private ArrayList<String> dir_activos = new ArrayList<>();
-    private ArrayList<String> dir_inactivos = new ArrayList<>();
+    private Map<String, ArrayList<String>> mensajesGuardados = new HashMap<>();
     //asumo que tambien tendria que tener acceso al modelo, para poder enviarle los mensajes a los usuarios... o no?
     public Server(){
         try {
@@ -27,6 +28,7 @@ public class Server {
                     BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                     String user = input.readLine();
                     System.out.println("Soy el server y se conecto:" + user);
+                    //chequeaMensajesGuardados();
                     
                     for (ClientHandler c : ClientHandler.clientHandlers){ // veo si no estaba conectado todavia
                         if (c.getUser().equals(user)){
@@ -50,6 +52,14 @@ public class Server {
         }).start();
     }
     
+    public void guardaMensaje(String receptor, String mensaje){
+        System.out.println("bien 3");
+        mensajesGuardados.putIfAbsent(receptor, new ArrayList<>());
+        mensajesGuardados.get(receptor).add(mensaje);
+        System.out.println("Mensaje guardado para " + receptor + ": " + mensaje);
+        System.out.println(mensajesGuardados);
+    }
+
     public static void main(String[] args) {
         Server server = new Server();
         server.iniciarServidor();
