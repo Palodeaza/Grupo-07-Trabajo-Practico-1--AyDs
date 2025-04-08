@@ -28,7 +28,6 @@ public class Server {
                     BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                     String user = input.readLine();
                     System.out.println("Soy el server y se conecto:" + user);
-                    //chequeaMensajesGuardados();
                     
                     for (ClientHandler c : ClientHandler.clientHandlers){ // veo si no estaba conectado todavia
                         if (c.getUser().equals(user)){
@@ -41,9 +40,13 @@ public class Server {
                     if (!(dir.contains(user))){ // si user no estaba en dir, lo agrego, se agrego por primera vez!
                         dir.add(user);
                     }
-                        
+                    
                     new Thread(new ClientHandler(clientSocket, user, this)).start(); // como cojones sacamos el user? podemos mandar un mensaje default
-
+                    
+                    if (mensajesGuardados.containsKey(user)){
+                        PrintWriter outputStream = new PrintWriter(clientSocket.getOutputStream(), true); 
+                        enviaMensajesGuardados(user, outputStream);
+                    }
                     }
                 
             } catch (IOException e) {
@@ -58,6 +61,13 @@ public class Server {
         mensajesGuardados.get(receptor).add(mensaje);
         System.out.println("Mensaje guardado para " + receptor + ": " + mensaje);
         System.out.println(mensajesGuardados);
+    }
+
+    private void enviaMensajesGuardados(String user, PrintWriter outputStream){
+        ArrayList<String> nuevosMensajes = mensajesGuardados.get(user);
+        for (String mensaje : nuevosMensajes)
+            outputStream.println(mensaje);
+        mensajesGuardados.remove(user);
     }
 
     public static void main(String[] args) {
