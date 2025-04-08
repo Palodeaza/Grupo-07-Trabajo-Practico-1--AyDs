@@ -1,24 +1,32 @@
 package vistas;
 
 import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import javax.swing.DefaultListModel;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.SwingUtilities;
 
 public class Init extends javax.swing.JFrame {
 
     public Init() {
         initComponents();
+        
         newContactButton = new AnimatedLabel("Nuevo Contacto");
         bg.add(newContactButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 440, 130, 60));
-
         newConvButton = new AnimatedLabel("Nuevo Chat");
         bg.add(newConvButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 440, 130, 60));
-
         sendMsgTxtButton = new AnimatedLabel("Enviar");
         bg.add(sendMsgTxtButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 440, 90, 60));
+        
+        msgScrollPane.getVerticalScrollBar().setUnitIncrement(20);
         DefaultListModel<String> modeloConversaciones = new DefaultListModel<>();
-        DefaultListModel<String> mensajesList = new DefaultListModel<>();
-        chatList.setModel(modeloConversaciones); // Configurar modelo dinámico
+        chatList.setModel(modeloConversaciones); 
         chatList.setCellRenderer(new ConversacionRenderer());
         chatList.setFixedCellHeight(30);
         chatList.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
@@ -41,6 +49,22 @@ public class Init extends javax.swing.JFrame {
                 selectedContactLabel.setText(sel != null ? "  " + sel : "");
             }
         });
+        msgTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                if (msgTextField.getText().trim().isEmpty()) {
+                    msgTextField.setText("  Mensaje...");
+                    msgTextField.setForeground(Color.GRAY);
+                }
+            }
+            @Override
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                if (msgTextField.getText().trim().equals("Mensaje...") || msgTextField.getText().trim().isEmpty()) {
+                    msgTextField.setText("  ");
+                    msgTextField.setForeground(Color.BLACK);
+                }
+            }
+        });
     }
 
     /**
@@ -52,6 +76,7 @@ public class Init extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jInternalFrame1 = new javax.swing.JInternalFrame();
         bg = new javax.swing.JPanel();
         msgTextField = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -62,6 +87,19 @@ public class Init extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
+
+        jInternalFrame1.setVisible(true);
+
+        javax.swing.GroupLayout jInternalFrame1Layout = new javax.swing.GroupLayout(jInternalFrame1.getContentPane());
+        jInternalFrame1.getContentPane().setLayout(jInternalFrame1Layout);
+        jInternalFrame1Layout.setHorizontalGroup(
+            jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jInternalFrame1Layout.setVerticalGroup(
+            jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -88,6 +126,8 @@ public class Init extends javax.swing.JFrame {
         jScrollPane1.setViewportView(chatList);
 
         bg.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 90, 260, 350));
+
+        msgScrollPane.setAutoscrolls(true);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -119,13 +159,15 @@ public class Init extends javax.swing.JFrame {
         jLabel1.setText("jLabel1");
         jLabel1.setBorder(javax.swing.BorderFactory.createCompoundBorder());
         jLabel1.setOpaque(true);
-        bg.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -10, 700, 450));
+        bg.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 700, 440));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(bg, javax.swing.GroupLayout.PREFERRED_SIZE, 700, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(bg, javax.swing.GroupLayout.PREFERRED_SIZE, 700, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -142,6 +184,14 @@ public class Init extends javax.swing.JFrame {
             System.currentTimeMillis(),
             0, 0, 0, 1, false
         ));
+
+        msgTextField.setText("  ");
+
+        SwingUtilities.invokeLater(() -> {
+            if (!msgTextField.requestFocusInWindow()) {
+                msgTextField.requestFocus();
+            }
+        });
     }//GEN-LAST:event_msgTextFieldActionPerformed
 
     private void msgTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_msgTextFieldMouseClicked
@@ -189,6 +239,7 @@ public class Init extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel bg;
     private javax.swing.JList<String> chatList;
+    private javax.swing.JInternalFrame jInternalFrame1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -247,13 +298,63 @@ public class Init extends javax.swing.JFrame {
         return jPanel1;
     }
 
-    public void actualizaChats(List<String> listaConexiones) {
-    DefaultListModel<String> modeloConversaciones = (DefaultListModel<String>) chatList.getModel();
-    modeloConversaciones.clear(); // Limpiar la lista actual
-    for (String conexion : listaConexiones) {
-        modeloConversaciones.addElement(conexion); // Agregar nuevas conversaciones
+    public void addChatBubble(String texto, String hora, boolean esPropio) {
+
+        JLabel mensajeLabel = new JLabel("<html><body style='width:200px; margin:2px; padding:2px;'>"
+                                         + texto + "</body></html>");
+        mensajeLabel.setForeground(Color.WHITE);
+        mensajeLabel.setFont(new Font("Roboto", Font.PLAIN, 14));
+
+        JLabel horaLabel = new JLabel(hora);
+        horaLabel.setForeground(Color.GRAY);
+        horaLabel.setFont(new Font("Roboto", Font.ITALIC, 10));
+        horaLabel.setVisible(false);
+
+        RoundedPanel bubblePanel = new RoundedPanel(15, new Color(0, 0, 102));
+        bubblePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 2));
+        bubblePanel.add(mensajeLabel);
+        bubblePanel.setOpaque(false);
+
+        bubblePanel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                horaLabel.setVisible(true);
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                horaLabel.setVisible(false);
+            }
+        });
+
+        JPanel wrapper = new JPanel(new FlowLayout(
+                esPropio ? FlowLayout.RIGHT : FlowLayout.LEFT,
+                5, 2));
+        wrapper.setOpaque(false);
+        if (esPropio) {
+            wrapper.add(horaLabel);
+            wrapper.add(bubblePanel);
+        } else {
+            wrapper.add(bubblePanel);
+            wrapper.add(horaLabel);
+        }
+
+        getChatPanel().add(wrapper);
+        getChatPanel().revalidate();
+        getChatPanel().repaint();
+
+        SwingUtilities.invokeLater(() -> {
+            JScrollBar v = getMsgScrollPane().getVerticalScrollBar();
+            v.setValue(v.getMaximum());
+        });
     }
-    chatList.revalidate(); // Vuelve a validar la lista
-    chatList.repaint(); // Redibuja la lista
+    
+    public void actualizaChats(List<String> listaConexiones) {
+        DefaultListModel<String> modeloConversaciones = (DefaultListModel<String>) chatList.getModel();
+        modeloConversaciones.clear(); // Limpiar la lista actual
+        for (String conexion : listaConexiones) {
+            modeloConversaciones.addElement(conexion); // Agregar nuevas conversaciones
+        }
+        chatList.revalidate(); // Vuelve a validar la lista
+        chatList.repaint(); // Redibuja la lista
     }
 }

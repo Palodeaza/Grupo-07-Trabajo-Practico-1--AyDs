@@ -11,7 +11,7 @@ public class Server {
     private ServerSocket serverSocket;
     private ArrayList<String> dir = new ArrayList<>();
     private Map<String, ArrayList<String>> mensajesGuardados = new HashMap<>();
-    //asumo que tambien tendria que tener acceso al modelo, para poder enviarle los mensajes a los usuarios... o no?
+    
     public Server(){
         try {
             serverSocket = new ServerSocket(3333);
@@ -24,7 +24,7 @@ public class Server {
         new Thread(() -> {
             try {
                 while (true) {
-                    Socket clientSocket = serverSocket.accept(); // por cada cliente que se quiera conectar, le doy un socket
+                    Socket clientSocket = serverSocket.accept(); 
                     BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                     String user = input.readLine();
                     System.out.println("Soy el server y se conecto:" + user);
@@ -41,14 +41,13 @@ public class Server {
                         dir.add(user);
                     }
                     
-                    new Thread(new ClientHandler(clientSocket, user, this)).start(); // como cojones sacamos el user? podemos mandar un mensaje default
+                    new Thread(new ClientHandler(clientSocket, user, this)).start();
                     
                     if (mensajesGuardados.containsKey(user)){
                         PrintWriter outputStream = new PrintWriter(clientSocket.getOutputStream(), true); 
                         enviaMensajesGuardados(user, outputStream);
                     }
-                    }
-                
+                }
             } catch (IOException e) {
                 System.err.println("Error en el servidor: " + e.getMessage());
             }
@@ -77,5 +76,6 @@ public class Server {
     public static void main(String[] args) {
         Server server = new Server();
         server.iniciarServidor();
+        System.out.println("Servidor iniciado");
     }
 }

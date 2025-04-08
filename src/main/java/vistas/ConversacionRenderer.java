@@ -67,7 +67,7 @@ public class ConversacionRenderer extends JPanel implements ListCellRenderer<Str
 
         int cantidadNoLeidos = mensajesNoLeidos.getOrDefault(value, 0);
         if (isSelected) {
-            mensajesNoLeidos.put(value, 0); // Marcar como leídos
+            mensajesNoLeidos.put(value, 0); 
             cantidadNoLeidos = 0;
         }
 
@@ -78,7 +78,6 @@ public class ConversacionRenderer extends JPanel implements ListCellRenderer<Str
             contadorMensajes.setVisible(false);
         }
 
-        // Colores de fondo
         if (isSelected) {
             setBackground(new Color(0, 102, 204));
         } else if (index == hoveredIndex) {

@@ -9,25 +9,6 @@ import java.util.ArrayList;
 
 public class ClientHandler implements Runnable{
 
-    public Socket getSocket() {
-        return socket;
-    }
-
-    public BufferedReader getInputStream() {
-        return inputStream;
-    }
-
-    public PrintWriter getOutputStream() {
-        return outputStream;
-    }
-
-    public String getUser() {
-        return user;
-    }
-
-    public Server getServidor() {
-        return servidor;
-    }
     private Socket socket;
     private BufferedReader inputStream;
     private PrintWriter outputStream;
@@ -70,7 +51,7 @@ public class ClientHandler implements Runnable{
                 String[] datos = partes[0].split(":", 3); //datos[0]=nombre / datos[1]= ip / datos[2] = puerto
                 System.out.println(partes[3]+" esta online?: "+usuarioEstaOnline(datos[1]));
                 if (usuarioEstaOnline(partes[3]))
-                    enviaMensaje(partes[3], mensaje); //TENEMOS QUE MANDAR EL RECEPTOR EN EL MENSAJE
+                    enviaMensaje(partes[3], mensaje); 
                     else{
                         System.out.println("bien 2");
                         servidor.guardaMensaje(partes[3], mensaje);
@@ -93,7 +74,7 @@ public class ClientHandler implements Runnable{
         return false;
     }
 
-    private void enviaMensaje(String receptor, String mensaje) { //MANDAR EL RECEPTOR EN EL MENSAJE
+    private void enviaMensaje(String receptor, String mensaje) {
         System.out.println("Receptor: "+receptor+" Mensaje: "+mensaje);
         for (ClientHandler c : clientHandlers) {
             try {
@@ -128,5 +109,25 @@ public class ClientHandler implements Runnable{
         catch(Exception e){
             e.printStackTrace();
         }
+    }
+    
+        public Socket getSocket() {
+        return socket;
+    }
+
+    public BufferedReader getInputStream() {
+        return inputStream;
+    }
+
+    public PrintWriter getOutputStream() {
+        return outputStream;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public Server getServidor() {
+        return servidor;
     }
 }

@@ -10,35 +10,36 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.swing.JOptionPane;
 
 public class Modelo {
-private ServerSocket serverSocket;
-private ArrayList<Contacto> contactos = new ArrayList<>();
-private Map<String, Socket> conexionesActivas = new HashMap<>();
-private Map<String, PrintWriter> flujosSalida = new HashMap<>();
-private Map<String, List<String>> mensajes = new HashMap<>(); 
-private MensajeListener mensajeListener;
-private Controlador controlador;
-private Socket socket;
-
-    public interface MensajeListener {
-        void onMensajeRecibido(String mensaje); 
-    }
+    
+    private ArrayList<Contacto> contactos = new ArrayList<>();
+    private ArrayList<String> conexionesActivas = new ArrayList<>();
+    private Map<String, List<String>> mensajes = new HashMap<>(); 
+    private Controlador controlador;
+    private Socket socket;
+    private PrintWriter outputStream;
 
     public void setControlador(Controlador controlador){
         this.controlador = controlador;
     }
+   
+    public List<String> getListaConexiones() {
+        return this.conexionesActivas; // Devuelve solo los nombres de los contactos
+    }
+
+    public Map<String, List<String>> getMensajes() {
+        return this.mensajes;
+    }
     
-    public void setMensajeListener(MensajeListener listener) {
-        this.mensajeListener = listener;
+    public List<Contacto> getListaContactos() {
+        return this.contactos; // Devuelve solo los nombres de los contactos
     }
 
     public boolean validarCredenciales(String usuario, int puerto) {
         if (usuario.isEmpty() || puerto <= 0) {
             return false;
         }
-
         ServerSocket testSocket = null;
         try {
             testSocket = new ServerSocket(puerto);
@@ -53,21 +54,7 @@ private Socket socket;
             }
         }
     }
-/*
-    public void iniciarServidor(int puerto) {
-        new Thread(() -> {
-            try {
-                serverSocket = new ServerSocket(puerto);
-                while (true) {
-                    Socket clientSocket = serverSocket.accept(); // por cada cliente que se quiera conectar, le doy un socket
-                    new Thread(new ClientHandler(clientSocket)).start();
-                }
-            } catch (IOException e) {
-                System.err.println("Error en el servidor: " + e.getMessage());
-            }
-        }).start();
-    }
-*/
+
     public boolean agregarContacto(String nombre, String ip, int puerto) {
         for (Contacto c: contactos){
             if (c.getNombre().equalsIgnoreCase(nombre) || (c.getIp().equalsIgnoreCase(ip) && (c.getPuerto() == puerto))){
@@ -78,35 +65,6 @@ private Socket socket;
         contactos.add(c);
         return true;
     }
-
-    public String[] obtenerDatosContacto(String contactoSeleccionado) {
-        for (Contacto c : contactos) {
-            if (c.getNombre().equalsIgnoreCase(contactoSeleccionado))
-                return new String[]{c.getIp(), String.valueOf(c.getPuerto())};
-            }
-        return null;
-    }
-
-    public List<String> getListaConexiones() {
-        return new ArrayList<>(conexionesActivas.keySet()); // Devuelve solo los nombres de los contactos
-    }
-
-    public List<Contacto> getListaContactos() {
-        return this.contactos; // Devuelve solo los nombres de los contactos
-    }
-
-    public boolean conversacionActiva(String contacto) {
-        return conexionesActivas.containsKey(contacto);
-    }
-    
-    public String obtenerIPLocal() {
-        try {
-            return InetAddress.getLocalHost().getHostAddress();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-            return "Desconocido";
-        }
-    }
     
     public String buscaContacto(String ip, String puerto) {
         for (Contacto contacto : this.contactos) {
@@ -115,6 +73,23 @@ private Socket socket;
             }
         }
         return null;
+    }
+    
+    public String[] obtenerDatosContacto(String contactoSeleccionado) {
+        for (Contacto c : contactos) {
+            if (c.getNombre().equalsIgnoreCase(contactoSeleccionado))
+                return new String[]{c.getIp(), String.valueOf(c.getPuerto())};
+            }
+        return null;
+    }
+
+    public String obtenerIPLocal() {
+        try {
+            return InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+            return "Desconocido";
+        }
     }
 
     public void usuarioOnline(String emisor) {
@@ -132,11 +107,10 @@ private Socket socket;
 
     public void iniciarConexionCliente(String nombre, String ip, int puerto, String emisor) {
         try {              
-            PrintWriter outputStream = new PrintWriter(socket.getOutputStream(), true); 
-            conexionesActivas.put(nombre, socket);
+            this.outputStream = new PrintWriter(socket.getOutputStream(), true); 
+            conexionesActivas.add(nombre);
             controlador.refreshConversaciones();
             controlador.getInitView().getChatList().setSelectedValue(nombre, true);
-            flujosSalida.put(nombre, outputStream);
         } catch (IOException e) {
             System.err.println("Error al conectar con el contacto: " + e.getMessage()); 
             controlador.mostrarCartelErrorConexion();
@@ -144,7 +118,6 @@ private Socket socket;
     }
 
     public void enviarMensaje(String contacto, String mensaje) {
-        PrintWriter outputStream = flujosSalida.get(contacto);
         if (outputStream != null) {
             try {
                 outputStream.println(mensaje);
@@ -157,20 +130,15 @@ private Socket socket;
         }
     }
 
-    public void cerrarConexion(String contacto) {
+    public void cerrarConexion(String contacto) { // metodo descontinuado
         try {
-            if (flujosSalida.containsKey(contacto)) {
-                flujosSalida.get(contacto).close();
-                flujosSalida.remove(contacto);
-            }
-            if (conexionesActivas.containsKey(contacto)) {
-                conexionesActivas.get(contacto).close();
+            if (conexionesActivas.contains(contacto)) {
                 conexionesActivas.remove(contacto);
             }
             controlador.mostrarCartelErrorConexion();
             controlador.borraChat(contacto);
             controlador.refreshConversaciones();
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.err.println("Error al cerrar conexion: " + e.getMessage());
         }
     }
@@ -206,22 +174,23 @@ private Socket socket;
                         System.out.println("me llego mensaje de: " + datos[0]+" "+datos[1]);
                         nombreCliente = buscaContacto(datos[1], datos[2]);
                         System.out.println("Su nombre es: " + nombreCliente);
-                    if (nombreCliente==null){// si me llega mensaje desconocido, lo agendo                  
-                        agregarContacto(datos[0],datos[1],Integer.parseInt(datos[2]));
-                        controlador.actualizaListaContactos();
-                        nombreCliente = datos[0];
-                    }
-                    if (!conversacionActiva(nombreCliente)) {
-                        conexionesActivas.put(nombreCliente, socket);
-                        flujosSalida.put(nombreCliente, outputStream);
-                        controlador.refreshConversaciones();
-                    }
-                mensajes.computeIfAbsent(nombreCliente, k -> new ArrayList<>()).add(mensaje);
-                controlador.mostrarMensajeEnChat2(mensaje);
+                        
+                        if (nombreCliente==null){// si me llega mensaje desconocido, lo agendo                  
+                            agregarContacto(datos[0],datos[1],Integer.parseInt(datos[2]));
+                            controlador.actualizaListaContactos();
+                            nombreCliente = datos[0];
+                        }
+                        if (!conexionesActivas.contains(nombreCliente)) {
+                            conexionesActivas.add(nombreCliente);
+                            controlador.refreshConversaciones();
+                        }
+                        
+                        mensajes.computeIfAbsent(nombreCliente, k -> new ArrayList<>()).add(mensaje);
+                        controlador.mostrarMensajeEnChat(mensaje);
                     } catch (IOException e) {
                         e.printStackTrace();
                         System.err.println("Error en la recepción del mensaje: " + e.getMessage());
-                        cerrarConexion(nombreCliente);
+                        cerrarConexion(nombreCliente); // Esto ya no deberia de cerrar la conexion de cliente, sino que deberia de cerrar la conexion con el server o quedarse esperando a que vuelva a abrirse
                         break;
                     }
                 }
@@ -229,16 +198,7 @@ private Socket socket;
                 e.printStackTrace();
                 System.err.println("Error en la conexión con el servidor: " + e.getMessage());
                 cerrarConexion(nombreCliente);
-            } finally {
-                if (nombreCliente != null) { 
-                    //cerrarConexion(nombreCliente);
-                }
             }
         }
-    }
-
-
-    public Map<String, List<String>> getMensajes() {
-        return this.mensajes;
     }
 }

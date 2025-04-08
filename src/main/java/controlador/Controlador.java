@@ -1,25 +1,18 @@
 package controlador;
 
 import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.Point;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import modelo.Modelo;
 import vistas.ConversacionRenderer;
 import vistas.Init;
 import vistas.Login;
-import vistas.RoundedPanel;
 import vistas.newChat;
 import vistas.newContact;
 
@@ -39,9 +32,8 @@ public class Controlador {
         this.contactView = contact;
         this.chatView = chat;
         this.modelo = modelo;
-        this.modelo.setMensajeListener(mensaje -> mostrarMensajeEnChat2(mensaje));
+        
         this.loginView.getLoginButton().addActionListener(e -> autenticarUsuario());
-
         this.contactView.getNewContactButton().addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -88,7 +80,7 @@ public class Controlador {
         });
     }
 
-    private void autenticarUsuario() {
+    public void autenticarUsuario() {
         String usuario = loginView.getUserTxt().getText().trim();
         String puertoStr = loginView.getPortTxt().getText().trim();
 
@@ -115,10 +107,8 @@ public class Controlador {
             JOptionPane.showMessageDialog(loginView, "El puerto debe ser un número válido.");
         }
     }
-    public void actualizaListaContactos(){
-        this.chatView.actualizarListaContactos(modelo.getListaContactos());
-    }
-    private void agregarNuevoContacto() {
+    
+    public void agregarNuevoContacto() {
         String nombre = contactView.getNameTxtField().getText().trim();
         String ip = contactView.getIpTxtField().getText().trim();
         String puertoStr = contactView.getPortTxtField().getText().trim();
@@ -153,14 +143,14 @@ public class Controlador {
         }
     }
     
-    public void mostrarCartelErrorConexion(){
-        JOptionPane.showMessageDialog(chatView, "Servidor desconectado.");
+    public void actualizaListaContactos(){
+        this.chatView.actualizarListaContactos(modelo.getListaContactos());
     }
 
-    private void iniciarChatConSeleccion() {
+    public void iniciarChatConSeleccion() {
         String contactoSeleccionado = chatView.getContactList().getSelectedValue();
         if (contactoSeleccionado != null) {
-            if (!modelo.conversacionActiva(contactoSeleccionado)) {
+            if (!modelo.getListaConexiones().contains(contactoSeleccionado)) {
                 String[] datosContacto = modelo.obtenerDatosContacto(contactoSeleccionado);
                 if (datosContacto != null) {
                     String ip = datosContacto[0];
@@ -177,7 +167,7 @@ public class Controlador {
         chatView.getContactList().clearSelection();
     }
 
-    private void enviarMensaje() {
+    public void enviarMensaje() {
         String mensajeTexto = getInitView().getMsgTextField().getText().trim();
         String receptor = getInitView().getChatList().getSelectedValue();
 
@@ -199,7 +189,7 @@ public class Controlador {
 
         modelo.getMensajes().computeIfAbsent(receptor, k -> new java.util.ArrayList<>()).add(mensajeFormateado);
         modelo.enviarMensaje(receptor, mensajeFormateado);
-        mostrarMensajeEnChat2(mensajeFormateado);
+        mostrarMensajeEnChat(mensajeFormateado);
         getInitView().getMsgTextField().setText("  Mensaje...");
         getInitView().getMsgTextField().setForeground(new Color(204, 204, 204));
         SwingUtilities.invokeLater(() -> {
@@ -211,15 +201,15 @@ public class Controlador {
     public void borraChat(String contacto) {
         String receptoractual = getInitView().getChatList().getSelectedValue();
         if (!(receptoractual == null)){
-        if (receptoractual.equals(contacto)){
-        getInitView().getChatPanel().removeAll();
-        getInitView().getChatPanel().revalidate();
-        getInitView().getChatPanel().repaint();
-        }
+            if (receptoractual.equals(contacto)){
+                getInitView().getChatPanel().removeAll();
+                getInitView().getChatPanel().revalidate();
+                getInitView().getChatPanel().repaint();
+            }
         }
     }
 
-    public void mostrarMensajeEnChat2(String mensaje) {
+    public void mostrarMensajeEnChat(String mensaje) {
         String receptoractual = getInitView().getChatList().getSelectedValue();
         String[] partes = mensaje.split(";", 4);
         if (partes.length < 3) {
@@ -235,53 +225,10 @@ public class Controlador {
         }
         String remitente = modelo.buscaContacto(datos[1], datos[2]); // método que retorna el nombre según ip y puerto
         boolean esMensajePropio = datos[1].equals(modelo.obtenerIPLocal()) && datos[2].equals(String.valueOf(puertoActual));
+        
         if ((receptoractual != null && receptoractual.equals(remitente) )|| esMensajePropio) {
-
-        javax.swing.SwingUtilities.invokeLater(() -> {
-            JLabel mensajeLabel = new JLabel("<html><body style='width:200px; margin:2px; padding:2px;'>" 
-                                             + mensajeTexto + "</body></html>");
-            mensajeLabel.setForeground(Color.WHITE);
-            mensajeLabel.setFont(new Font("Roboto", Font.PLAIN, 14));
-
-            JLabel horaLabel = new JLabel(horaMensaje);
-            horaLabel.setForeground(Color.GRAY);
-            horaLabel.setFont(new Font("Roboto", Font.ITALIC, 10));
-            horaLabel.setVisible(false);
-
-            RoundedPanel bubblePanel = new RoundedPanel(15, new Color(0, 0, 102));
-            bubblePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 2));
-            bubblePanel.add(mensajeLabel);
-            bubblePanel.setOpaque(false);
-
-            bubblePanel.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseEntered(MouseEvent e) {
-                    horaLabel.setVisible(true);
-                }
-                @Override
-                public void mouseExited(MouseEvent e) {
-                    horaLabel.setVisible(false);
-                }
-            });
-
-            JPanel wrapper = new JPanel(new FlowLayout(
-                    esMensajePropio ? FlowLayout.RIGHT : FlowLayout.LEFT, 
-                    5, 2));
-            wrapper.setOpaque(false);
-
-            if (esMensajePropio) {
-                wrapper.add(horaLabel);
-                wrapper.add(bubblePanel);
-            } else {
-                wrapper.add(bubblePanel);
-                wrapper.add(horaLabel);
-            }
-
-            getInitView().getChatPanel().add(wrapper);
-            getInitView().getChatPanel().revalidate();
-            getInitView().getChatPanel().repaint();
-        });
-        }else{
+            initView.addChatBubble(mensajeTexto, horaMensaje, esMensajePropio);
+        } else {
             ((ConversacionRenderer) initView.getChatList().getCellRenderer()).setMensajeNoLeido(remitente, true);//pone el puntito d msj sin leer
             initView.getChatList().repaint();
         }
@@ -297,8 +244,8 @@ public class Controlador {
             return;
         }
         for (String mensaje : listamensajes) {
-            this.mostrarMensajeEnChat2(mensaje);
-            }
+            this.mostrarMensajeEnChat(mensaje);
+        }
         getInitView().getChatPanel().revalidate();
         getInitView().getChatPanel().repaint();
     }
@@ -309,5 +256,9 @@ public class Controlador {
 
     public Init getInitView() {
         return initView;
+    }
+        
+    public void mostrarCartelErrorConexion(){
+        JOptionPane.showMessageDialog(chatView, "Servidor desconectado.");
     }
 }
