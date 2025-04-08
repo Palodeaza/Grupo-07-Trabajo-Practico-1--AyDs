@@ -47,11 +47,11 @@ public class ClientHandler implements Runnable{
                     outputStream.println(dir);
                 }
                 else{
-                String[] partes = mensaje.split(";", 4);
-                String[] datos = partes[0].split(":", 3); //datos[0]=nombre / datos[1]= ip / datos[2] = puerto
-                System.out.println(partes[3]+" esta online?: "+usuarioEstaOnline(datos[1]));
-                if (usuarioEstaOnline(partes[3]))
-                    enviaMensaje(partes[3], mensaje); 
+                    String[] partes = mensaje.split(";", 4);
+                    String[] datos = partes[0].split(":", 3); //datos[0]=nombre / datos[1]= ip / datos[2] = puerto
+                    System.out.println(partes[3]+" esta online?: "+usuarioEstaOnline(datos[1]));
+                    if (usuarioEstaOnline(partes[3]))
+                        enviaMensaje(partes[3], mensaje); 
                     else{
                         System.out.println("bien 2");
                         servidor.guardaMensaje(partes[3], mensaje);

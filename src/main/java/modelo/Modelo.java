@@ -94,9 +94,8 @@ public class Modelo {
 
     public void usuarioOnline(String emisor) {
         try {
-            Socket socket = new Socket("localhost", 3333); //se crea el socket hacia el servidor
-            this.socket = socket;               
-            PrintWriter outputStream = new PrintWriter(socket.getOutputStream(), true); 
+            this.socket = new Socket("localhost", 3333);               
+            this.outputStream = new PrintWriter(socket.getOutputStream(), true); 
             outputStream.println(emisor);
             new Thread(new MessageHandler(socket)).start();
         } catch (IOException e) {
@@ -107,20 +106,19 @@ public class Modelo {
 
     public void iniciarConexionCliente(String nombre, String ip, int puerto, String emisor) {
         try {              
-            this.outputStream = new PrintWriter(socket.getOutputStream(), true); 
             conexionesActivas.add(nombre);
             controlador.refreshConversaciones();
             controlador.getInitView().getChatList().setSelectedValue(nombre, true);
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.err.println("Error al conectar con el contacto: " + e.getMessage()); 
             controlador.mostrarCartelErrorConexion();
         }
     }
 
     public void enviarMensaje(String contacto, String mensaje) {
-        if (outputStream != null) {
+        if (this.outputStream != null) {
             try {
-                outputStream.println(mensaje);
+                this.outputStream.println(mensaje);
             } catch (Exception e) {
                 System.err.println("Error al enviar mensaje: " + e.getMessage());
                 cerrarConexion(contacto);

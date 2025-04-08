@@ -225,13 +225,16 @@ public class Controlador {
         }
         String remitente = modelo.buscaContacto(datos[1], datos[2]); // método que retorna el nombre según ip y puerto
         boolean esMensajePropio = datos[1].equals(modelo.obtenerIPLocal()) && datos[2].equals(String.valueOf(puertoActual));
+        ConversacionRenderer renderer = (ConversacionRenderer) initView.getChatList().getCellRenderer();
+
+        renderer.setUltimoMensaje(remitente, mensajeTexto, horaMensaje);// actualizo ultimo mensaje y hora
         
-        if ((receptoractual != null && receptoractual.equals(remitente) )|| esMensajePropio) {
+        if ((receptoractual != null && receptoractual.equals(remitente)) || esMensajePropio) {
             initView.addChatBubble(mensajeTexto, horaMensaje, esMensajePropio);
         } else {
-            ((ConversacionRenderer) initView.getChatList().getCellRenderer()).setMensajeNoLeido(remitente, true);//pone el puntito d msj sin leer
-            initView.getChatList().repaint();
+            renderer.setMensajeNoLeido(remitente, true);
         }
+        initView.getChatList().repaint();
     }
 
     public void actualizaChatPanel(String nombre) {
