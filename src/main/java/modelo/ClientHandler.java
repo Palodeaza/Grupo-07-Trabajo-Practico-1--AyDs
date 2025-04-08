@@ -61,15 +61,20 @@ public class ClientHandler implements Runnable{
                     cierraConexion(socket, inputStream, outputStream);
                     break;
                 }
+                if (mensaje.equals("getDir")){
+                    String dir = String.join(";", this.servidor.getDir()); // sale el dir asi-> marcos;palo;tomi
+                    outputStream.println(dir);
+                }
+                else{
                 String[] partes = mensaje.split(";", 4);
-                String[] datos = partes[0].split(":", 3); //datos[0]=nombre / datos[1]=ip / datos[2]=puerto
-
-                System.out.println(partes[3]+" esta online?: "+usuarioEstaOnline(partes[3]));
+                String[] datos = partes[0].split(":", 3); //datos[0]=nombre / datos[1]= ip / datos[2] = puerto
+                System.out.println(partes[3]+" esta online?: "+usuarioEstaOnline(datos[1]));
                 if (usuarioEstaOnline(partes[3]))
                     enviaMensaje(partes[3], mensaje); //TENEMOS QUE MANDAR EL RECEPTOR EN EL MENSAJE
-                else{
-                    System.out.println("bien 2");
-                    servidor.guardaMensaje(partes[3], mensaje);
+                    else{
+                        System.out.println("bien 2");
+                        servidor.guardaMensaje(partes[3], mensaje);
+                    } 
                 }
             }
             catch(IOException e){

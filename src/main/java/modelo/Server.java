@@ -69,6 +69,10 @@ public class Server {
             outputStream.println(mensaje);
         mensajesGuardados.remove(user);
     }
+    
+    public ArrayList<String> getDir(){
+        return dir;
+    }
 
     public static void main(String[] args) {
         Server server = new Server();

@@ -193,40 +193,31 @@ private Socket socket;
             try {
                 inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 outputStream = new PrintWriter(socket.getOutputStream(), true); 
-
-                String mensajeInicial = inputStream.readLine();
-                if (mensajeInicial == null){
-                    throw new IOException (); //DA null cuando me cierran el socket por ser duplicado el nickname
-                }
-                System.out.println("en el MessageHandler de Modelo, msjInicial: "+mensajeInicial);
-                String[] partes = mensajeInicial.split(";", 4);
-                String[] datos = partes[0].split(":", 3); //datos[0]=nombre / datos[1]=ip / datos[2]=puerto
-
-                nombreCliente = buscaContacto(datos[1], datos[2]);
-                if (nombreCliente==null){// si me llega mensaje desconocido, lo agendo                  
-                    agregarContacto(datos[0],datos[1],Integer.parseInt(datos[2]));
-                    controlador.actualizaListaContactos();
-                    nombreCliente = datos[0];
-                }
-                if (!conversacionActiva(nombreCliente)) {
-                    conexionesActivas.put(nombreCliente, socket);
-                    flujosSalida.put(nombreCliente, outputStream);
-                    controlador.refreshConversaciones();
-                }
-                mensajes.computeIfAbsent(nombreCliente, k -> new ArrayList<>()).add(mensajeInicial);
-                if (mensajeListener != null) {
-                    mensajeListener.onMensajeRecibido(mensajeInicial);
-                }
+                String[] partes;
+                String[] datos;
                 while (true) {
                     try {
                         String mensaje = inputStream.readLine();
                         if (mensaje == null) {
                             break;
                         }
-                        mensajes.computeIfAbsent(nombreCliente, k -> new ArrayList<>()).add(mensaje);
-                        if (mensajeListener != null) {
-                            mensajeListener.onMensajeRecibido(mensaje);
-                        }
+                        partes = mensaje.split(";", 4);
+                        datos = partes[0].split(":", 3);
+                        System.out.println("me llego mensaje de: " + datos[0]+" "+datos[1]);
+                        nombreCliente = buscaContacto(datos[1], datos[2]);
+                        System.out.println("Su nombre es: " + nombreCliente);
+                    if (nombreCliente==null){// si me llega mensaje desconocido, lo agendo                  
+                        agregarContacto(datos[0],datos[1],Integer.parseInt(datos[2]));
+                        controlador.actualizaListaContactos();
+                        nombreCliente = datos[0];
+                    }
+                    if (!conversacionActiva(nombreCliente)) {
+                        conexionesActivas.put(nombreCliente, socket);
+                        flujosSalida.put(nombreCliente, outputStream);
+                        controlador.refreshConversaciones();
+                    }
+                mensajes.computeIfAbsent(nombreCliente, k -> new ArrayList<>()).add(mensaje);
+                controlador.mostrarMensajeEnChat2(mensaje);
                     } catch (IOException e) {
                         e.printStackTrace();
                         System.err.println("Error en la recepción del mensaje: " + e.getMessage());

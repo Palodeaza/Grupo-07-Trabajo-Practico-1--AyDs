@@ -219,7 +219,7 @@ public class Controlador {
         }
     }
 
-    private void mostrarMensajeEnChat2(String mensaje) {
+    public void mostrarMensajeEnChat2(String mensaje) {
         String receptoractual = getInitView().getChatList().getSelectedValue();
         String[] partes = mensaje.split(";", 4);
         if (partes.length < 3) {
