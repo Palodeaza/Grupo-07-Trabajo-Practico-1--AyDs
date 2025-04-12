@@ -43,10 +43,10 @@ public class ClientHandler implements Runnable{
                     break;
                 }
                 if (mensaje.equals("getDir")){
-                    String dir = String.join(";", this.servidor.getDir()); // sale el dir asi-> marcos;palo;tomi
+                    String dir = String.join("+", this.servidor.getDir()); // sale el dir asi-> marcos;palo;tomi
                     outputStream.println(dir);
                 }
-                else{
+                else {
                     String[] partes = mensaje.split(";", 4);
                     String[] datos = partes[0].split(":", 3); //datos[0]=nombre / datos[1]= ip / datos[2] = puerto
                     System.out.println(partes[3]+" esta online?: "+usuarioEstaOnline(datos[1]));
@@ -80,11 +80,11 @@ public class ClientHandler implements Runnable{
             try {
                 System.out.println("[ClientHandler]: Nombre de cliente:"+c.user);
                 //if (c.user.equals(receptor) && !c.user.equals(user)){ // Faltaria implementar que guarde el mensaje si el receptor no esta conectado
-                if (c.user.equals(receptor)){
+                if (c.user.equalsIgnoreCase(receptor)){
                     c.outputStream.println(mensaje); 
                 }   
             }
-            catch(Exception e){//creo que aca iria el guardado del mensaje no enviado //este catch no funciona
+            catch(Exception e){//este catch no funciona
                 System.err.println("Error al enviar mensaje: " + e.getMessage());
                 cierraConexion(socket, inputStream, outputStream); 
             }

@@ -107,7 +107,7 @@ public class Controlador {
             JOptionPane.showMessageDialog(loginView, "El puerto debe ser un número válido.");
         }
     }
-    
+    /*
     public void agregarNuevoContacto() {
         String nombre = contactView.getNameTxtField().getText().trim();
         String ip = contactView.getIpTxtField().getText().trim();
@@ -142,7 +142,31 @@ public class Controlador {
             JOptionPane.showMessageDialog(contactView, "El puerto debe ser un numero válido.");
         }
     }
-    
+    */
+        public void agregarNuevoContacto() {
+        String nombre = contactView.getNameTxtField().getText().trim();
+
+        if (nombre.isEmpty()) {
+            JOptionPane.showMessageDialog(contactView, "El nombre de usuario es obligatorio.");
+            return;
+        }
+        /*
+        if (!modelo.checkDir(nombre)){
+            JOptionPane.showMessageDialog(contactView, "El contacto ingresado no existe.");
+            return;
+        }
+        */
+        if (modelo.agregarContacto(nombre)) {
+            JOptionPane.showMessageDialog(contactView, "Contacto agregado exitosamente.");
+            actualizaListaContactos();
+            contactView.setVisible(false);
+        } else {
+            JOptionPane.showMessageDialog(contactView, "El contacto ya existe.");
+        }
+        contactView.limpiarTextFields();
+
+    }
+        
     public void actualizaListaContactos(){
         this.chatView.actualizarListaContactos(modelo.getListaContactos());
     }

@@ -55,13 +55,13 @@ public class Modelo {
         }
     }
 
-    public boolean agregarContacto(String nombre, String ip, int puerto) {
+    public boolean agregarContacto(String nombre) {
         for (Contacto c: contactos){
-            if (c.getNombre().equalsIgnoreCase(nombre) || (c.getIp().equalsIgnoreCase(ip) && (c.getPuerto() == puerto))){
+            if (c.getNombre().equalsIgnoreCase(nombre)){
                 return false;
             }
         }
-        Contacto c = new Contacto(nombre,ip,puerto);
+        Contacto c = new Contacto(nombre,"localhost",3333);
         contactos.add(c);
         return true;
     }
@@ -140,6 +140,16 @@ public class Modelo {
             System.err.println("Error al cerrar conexion: " + e.getMessage());
         }
     }
+    
+    public void checkDir(String contacto) {
+        try {
+            BufferedReader inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            PrintWriter outputStream = new PrintWriter(socket.getOutputStream(), true);
+            outputStream.println("getDir");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
 
     private class MessageHandler implements Runnable {
         private Socket socket;
@@ -168,27 +178,27 @@ public class Modelo {
                             break;
                         }
                         partes = mensaje.split(";", 4);
-                        datos = partes[0].split(":", 3);
-                        System.out.println("me llego mensaje de: " + datos[0]+" "+datos[1]);
-                        nombreCliente = buscaContacto(datos[1], datos[2]);
-                        System.out.println("Su nombre es: " + nombreCliente);
-                        
-                        if (nombreCliente==null){// si me llega mensaje desconocido, lo agendo                  
-                            agregarContacto(datos[0],datos[1],Integer.parseInt(datos[2]));
-                            controlador.actualizaListaContactos();
-                            nombreCliente = datos[0];
+                        if (partes.length == 4){ 
+                            datos = partes[0].split(":", 3);
+                            System.out.println("me llego mensaje de: " + datos[0]+" "+datos[1]);
+                            nombreCliente = buscaContacto(datos[1], datos[2]);
+                            System.out.println("Su nombre es: " + nombreCliente);
+                            if (nombreCliente==null){// si me llega mensaje desconocido, lo agendo                  
+                                agregarContacto(datos[0]);
+                                controlador.actualizaListaContactos();
+                                nombreCliente = datos[0];
+                            }
+                            if (!conexionesActivas.contains(nombreCliente)) {
+                                conexionesActivas.add(nombreCliente);
+                                controlador.refreshConversaciones();
+                            }
+                            mensajes.computeIfAbsent(nombreCliente, k -> new ArrayList<>()).add(mensaje);
+                            controlador.mostrarMensajeEnChat(mensaje);  
                         }
-                        if (!conexionesActivas.contains(nombreCliente)) {
-                            conexionesActivas.add(nombreCliente);
-                            controlador.refreshConversaciones();
-                        }
-                        
-                        mensajes.computeIfAbsent(nombreCliente, k -> new ArrayList<>()).add(mensaje);
-                        controlador.mostrarMensajeEnChat(mensaje);
                     } catch (IOException e) {
                         e.printStackTrace();
                         System.err.println("Error en la recepción del mensaje: " + e.getMessage());
-                        cerrarConexion(nombreCliente); // Esto ya no deberia de cerrar la conexion de cliente, sino que deberia de cerrar la conexion con el server o quedarse esperando a que vuelva a abrirse
+                        //cerrarConexion(nombreCliente); // Esto ya no deberia de cerrar la conexion de cliente, sino que deberia de cerrar la conexion con el server o quedarse esperando a que vuelva a abrirse
                         break;
                     }
                 }

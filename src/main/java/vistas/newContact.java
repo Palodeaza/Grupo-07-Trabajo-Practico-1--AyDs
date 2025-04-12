@@ -4,11 +4,6 @@ import java.awt.Color;
 
 public class newContact extends javax.swing.JFrame {
 
-
-    public javax.swing.JTextField getIpTxtField() {
-        return ipTxtField;
-    }
-
     public javax.swing.JTextField getNameTxtField() {
         return nameTxtField;
     }
@@ -17,12 +12,6 @@ public class newContact extends javax.swing.JFrame {
         return newContactButton;
     }
 
-    /**
-     * @return the portTxtField
-     */
-    public javax.swing.JTextField getPortTxtField() {
-        return portTxtField;
-    }
 
     /**
      * Creates new form newContact
@@ -30,7 +19,7 @@ public class newContact extends javax.swing.JFrame {
     public newContact() {
         initComponents();
         newContactButton = new vistas.AnimatedLabel("AGREGAR");
-        bg.add(newContactButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 270, 90, 40));
+        bg.add(newContactButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 160, 90, 40));
 
         addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
@@ -53,13 +42,7 @@ public class newContact extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         nameTxtField = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        ipTxtField = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
-        portTxtField = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
@@ -68,6 +51,8 @@ public class newContact extends javax.swing.JFrame {
         setResizable(false);
 
         bg.setBackground(new java.awt.Color(255, 255, 255));
+        bg.setMinimumSize(new java.awt.Dimension(410, 220));
+        bg.setPreferredSize(new java.awt.Dimension(410, 220));
         bg.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Roboto", 0, 24)); // NOI18N
@@ -93,42 +78,8 @@ public class newContact extends javax.swing.JFrame {
         });
         bg.add(nameTxtField, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 110, 220, -1));
 
-        jLabel3.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        jLabel3.setText("Direccion IP");
-        bg.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 140, -1, -1));
-
-        ipTxtField.setForeground(new java.awt.Color(204, 204, 204));
-        ipTxtField.setText("Ingrese la direccion IP del contacto...");
-        ipTxtField.setBorder(null);
-        ipTxtField.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                ipTxtFieldMouseClicked(evt);
-            }
-        });
-        bg.add(ipTxtField, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 160, 220, -1));
-
-        jLabel4.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        jLabel4.setText("Puerto");
-        bg.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 190, -1, -1));
-
-        portTxtField.setForeground(new java.awt.Color(204, 204, 204));
-        portTxtField.setText("Ingrese el puerto del contacto...");
-        portTxtField.setBorder(null);
-        portTxtField.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                portTxtFieldMouseClicked(evt);
-            }
-        });
-        bg.add(portTxtField, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 210, 220, -1));
-
         jLabel5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         bg.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 130, 220, -1));
-
-        jLabel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        bg.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 180, 220, -1));
-
-        jLabel7.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        bg.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 230, 220, -1));
 
         jLabel8.setBackground(new java.awt.Color(0, 0, 102));
         jLabel8.setOpaque(true);
@@ -165,53 +116,11 @@ public class newContact extends javax.swing.JFrame {
             getNameTxtField().setText("");
             getNameTxtField().setForeground(Color.BLACK);          
        }
-       if (portTxtField.getText().isEmpty()){
-           portTxtField.setText("Ingrese el puerto del contacto...");
-           portTxtField.setForeground(new Color(204,204,204));
-       }
-       if (ipTxtField.getText().isEmpty()){
-           ipTxtField.setText("Ingrese la direccion IP del contacto...");
-           ipTxtField.setForeground(new Color(204,204,204));
-       }
     }//GEN-LAST:event_nameTxtFieldMouseClicked
-
-    private void ipTxtFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ipTxtFieldMouseClicked
-       if (ipTxtField.getText().equals("Ingrese la direccion IP del contacto...")){
-            ipTxtField.setText("");
-            ipTxtField.setForeground(Color.BLACK);          
-       }
-       if (portTxtField.getText().isEmpty()){
-           portTxtField.setText("Ingrese el puerto del contacto...");
-           portTxtField.setForeground(new Color(204,204,204));
-       }
-       if (getNameTxtField().getText().isEmpty()){
-           getNameTxtField().setText("Ingrese el nombre del contacto...");
-           getNameTxtField().setForeground(new Color(204,204,204));
-       }
-    }//GEN-LAST:event_ipTxtFieldMouseClicked
-
-    private void portTxtFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_portTxtFieldMouseClicked
-       if (portTxtField.getText().equals("Ingrese el puerto del contacto...")){
-            portTxtField.setText("");
-            portTxtField.setForeground(Color.BLACK);          
-       }
-       if (getNameTxtField().getText().isEmpty()){
-           getNameTxtField().setText("Ingrese el nombre del contacto...");
-           getNameTxtField().setForeground(new Color(204,204,204));
-       }
-       if (ipTxtField.getText().isEmpty()){
-           ipTxtField.setText("Ingrese la direccion IP del contacto...");
-           ipTxtField.setForeground(new Color(204,204,204));
-       }
-    }//GEN-LAST:event_portTxtFieldMouseClicked
 
     public void limpiarTextFields(){
       nameTxtField.setText("Ingrese el nombre del contacto...");
       nameTxtField.setForeground(new Color(204,204,204));
-      ipTxtField.setText("Ingrese la direccion IP del contacto...");
-      ipTxtField.setForeground(new Color(204,204,204));
-      portTxtField.setText("Ingrese el puerto del contacto...");
-      portTxtField.setForeground(new Color(204,204,204));
     }
 
     /**
@@ -251,19 +160,13 @@ public class newContact extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel bg;
-    private javax.swing.JTextField ipTxtField;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JTextField nameTxtField;
-    private javax.swing.JTextField portTxtField;
     // End of variables declaration//GEN-END:variables
     private AnimatedLabel newContactButton;
 }
