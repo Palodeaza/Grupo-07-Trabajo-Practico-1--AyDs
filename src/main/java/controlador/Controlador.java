@@ -261,7 +261,8 @@ public class Controlador {
             System.err.println("Error: Datos de remitente incompletos.");
             return;
         }
-        String remitente = modelo.buscaContacto(datos[1], datos[2]); // método que retorna el nombre según ip y puerto
+        //String remitente = modelo.buscaContacto(datos[1], datos[2]); // método que retorna el nombre según ip y puerto que voy a buscar? si solo guardo nombre ahora
+        String remitente = datos[0];
         boolean esMensajePropio = datos[1].equals(modelo.obtenerIPLocal()) && datos[2].equals(String.valueOf(puertoActual));
         ConversacionRenderer renderer = (ConversacionRenderer) initView.getChatList().getCellRenderer();
 

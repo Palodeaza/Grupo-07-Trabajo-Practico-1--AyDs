@@ -97,7 +97,7 @@ public class Modelo {
             this.socket = new Socket("localhost", 3333);               
             this.outputStream = new PrintWriter(socket.getOutputStream(), true); 
             outputStream.println(emisor);
-            new Thread(new MessageHandler(socket)).start();
+            new Thread(new MessageHandler(socket,emisor)).start();
         } catch (IOException e) {
             System.err.println("Error al conectar: " + e.getMessage()); 
             controlador.mostrarCartelErrorConexion();
@@ -171,6 +171,7 @@ public class Modelo {
                         if (mensaje == null) {
                             break;
                         }
+                        System.out.println(" SOY " + nombreCliente + " y me llego ->  " + mensaje);
                         String operacion = mensaje.split("/",2)[0];
                         if (operacion.equals("dir")){ 
                             datos = mensaje.split("/",2)[1].split(":",3); // el dir llega de la forma dir/ Juan:ip:puerto si lo encontro, todo null si no
@@ -196,12 +197,14 @@ public class Modelo {
                                 agregarContacto(datos[0]);
                                 controlador.actualizaListaContactos();
                                 nombreCliente = datos[0];
+                                System.out.println("No lo habia encontrado, lo agregue y su nombre es: " + nombreCliente);
                             }
                             if (!conexionesActivas.contains(nombreCliente)) {
                                 conexionesActivas.add(nombreCliente);
                                 controlador.refreshConversaciones();
                             }
                             mensajes.computeIfAbsent(nombreCliente, k -> new ArrayList<>()).add(mensaje);
+                            System.out.println("LE VOY A DECIR A CONTROLADOR QUE MUESTRE MENSAJE, LE PASO-> " + mensaje);
                             controlador.mostrarMensajeEnChat(mensaje);  
                         }
                         }

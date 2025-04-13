@@ -58,7 +58,7 @@ public class Server {
     public void guardaMensaje(String receptor, String mensaje){
         System.out.println("bien 3");
         mensajesGuardados.putIfAbsent(receptor, new ArrayList<>());
-        mensajesGuardados.get(receptor).add(mensaje);
+        mensajesGuardados.get(receptor).add("texto/" + mensaje);
         System.out.println("Mensaje guardado para " + receptor + ": " + mensaje);
         System.out.println(mensajesGuardados);
     }

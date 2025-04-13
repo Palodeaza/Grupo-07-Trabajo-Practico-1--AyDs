@@ -23,7 +23,8 @@ public class ClientHandler implements Runnable{
             this.outputStream = new PrintWriter(socket.getOutputStream(), true); 
             this.user = nombre;
             this.servidor= servidor;
-            clientHandlers.add(this);
+            ClientHandler.clientHandlers.add(this);
+            System.out.println("Agregue a " + this.toString() + " a ClientHandlers");
         }
         catch(IOException e){
             e.printStackTrace();
@@ -52,10 +53,14 @@ public class ClientHandler implements Runnable{
                             outputStream.println("dir/"+ contacto.getNombre() + ":" + contacto.getIp() + ":" + contacto.getPuerto());
                         }
                         else {
+                            mensaje = mensaje.split("/",2)[1];
+                            System.out.println("EL MENSAJE DE TEXTO ES: " + mensaje);
                             String[] partes = mensaje.split(";", 4);
                             String[] datos = partes[0].split(":", 3); //datos[0]=nombre / datos[1]= ip / datos[2] = puerto
-                            System.out.println(partes[3]+" esta online?: "+usuarioEstaOnline(datos[1]));
-                            if (usuarioEstaOnline(partes[3]))
+                            System.out.println("PARTES: "+partes[0] + " /" + partes[1]+ "/ " + partes[2] + "/" + partes[3]);
+                            System.out.println("VOY A INVOCAR usuarioEstaOnline con " + partes[3]);
+                            boolean esta = usuarioEstaOnline(partes[3]);
+                            if (esta)
                                 enviaMensaje(partes[3], mensaje); 
                             else{
                                 System.out.println("bien 2");
@@ -72,9 +77,14 @@ public class ClientHandler implements Runnable{
     }
 
     private boolean usuarioEstaOnline(String contacto){
-        for (ClientHandler c : clientHandlers){
-            if (c.getUser().equals(contacto))
+        System.out.println(contacto + " esta online ?, voy a verificarlo !");
+        for (ClientHandler c : ClientHandler.clientHandlers){
+            System.out.println(c.getUser() + " esta online, pero es igual a " + contacto + " ?");
+            if (c.getUser().equals(contacto)){
+                System.out.println("SIP");
                 return true;
+            }
+            System.out.println("NOP");
         }
         return false;
     }
@@ -92,12 +102,12 @@ public class ClientHandler implements Runnable{
 
     private void enviaMensaje(String receptor, String mensaje) {
         System.out.println("Receptor: "+receptor+" Mensaje: "+mensaje);
-        for (ClientHandler c : clientHandlers) {
+        for (ClientHandler c : ClientHandler.clientHandlers) {
             try {
                 System.out.println("[ClientHandler]: Nombre de cliente:"+c.user);
                 //if (c.user.equals(receptor) && !c.user.equals(user)){ // Faltaria implementar que guarde el mensaje si el receptor no esta conectado
                 if (c.user.equalsIgnoreCase(receptor)){
-                    c.outputStream.println(mensaje); 
+                    c.outputStream.println("texto/" + mensaje); 
                 }   
             }
             catch(Exception e){//este catch no funciona
@@ -110,7 +120,7 @@ public class ClientHandler implements Runnable{
     private void cierraConexion(Socket socket1, BufferedReader inputStream1, PrintWriter outputStream1) {
         System.out.println(this.user +" se desconecto ");
         clientHandlers.remove(this);
-        System.out.println("dlientHandlers:"+ clientHandlers);
+        System.out.println("ClientHandlers:"+ ClientHandler.clientHandlers);
         try {
             if (socket1!=null){
                 socket.close();
