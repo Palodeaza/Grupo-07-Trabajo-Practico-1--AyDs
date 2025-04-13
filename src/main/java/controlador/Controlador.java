@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import modelo.Contacto;
 
 import modelo.Modelo;
 import vistas.ConversacionRenderer;
@@ -156,7 +157,7 @@ public class Controlador {
             return;
         }
         */
-        if (modelo.agregarContacto(nombre)) {
+        /*if (modelo.agregarContacto(nombre)) {
             JOptionPane.showMessageDialog(contactView, "Contacto agregado exitosamente.");
             actualizaListaContactos();
             contactView.setVisible(false);
@@ -164,8 +165,21 @@ public class Controlador {
             JOptionPane.showMessageDialog(contactView, "El contacto ya existe.");
         }
         contactView.limpiarTextFields();
-
+        */
+        Contacto c = new Contacto(nombre,"localhost",3333); //hardcodeado, podriamos agarrar de los txt fields igual...
+        modelo.checkDir(c);
     }
+        public void agregadoExitoso(){
+            JOptionPane.showMessageDialog(contactView, "Contacto agregado exitosamente.");
+            actualizaListaContactos();
+            contactView.setVisible(false);
+            contactView.limpiarTextFields();
+        }
+        
+        public void agregadoRepetido(){
+            JOptionPane.showMessageDialog(contactView, "El contacto ya existe.");
+            contactView.limpiarTextFields();
+        }
         
     public void actualizaListaContactos(){
         this.chatView.actualizarListaContactos(modelo.getListaContactos());
@@ -209,7 +223,7 @@ public class Controlador {
         String ipEmisor = modelo.obtenerIPLocal();
         String nombre = this.usuarioActual;
 
-        String mensajeFormateado = nombre + ":" + ipEmisor + ":" + puertoActual + ";" + mensajeTexto + ";" + horaActual + ";" + receptor;
+        String mensajeFormateado = "texto" + "/" + nombre + ":" + ipEmisor + ":" + puertoActual + ";" + mensajeTexto + ";" + horaActual + ";" + receptor;
 
         modelo.getMensajes().computeIfAbsent(receptor, k -> new java.util.ArrayList<>()).add(mensajeFormateado);
         modelo.enviarMensaje(receptor, mensajeFormateado);
@@ -287,5 +301,8 @@ public class Controlador {
         
     public void mostrarCartelErrorConexion(){
         JOptionPane.showMessageDialog(chatView, "Servidor desconectado.");
+    }
+    public void mostrarCartelErrorDir(){
+        JOptionPane.showMessageDialog(contactView, "Contacto no se encuentra en el directorio");
     }
 }

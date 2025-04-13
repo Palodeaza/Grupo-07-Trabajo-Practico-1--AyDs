@@ -141,14 +141,8 @@ public class Modelo {
         }
     }
     
-    public void checkDir(String contacto) {
-        try {
-            BufferedReader inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            PrintWriter outputStream = new PrintWriter(socket.getOutputStream(), true);
-            outputStream.println("getDir");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+    public void checkDir(Contacto contacto) {
+            this.outputStream.println("dir/" + contacto.getNombre());
     }
 
     private class MessageHandler implements Runnable {
@@ -177,6 +171,21 @@ public class Modelo {
                         if (mensaje == null) {
                             break;
                         }
+                        String operacion = mensaje.split("/",2)[0];
+                        if (operacion.equals("dir")){ 
+                            datos = mensaje.split("/",2)[1].split(":",3); // el dir llega de la forma dir/ Juan:ip:puerto si lo encontro, todo null si no
+                            if (datos[0].equals("null")){
+                                controlador.mostrarCartelErrorDir();
+                            }
+                            else{
+                                    if (agregarContacto(datos[0]))//deberia poder pasarle otras cosas...
+                                        controlador.agregadoExitoso();
+                                    else // esto queda horrible, nose que se les ocurre para hacer esto en el controlador
+                                        controlador.agregadoRepetido();
+                                }
+                        }
+                        else{ //me mandaron mensaje de texto
+                        mensaje = mensaje.split("/",2)[1]; // me quedo con todo menos operacion
                         partes = mensaje.split(";", 4);
                         if (partes.length == 4){ 
                             datos = partes[0].split(":", 3);
@@ -194,6 +203,7 @@ public class Modelo {
                             }
                             mensajes.computeIfAbsent(nombreCliente, k -> new ArrayList<>()).add(mensaje);
                             controlador.mostrarMensajeEnChat(mensaje);  
+                        }
                         }
                     } catch (IOException e) {
                         e.printStackTrace();

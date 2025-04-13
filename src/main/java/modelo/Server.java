@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class Server {
     private ServerSocket serverSocket;
-    private ArrayList<String> dir = new ArrayList<>();
+    private ArrayList<Contacto> dir = new ArrayList<>();
     private Map<String, ArrayList<String>> mensajesGuardados = new HashMap<>();
     
     public Server(){
@@ -38,7 +38,8 @@ public class Server {
                     }      
                     
                     if (!(dir.contains(user))){ // si user no estaba en dir, lo agrego, se agrego por primera vez!
-                        dir.add(user);
+                        Contacto c = new Contacto(user,clientSocket.getInetAddress().toString(),clientSocket.getPort());
+                        dir.add(c);
                     }
                     
                     new Thread(new ClientHandler(clientSocket, user, this)).start();
@@ -69,7 +70,7 @@ public class Server {
         mensajesGuardados.remove(user);
     }
     
-    public ArrayList<String> getDir(){
+    public ArrayList<Contacto> getDir(){
         return dir;
     }
 

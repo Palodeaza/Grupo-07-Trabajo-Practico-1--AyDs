@@ -42,21 +42,26 @@ public class ClientHandler implements Runnable{
                     cierraConexion(socket, inputStream, outputStream);
                     break;
                 }
-                if (mensaje.equals("getDir")){
-                    String dir = String.join("+", this.servidor.getDir()); // sale el dir asi-> marcos;palo;tomi
-                    outputStream.println(dir);
-                }
-                else {
-                    String[] partes = mensaje.split(";", 4);
-                    String[] datos = partes[0].split(":", 3); //datos[0]=nombre / datos[1]= ip / datos[2] = puerto
-                    System.out.println(partes[3]+" esta online?: "+usuarioEstaOnline(datos[1]));
-                    if (usuarioEstaOnline(partes[3]))
-                        enviaMensaje(partes[3], mensaje); 
-                    else{
-                        System.out.println("bien 2");
-                        servidor.guardaMensaje(partes[3], mensaje);
-                    } 
-                }
+                String operacion = mensaje.split("/",2)[0];
+                        if (operacion.equals("dir")){
+                            String nombre= mensaje.split("/",2)[1]; // yo chequeo si esta el nombre y despues les aviso sus datos
+                            Contacto contacto = buscaDir(nombre);
+                            if (contacto == null)
+                            outputStream.println("dir/"+ "null" + ":" + "null" + ":" + "null");                            
+                            else
+                            outputStream.println("dir/"+ contacto.getNombre() + ":" + contacto.getIp() + ":" + contacto.getPuerto());
+                        }
+                        else {
+                            String[] partes = mensaje.split(";", 4);
+                            String[] datos = partes[0].split(":", 3); //datos[0]=nombre / datos[1]= ip / datos[2] = puerto
+                            System.out.println(partes[3]+" esta online?: "+usuarioEstaOnline(datos[1]));
+                            if (usuarioEstaOnline(partes[3]))
+                                enviaMensaje(partes[3], mensaje); 
+                            else{
+                                System.out.println("bien 2");
+                                servidor.guardaMensaje(partes[3], mensaje);
+                            } 
+                        }
             }
             catch(IOException e){
                 cierraConexion(socket, inputStream, outputStream); // aca ejecuta cuando se desconecta un cliente
@@ -72,6 +77,17 @@ public class ClientHandler implements Runnable{
                 return true;
         }
         return false;
+    }
+    
+    private Contacto buscaDir(String nombre){
+        Contacto found = null;
+        for (Contacto c : servidor.getDir()){
+            if (c.getNombre().equals(nombre)){
+                found = new Contacto(nombre,c.getIp(),c.getPuerto());
+                return found;
+            }
+        }
+        return found;
     }
 
     private void enviaMensaje(String receptor, String mensaje) {
