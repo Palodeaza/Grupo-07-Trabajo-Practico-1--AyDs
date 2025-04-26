@@ -1,6 +1,7 @@
     package prueba;
 
-    import controlador.Controlador;
+    import controlador.GestorInterfaz;
+import controlador.IGestionInterfaz;
     import modelo.Modelo;
     import vistas.Init;
     import vistas.Login;
@@ -28,7 +29,7 @@
                 Init init = new Init();
                 newContact nc = new newContact();
                 newChat nch = new newChat();
-                Controlador ctrl = new Controlador(login, init, nc, nch, modelo);
+                IGestionInterfaz ctrl = new GestorInterfaz(login, init, nc, nch, modelo);
                 modelo.setControlador(ctrl);
 
                 login.pack(); 

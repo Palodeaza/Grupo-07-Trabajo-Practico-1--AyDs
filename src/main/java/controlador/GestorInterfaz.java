@@ -17,7 +17,7 @@ import vistas.Login;
 import vistas.newChat;
 import vistas.newContact;
 
-public class Controlador {
+public class GestorInterfaz implements IGestionInterfaz {
 
     private Login loginView = null;
     private Init initView = null;
@@ -27,7 +27,7 @@ public class Controlador {
     private String usuarioActual;
     private int puertoActual;
 
-    public Controlador(Login login, Init init, newContact contact, newChat chat, Modelo modelo) {
+    public GestorInterfaz(Login login, Init init, newContact contact, newChat chat, Modelo modelo) {
         this.loginView = login;
         this.initView = init;
         this.contactView = contact;
@@ -81,6 +81,7 @@ public class Controlador {
         });
     }
 
+    @Override
     public void autenticarUsuario() {
         String usuario = loginView.getUserTxt().getText().trim();
         String puertoStr = loginView.getPortTxt().getText().trim();
@@ -144,6 +145,7 @@ public class Controlador {
         }
     }
     */
+    @Override
         public void agregarNuevoContacto() {
         String nombre = contactView.getNameTxtField().getText().trim();
 
@@ -169,6 +171,7 @@ public class Controlador {
         Contacto c = new Contacto(nombre,"localhost",3333); //hardcodeado, podriamos agarrar de los txt fields igual...
         modelo.checkDir(c);
     }
+    @Override
         public void agregadoExitoso(){
             JOptionPane.showMessageDialog(contactView, "Contacto agregado exitosamente.");
             actualizaListaContactos();
@@ -176,20 +179,23 @@ public class Controlador {
             contactView.limpiarTextFields();
         }
         
+    @Override
         public void agregadoRepetido(){
             JOptionPane.showMessageDialog(contactView, "El contacto ya existe.");
             contactView.limpiarTextFields();
         }
         
+    @Override
     public void actualizaListaContactos(){
-        this.chatView.actualizarListaContactos(modelo.getListaContactos());
+        this.chatView.actualizarListaContactos(modelo.getGestorContactos().getListaContactos());
     }
 
+    @Override
     public void iniciarChatConSeleccion() {
         String contactoSeleccionado = chatView.getContactList().getSelectedValue();
         if (contactoSeleccionado != null) {
             if (!modelo.getListaConexiones().contains(contactoSeleccionado)) {
-                String[] datosContacto = modelo.obtenerDatosContacto(contactoSeleccionado);
+                String[] datosContacto = modelo.getGestorContactos().obtenerDatosContacto(contactoSeleccionado);
                 if (datosContacto != null) {
                     String ip = datosContacto[0];
                     int puerto = Integer.parseInt(datosContacto[1]);
@@ -205,6 +211,7 @@ public class Controlador {
         chatView.getContactList().clearSelection();
     }
 
+    @Override
     public void enviarMensaje() {
         String mensajeTexto = getInitView().getMsgTextField().getText().trim();
         String receptor = getInitView().getChatList().getSelectedValue();
@@ -236,6 +243,7 @@ public class Controlador {
 
     }
 
+    @Override
     public void borraChat(String contacto) {
         String receptoractual = getInitView().getChatList().getSelectedValue();
         if (!(receptoractual == null)){
@@ -247,6 +255,7 @@ public class Controlador {
         }
     }
 
+    @Override
     public void mostrarMensajeEnChat(String mensaje) {
         String receptoractual = getInitView().getChatList().getSelectedValue();
         String[] partes = mensaje.split(";", 4);
@@ -276,6 +285,7 @@ public class Controlador {
         initView.getChatList().repaint();
     }
 
+    @Override
     public void actualizaChatPanel(String nombre) {
         List<String> copiamensajes = modelo.getMensajes().get(nombre);
         List<String> listamensajes = (copiamensajes != null) ? new ArrayList<>(copiamensajes) : new ArrayList<>();
@@ -292,17 +302,21 @@ public class Controlador {
         getInitView().getChatPanel().repaint();
     }
 
+    @Override
     public void refreshConversaciones() {
         getInitView().actualizaChats(modelo.getListaConexiones());
     }
 
+    @Override
     public Init getInitView() {
         return initView;
     }
         
+    @Override
     public void mostrarCartelErrorConexion(){
         JOptionPane.showMessageDialog(chatView, "Servidor desconectado.");
     }
+    @Override
     public void mostrarCartelErrorDir(){
         JOptionPane.showMessageDialog(contactView, "Contacto no se encuentra en el directorio");
     }

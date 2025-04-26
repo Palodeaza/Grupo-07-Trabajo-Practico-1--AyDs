@@ -1,6 +1,7 @@
 package modelo;
 
-import controlador.Controlador;
+import controlador.GestorInterfaz;
+import controlador.IGestionInterfaz;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -16,12 +17,12 @@ public class Modelo {
     private ArrayList<Contacto> contactos = new ArrayList<>();
     private ArrayList<String> conexionesActivas = new ArrayList<>();
     private Map<String, List<String>> mensajes = new HashMap<>(); 
-    private Controlador controlador;
+    private IGestionInterfaz controlador;
     private Socket socket;
     private PrintWriter outputStream;
     private IGestionContactos gestorcontactos = new GestorContactos();
 
-    public void setControlador(Controlador controlador){
+    public void setControlador(IGestionInterfaz controlador){
         this.controlador = controlador;
     }
 
@@ -37,10 +38,10 @@ public class Modelo {
         return this.mensajes;
     }
     
-    public List<Contacto> getListaContactos() {
+    /*public List<Contacto> getListaContactos() {
         return this.contactos; // Devuelve solo los nombres de los contactos
     }
-
+    */
     public boolean validarCredenciales(String usuario, int puerto) {
         if (usuario.isEmpty() || puerto <= 0) {
             return false;
@@ -60,7 +61,7 @@ public class Modelo {
         }
     }
 
-    public boolean agregarContacto(String nombre) {
+    /*public boolean agregarContacto(String nombre) {
         for (Contacto c: contactos){
             if (c.getNombre().equalsIgnoreCase(nombre)){
                 return false;
@@ -70,7 +71,8 @@ public class Modelo {
         contactos.add(c);
         return true;
     }
-    
+    */
+    /*
     public String buscaContacto(String ip, String puerto) {
         for (Contacto contacto : this.contactos) {
             if ((contacto.getIp().equals(ip) || contacto.getIp().equals("localhost")) && String.valueOf(contacto.getPuerto()).equals(puerto)) {
@@ -79,15 +81,15 @@ public class Modelo {
         }
         return null;
     }
-    
-    public String[] obtenerDatosContacto(String contactoSeleccionado) {
+    */
+    /*public String[] obtenerDatosContacto(String contactoSeleccionado) {
         for (Contacto c : contactos) {
             if (c.getNombre().equalsIgnoreCase(contactoSeleccionado))
                 return new String[]{c.getIp(), String.valueOf(c.getPuerto())};
             }
         return null;
     }
-
+    */
     public String obtenerIPLocal() {
         try {
             return InetAddress.getLocalHost().getHostAddress();
@@ -184,7 +186,7 @@ public class Modelo {
                                 controlador.mostrarCartelErrorDir();
                             }
                             else{
-                                    if (agregarContacto(datos[0]))//deberia poder pasarle otras cosas...
+                                    if (gestorcontactos.agregarContacto(datos[0]))//deberia poder pasarle otras cosas...
                                         controlador.agregadoExitoso();
                                     else // esto queda horrible, nose que se les ocurre para hacer esto en el controlador
                                         controlador.agregadoRepetido();
@@ -196,10 +198,10 @@ public class Modelo {
                         if (partes.length == 4){ 
                             datos = partes[0].split(":", 3);
                             System.out.println("me llego mensaje de: " + datos[0]+" "+datos[1]);
-                            nombreCliente = buscaContacto(datos[1], datos[2]);
+                            nombreCliente = gestorcontactos.buscaContacto(datos[1], datos[2]);
                             System.out.println("Su nombre es: " + nombreCliente);
                             if (nombreCliente==null){// si me llega mensaje desconocido, lo agendo                  
-                                agregarContacto(datos[0]);
+                                gestorcontactos.agregarContacto(datos[0]);
                                 controlador.actualizaListaContactos();
                                 nombreCliente = datos[0];
                                 System.out.println("No lo habia encontrado, lo agregue y su nombre es: " + nombreCliente);

@@ -19,6 +19,9 @@ public class GestorContactos implements IGestionContactos {
         return this.contactos;
     }
 
+    public GestorContactos() {
+    }
+
     @Override
     public boolean agregarContacto(String nombre) {
         for (Contacto c: contactos){
