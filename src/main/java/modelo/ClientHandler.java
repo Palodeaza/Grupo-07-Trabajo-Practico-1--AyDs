@@ -48,10 +48,10 @@ public class ClientHandler implements Runnable{
                             String nombre= mensaje.split("/",2)[1]; // yo chequeo si esta el nombre y despues les aviso sus datos
                             Contacto contacto = buscaDir(nombre);
                             if (contacto == null)
-                            outputStream.println("dir/"+ "null" + ":" + "null" + ":" + "null");                            
+                            outputStream.println("dir/"+ "null" + ":" + "null" + ":" + "null"); 
                             else
                             outputStream.println("dir/"+ contacto.getNombre() + ":" + contacto.getIp() + ":" + contacto.getPuerto());
-                        }
+                            }
                         else {
                             mensaje = mensaje.split("/",2)[1];
                             System.out.println("EL MENSAJE DE TEXTO ES: " + mensaje);

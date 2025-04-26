@@ -97,7 +97,7 @@ public class GestorInterfaz implements IGestionInterfaz {
                 this.usuarioActual = usuario;
                 this.puertoActual = puerto;
 
-                modelo.usuarioOnline(usuario);
+                modelo.getGestored().usuarioOnline(usuario);
                 Point posicionActual = loginView.getLocation();
                 loginView.setVisible(false);
                 initView.setLocation(posicionActual);
@@ -169,7 +169,7 @@ public class GestorInterfaz implements IGestionInterfaz {
         contactView.limpiarTextFields();
         */
         Contacto c = new Contacto(nombre,"localhost",3333); //hardcodeado, podriamos agarrar de los txt fields igual...
-        modelo.checkDir(c);
+        modelo.getGestored().checkDir(c);
     }
     @Override
         public void agregadoExitoso(){
@@ -194,12 +194,12 @@ public class GestorInterfaz implements IGestionInterfaz {
     public void iniciarChatConSeleccion() {
         String contactoSeleccionado = chatView.getContactList().getSelectedValue();
         if (contactoSeleccionado != null) {
-            if (!modelo.getListaConexiones().contains(contactoSeleccionado)) {
+            if (!modelo.getGestored().estaConectado(contactoSeleccionado)) {
                 String[] datosContacto = modelo.getGestorContactos().obtenerDatosContacto(contactoSeleccionado);
                 if (datosContacto != null) {
                     String ip = datosContacto[0];
                     int puerto = Integer.parseInt(datosContacto[1]);
-                    modelo.iniciarConexionCliente(contactoSeleccionado, ip, puerto, usuarioActual);
+                    modelo.getGestored().iniciarConexionCliente(contactoSeleccionado, ip, puerto, usuarioActual);
                     chatView.setVisible(false);
                 } else {
                     JOptionPane.showMessageDialog(chatView, "No se encontraron datos del contacto.");
@@ -227,13 +227,14 @@ public class GestorInterfaz implements IGestionInterfaz {
         }
 
         String horaActual = new java.text.SimpleDateFormat("HH:mm").format(new java.util.Date());
-        String ipEmisor = modelo.obtenerIPLocal();
+        String ipEmisor = modelo.getGestored().obtenerIPLocal();
         String nombre = this.usuarioActual;
 
         String mensajeFormateado = "texto" + "/" + nombre + ":" + ipEmisor + ":" + puertoActual + ";" + mensajeTexto + ";" + horaActual + ";" + receptor;
 
-        modelo.getMensajes().computeIfAbsent(receptor, k -> new java.util.ArrayList<>()).add(mensajeFormateado);
-        modelo.enviarMensaje(receptor, mensajeFormateado);
+       // modelo.getMensajes().computeIfAbsent(receptor, k -> new java.util.ArrayList<>()).add(mensajeFormateado);
+       modelo.getGestormensajes().agregaMensaje(receptor, mensajeFormateado);
+       modelo.getGestored().enviarMensaje(receptor, mensajeFormateado);
         mostrarMensajeEnChat(mensajeFormateado);
         getInitView().getMsgTextField().setText("  Mensaje...");
         getInitView().getMsgTextField().setForeground(new Color(204, 204, 204));
@@ -272,7 +273,7 @@ public class GestorInterfaz implements IGestionInterfaz {
         }
         //String remitente = modelo.buscaContacto(datos[1], datos[2]); // método que retorna el nombre según ip y puerto que voy a buscar? si solo guardo nombre ahora
         String remitente = datos[0];
-        boolean esMensajePropio = datos[1].equals(modelo.obtenerIPLocal()) && datos[2].equals(String.valueOf(puertoActual));
+        boolean esMensajePropio = datos[1].equals(modelo.getGestored().obtenerIPLocal()) && datos[2].equals(String.valueOf(puertoActual));
         ConversacionRenderer renderer = (ConversacionRenderer) initView.getChatList().getCellRenderer();
 
         renderer.setUltimoMensaje(remitente, mensajeTexto, horaMensaje);// actualizo ultimo mensaje y hora
@@ -287,7 +288,7 @@ public class GestorInterfaz implements IGestionInterfaz {
 
     @Override
     public void actualizaChatPanel(String nombre) {
-        List<String> copiamensajes = modelo.getMensajes().get(nombre);
+        List<String> copiamensajes = modelo.getGestormensajes().getMensajesDe(nombre);
         List<String> listamensajes = (copiamensajes != null) ? new ArrayList<>(copiamensajes) : new ArrayList<>();
         getInitView().getChatPanel().removeAll();
         if (listamensajes.isEmpty()) {
@@ -304,7 +305,7 @@ public class GestorInterfaz implements IGestionInterfaz {
 
     @Override
     public void refreshConversaciones() {
-        getInitView().actualizaChats(modelo.getListaConexiones());
+        getInitView().actualizaChats(modelo.getGestored().getListaConexiones());
     }
 
     @Override

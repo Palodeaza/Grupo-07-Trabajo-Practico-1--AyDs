@@ -2,6 +2,8 @@
 
     import controlador.GestorInterfaz;
 import controlador.IGestionInterfaz;
+import java.io.PrintWriter;
+import java.net.Socket;
     import modelo.Modelo;
     import vistas.Init;
     import vistas.Login;
@@ -9,6 +11,8 @@ import controlador.IGestionInterfaz;
     import vistas.newContact;
 
     import javax.swing.*;
+import modelo.GestorRed;
+import modelo.IGestionRed;
 
     public class prueba {
         public static void main(String[] args) {
@@ -31,7 +35,7 @@ import controlador.IGestionInterfaz;
                 newChat nch = new newChat();
                 IGestionInterfaz ctrl = new GestorInterfaz(login, init, nc, nch, modelo);
                 modelo.setControlador(ctrl);
-
+                modelo.setGestorRed();
                 login.pack(); 
                 login.setLocationRelativeTo(null);
                 login.setVisible(true);

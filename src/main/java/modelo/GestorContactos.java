@@ -14,6 +14,7 @@ import java.util.List;
 public class GestorContactos implements IGestionContactos {
     
     public ArrayList<Contacto> contactos = new ArrayList<>();
+    
     @Override
     public List<Contacto> getListaContactos() {
         return this.contactos;
