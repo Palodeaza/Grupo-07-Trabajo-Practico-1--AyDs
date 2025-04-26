@@ -19,15 +19,20 @@ public class Modelo {
     private Controlador controlador;
     private Socket socket;
     private PrintWriter outputStream;
+    private IGestionContactos gestorcontactos = new GestorContactos();
 
     public void setControlador(Controlador controlador){
         this.controlador = controlador;
+    }
+
+    public IGestionContactos getGestorContactos(){
+        return this.gestorcontactos;
     }
    
     public List<String> getListaConexiones() {
         return this.conexionesActivas; // Devuelve solo los nombres de los contactos
     }
-
+   
     public Map<String, List<String>> getMensajes() {
         return this.mensajes;
     }
