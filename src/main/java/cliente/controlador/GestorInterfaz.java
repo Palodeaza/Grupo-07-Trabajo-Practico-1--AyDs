@@ -222,6 +222,11 @@ public class GestorInterfaz implements IGestionInterfaz {
 
     @Override
     public void iniciarChatConSeleccion() {
+        if (!gestored.isSocket()){
+            mostrarCartelErrorConexion();
+            chatView.getContactList().clearSelection();
+            return;
+        }
         String contactoSeleccionado = chatView.getContactList().getSelectedValue();
         if (contactoSeleccionado != null) {
             if (!gestored.estaConectado(contactoSeleccionado)) {
@@ -354,6 +359,18 @@ public class GestorInterfaz implements IGestionInterfaz {
     public void mostrarCartelErrorConexion(){
         JOptionPane.showMessageDialog(chatView, "Servidor desconectado.");
     }
+    
+    @Override
+    public void mostrarCartelErrorUsuarioConectado(){
+        JOptionPane.showMessageDialog(chatView, "Usuario ya conectado.");
+        initView.setVisible(false);
+        loginView.getPortTxt().setText("Ingrese el puerto a escuchar...");
+        loginView.getPortTxt().setForeground(new Color(204,204,204));
+        loginView.getUserTxt().setText("Ingrese su nombre de usuario...");
+        loginView.getUserTxt().setForeground(new Color(204,204,204));
+        loginView.setVisible(true);
+    }
+    
     @Override
     public void mostrarCartelErrorDir(){
         JOptionPane.showMessageDialog(contactView, "Contacto no se encuentra en el directorio");

@@ -27,4 +27,5 @@ public interface IGestionInterfaz { //gestiona TODOS los eventos producidos por 
     public Init getInitView();
     public void mostrarCartelErrorConexion();
     public void mostrarCartelErrorDir();
+    public void mostrarCartelErrorUsuarioConectado();
 }

@@ -42,6 +42,8 @@ public class Server {
                     for (ClientHandler c : ClientHandler.clientHandlers){ // veo si no estaba conectado todavia
                         if (c.getUser().equals(user)){
                             System.out.println(user + " ya se habia conectado ");
+                            PrintWriter outputStream = new PrintWriter(clientSocket.getOutputStream(), true); 
+                            outputStream.println("dupe/dupe");
                             clientSocket.close();
                             break;
                         }

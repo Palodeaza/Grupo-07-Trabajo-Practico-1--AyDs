@@ -17,6 +17,7 @@ public interface IGestionRed {
     public void setControlador(IGestionInterfaz controlador);
     public void iniciarConexionCliente(String nombre, String ip, int puerto, String emisor);
     public void cerrarConexion();
+    public boolean isSocket();
     public void checkDir(Contacto contacto);
     public List<String> getListaConexiones();
     public boolean estaConectado(String conexion);

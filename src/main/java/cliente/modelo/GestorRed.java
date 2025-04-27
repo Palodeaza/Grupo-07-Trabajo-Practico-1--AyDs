@@ -4,6 +4,7 @@
  */
 package modelo;
 
+import cliente.modelo.UsuarioDuplicadoException;
 import controlador.IGestionInterfaz;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -37,6 +38,10 @@ public class GestorRed implements IGestionRed{
         this.controlador=null; //lo debe setear luego
         this.gestorcontactos = gestorcontactos;
         this.gestormensajes = gestormensajes;
+    }
+    @Override
+    public boolean isSocket(){
+        return this.socket!=null;
     }
 
     public void setControlador(IGestionInterfaz controlador) {
@@ -72,6 +77,7 @@ public class GestorRed implements IGestionRed{
     @Override
     public void cerrarConexion() {
         try {
+            this.socket=null;
             conexionesActivas.clear();
             controlador.mostrarCartelErrorConexion();
             controlador.refreshConversaciones();
@@ -148,13 +154,12 @@ public class GestorRed implements IGestionRed{
                 while (true) {
                     try {
                         String mensaje = inputStream.readLine();
-                        
-                        if (mensaje == null) {
-                            System.out.println("ME LLEGO MENSAJE == NULL");
-                            break;
-                        }
+
                         System.out.println(" SOY " + nombreCliente + " y me llego ->  " + mensaje);
                         String operacion = mensaje.split("/",2)[0];
+                        if (operacion.equals("dupe")){
+                            throw new UsuarioDuplicadoException("Usuario duplicado detectado.");
+                        } 
                         if (operacion.equals("dir")){ 
                             datos = mensaje.split("/",2)[1].split(":",3); // el dir llega de la forma dir/ Juan:ip:puerto si lo encontro, todo null si no
                             if (datos[0].equals("null")){
@@ -188,6 +193,10 @@ public class GestorRed implements IGestionRed{
                             controlador.mostrarMensajeEnChat(mensaje);  
                         }
                         }
+                    } catch (UsuarioDuplicadoException e) {
+                        System.err.println("Usuario duplicado: " + e.getMessage());
+                        controlador.mostrarCartelErrorUsuarioConectado();
+                        break;
                     } catch (IOException e) {
                         e.printStackTrace();
                         System.err.println("Error en la recepción del mensaje: " + e.getMessage());
