@@ -68,18 +68,16 @@ public class GestorRed implements IGestionRed{
             controlador.mostrarCartelErrorConexion();
         }
     }
-
+    
     @Override
-    public void cerrarConexion(String contacto) {
+    public void cerrarConexion() {
         try {
-            if (conexionesActivas.contains(contacto)) {
-                conexionesActivas.remove(contacto);
-            }
+            conexionesActivas.clear();
             controlador.mostrarCartelErrorConexion();
-            controlador.borraChat(contacto);
             controlador.refreshConversaciones();
+            controlador.borraChat();
         } catch (Exception e) {
-            System.err.println("Error al cerrar conexion: " + e.getMessage());
+            System.err.println("Error al cerrar conexiones: " + e.getMessage());
         }
     }
 
@@ -118,7 +116,6 @@ public class GestorRed implements IGestionRed{
                 this.outputStream.println(mensaje);
             } catch (Exception e) {
                 System.err.println("Error al enviar mensaje: " + e.getMessage());
-                cerrarConexion(contacto);
             }
         } else {
             System.err.println("No hay conexion activa con " + contacto);
@@ -182,28 +179,25 @@ public class GestorRed implements IGestionRed{
                                 gestorcontactos.agregarContacto(datos[0]);
                                 controlador.actualizaListaContactos();
                                 nombreCliente = datos[0];
-                                System.out.println("No lo habia encontrado, lo agregue y su nombre es: " + nombreCliente);
                             }
                             if (!conexionesActivas.contains(nombreCliente)) {
                                 conexionesActivas.add(nombreCliente);
                                 controlador.refreshConversaciones();
                             }
                             gestormensajes.agregaMensaje(nombreCliente,mensaje);
-                            System.out.println("LE VOY A DECIR A CONTROLADOR QUE MUESTRE MENSAJE, LE PASO-> " + mensaje);
                             controlador.mostrarMensajeEnChat(mensaje);  
                         }
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
                         System.err.println("Error en la recepción del mensaje: " + e.getMessage());
-                        //cerrarConexion(nombreCliente); // Esto ya no deberia de cerrar la conexion de cliente, sino que deberia de cerrar la conexion con el server o quedarse esperando a que vuelva a abrirse
+                        cerrarConexion();
                         break;
                     }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
                 System.err.println("Error en la conexión con el servidor: " + e.getMessage());
-                cerrarConexion(nombreCliente);
             }
         }
     }

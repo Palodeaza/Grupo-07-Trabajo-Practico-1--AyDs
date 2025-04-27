@@ -16,7 +16,6 @@ import modelo.GestorMensajes;
 import modelo.IGestionContactos;
 import modelo.IGestionMensajes;
 import modelo.IGestionRed;
-import modelo.Modelo;
 import vistas.ConversacionRenderer;
 import vistas.Init;
 import vistas.Login;
@@ -285,6 +284,13 @@ public class GestorInterfaz implements IGestionInterfaz {
                 getInitView().getChatPanel().repaint();
             }
         }
+    }
+    
+    @Override
+    public void borraChat() {
+        getInitView().getChatPanel().removeAll();
+        getInitView().getChatPanel().revalidate();
+        getInitView().getChatPanel().repaint();
     }
 
     @Override

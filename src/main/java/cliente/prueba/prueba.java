@@ -1,21 +1,20 @@
-    package prueba;
+package prueba;
 
-    import controlador.GestorInterfaz;
+import controlador.GestorInterfaz;
 import controlador.IGestionInterfaz;
 import modelo.IGestionContactos;
 import modelo.IGestionMensajes;
 import java.io.PrintWriter;
 import java.net.Socket;
-    import modelo.Modelo;
-    import vistas.Init;
-    import vistas.Login;
-    import vistas.newChat;
-    import vistas.newContact;
+import vistas.Init;
+import vistas.Login;
+import vistas.newChat;
+import vistas.newContact;
 
-    import javax.swing.*;
-    
-    import modelo.GestorContactos;
-    import modelo.GestorMensajes;
+import javax.swing.*;
+
+import modelo.GestorContactos;
+import modelo.GestorMensajes;
 import modelo.GestorRed;
 import modelo.IGestionRed;
 

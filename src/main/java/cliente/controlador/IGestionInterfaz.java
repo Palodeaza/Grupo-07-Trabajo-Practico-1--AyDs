@@ -20,6 +20,7 @@ public interface IGestionInterfaz { //gestiona TODOS los eventos producidos por 
     public void iniciarChatConSeleccion();
     public void enviarMensaje();
     public void borraChat(String contacto);
+    public void borraChat();
     public void mostrarMensajeEnChat(String mensaje);
     public void actualizaChatPanel(String nombre);
     public void refreshConversaciones();
