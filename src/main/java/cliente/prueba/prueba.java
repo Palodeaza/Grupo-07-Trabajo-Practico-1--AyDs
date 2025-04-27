@@ -2,6 +2,8 @@
 
     import controlador.GestorInterfaz;
 import controlador.IGestionInterfaz;
+import modelo.IGestionContactos;
+import modelo.IGestionMensajes;
 import java.io.PrintWriter;
 import java.net.Socket;
     import modelo.Modelo;
@@ -11,6 +13,9 @@ import java.net.Socket;
     import vistas.newContact;
 
     import javax.swing.*;
+    
+    import modelo.GestorContactos;
+    import modelo.GestorMensajes;
 import modelo.GestorRed;
 import modelo.IGestionRed;
 
@@ -28,14 +33,16 @@ import modelo.IGestionRed;
                     e.printStackTrace();
                 }
 
-                Modelo modelo = new Modelo();
+                //Modelo modelo = new Modelo();
+                IGestionContactos gestorcontactos = new GestorContactos();
+                IGestionMensajes gestormensajes = new GestorMensajes();
+                IGestionRed gestored = new GestorRed(gestorcontactos, gestormensajes);
                 Login login = new Login();
                 Init init = new Init();
                 newContact nc = new newContact();
                 newChat nch = new newChat();
-                IGestionInterfaz ctrl = new GestorInterfaz(login, init, nc, nch, modelo);
-                modelo.setControlador(ctrl);
-                modelo.setGestorRed();
+                IGestionInterfaz ctrl = new GestorInterfaz(login, init, nc, nch, gestored, gestorcontactos, gestormensajes);
+                gestored.setControlador(ctrl);
                 login.pack(); 
                 login.setLocationRelativeTo(null);
                 login.setVisible(true);

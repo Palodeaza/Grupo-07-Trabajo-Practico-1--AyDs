@@ -2,14 +2,20 @@ package controlador;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.io.IOException;
 import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import modelo.Contacto;
-
+import modelo.GestorContactos;
+import modelo.GestorMensajes;
+import modelo.IGestionContactos;
+import modelo.IGestionMensajes;
+import modelo.IGestionRed;
 import modelo.Modelo;
 import vistas.ConversacionRenderer;
 import vistas.Init;
@@ -23,16 +29,20 @@ public class GestorInterfaz implements IGestionInterfaz {
     private Init initView = null;
     private newContact contactView = null;
     private newChat chatView = null;
-    private Modelo modelo = null;
+    private IGestionContactos gestorcontactos;
+    private IGestionMensajes gestormensajes;
+    private IGestionRed gestored;
     private String usuarioActual;
     private int puertoActual;
 
-    public GestorInterfaz(Login login, Init init, newContact contact, newChat chat, Modelo modelo) {
+    public GestorInterfaz(Login login, Init init, newContact contact, newChat chat, IGestionRed gestored, IGestionContactos gestorcontactos, IGestionMensajes gestormensajes) {
         this.loginView = login;
         this.initView = init;
         this.contactView = contact;
         this.chatView = chat;
-        this.modelo = modelo;
+        this.gestored = gestored;
+        this.gestorcontactos = gestorcontactos;
+        this.gestormensajes = gestormensajes;
         
         this.loginView.getLoginButton().addActionListener(e -> autenticarUsuario());
         this.contactView.getNewContactButton().addMouseListener(new java.awt.event.MouseAdapter() {
@@ -81,6 +91,25 @@ public class GestorInterfaz implements IGestionInterfaz {
         });
     }
 
+    public boolean validarCredenciales(String usuario, int puerto) {
+        if (usuario.isEmpty() || puerto <= 0) {
+            return false;
+        }
+        ServerSocket testSocket = null;
+        try {
+            testSocket = new ServerSocket(puerto);
+            return true; // Puerto disponible
+        } catch (IOException e) {
+            return false; // Puerto en uso
+        } finally {
+            if (testSocket != null) {
+                try {
+                    testSocket.close();
+                } catch (IOException ignored) {}
+            }
+        }
+    }
+
     @Override
     public void autenticarUsuario() {
         String usuario = loginView.getUserTxt().getText().trim();
@@ -93,11 +122,11 @@ public class GestorInterfaz implements IGestionInterfaz {
 
         try {
             int puerto = Integer.parseInt(puertoStr);
-            if (modelo.validarCredenciales(usuario, puerto)) {
+            if (validarCredenciales(usuario, puerto)) {
                 this.usuarioActual = usuario;
                 this.puertoActual = puerto;
 
-                modelo.getGestored().usuarioOnline(usuario);
+                gestored.usuarioOnline(usuario);
                 Point posicionActual = loginView.getLocation();
                 loginView.setVisible(false);
                 initView.setLocation(posicionActual);
@@ -109,6 +138,8 @@ public class GestorInterfaz implements IGestionInterfaz {
             JOptionPane.showMessageDialog(loginView, "El puerto debe ser un número válido.");
         }
     }
+
+
     /*
     public void agregarNuevoContacto() {
         String nombre = contactView.getNameTxtField().getText().trim();
@@ -169,7 +200,7 @@ public class GestorInterfaz implements IGestionInterfaz {
         contactView.limpiarTextFields();
         */
         Contacto c = new Contacto(nombre,"localhost",3333); //hardcodeado, podriamos agarrar de los txt fields igual...
-        modelo.getGestored().checkDir(c);
+        gestored.checkDir(c);
     }
     @Override
         public void agregadoExitoso(){
@@ -187,19 +218,19 @@ public class GestorInterfaz implements IGestionInterfaz {
         
     @Override
     public void actualizaListaContactos(){
-        this.chatView.actualizarListaContactos(modelo.getGestorContactos().getListaContactos());
+        this.chatView.actualizarListaContactos(gestorcontactos.getListaContactos());
     }
 
     @Override
     public void iniciarChatConSeleccion() {
         String contactoSeleccionado = chatView.getContactList().getSelectedValue();
         if (contactoSeleccionado != null) {
-            if (!modelo.getGestored().estaConectado(contactoSeleccionado)) {
-                String[] datosContacto = modelo.getGestorContactos().obtenerDatosContacto(contactoSeleccionado);
+            if (!gestored.estaConectado(contactoSeleccionado)) {
+                String[] datosContacto = gestorcontactos.obtenerDatosContacto(contactoSeleccionado);
                 if (datosContacto != null) {
                     String ip = datosContacto[0];
                     int puerto = Integer.parseInt(datosContacto[1]);
-                    modelo.getGestored().iniciarConexionCliente(contactoSeleccionado, ip, puerto, usuarioActual);
+                    gestored.iniciarConexionCliente(contactoSeleccionado, ip, puerto, usuarioActual);
                     chatView.setVisible(false);
                 } else {
                     JOptionPane.showMessageDialog(chatView, "No se encontraron datos del contacto.");
@@ -227,14 +258,14 @@ public class GestorInterfaz implements IGestionInterfaz {
         }
 
         String horaActual = new java.text.SimpleDateFormat("HH:mm").format(new java.util.Date());
-        String ipEmisor = modelo.getGestored().obtenerIPLocal();
+        String ipEmisor = gestored.obtenerIPLocal();
         String nombre = this.usuarioActual;
 
         String mensajeFormateado = "texto" + "/" + nombre + ":" + ipEmisor + ":" + puertoActual + ";" + mensajeTexto + ";" + horaActual + ";" + receptor;
 
        // modelo.getMensajes().computeIfAbsent(receptor, k -> new java.util.ArrayList<>()).add(mensajeFormateado);
-       modelo.getGestormensajes().agregaMensaje(receptor, mensajeFormateado);
-       modelo.getGestored().enviarMensaje(receptor, mensajeFormateado);
+       gestormensajes.agregaMensaje(receptor, mensajeFormateado);
+       gestored.enviarMensaje(receptor, mensajeFormateado);
         mostrarMensajeEnChat(mensajeFormateado);
         getInitView().getMsgTextField().setText("  Mensaje...");
         getInitView().getMsgTextField().setForeground(new Color(204, 204, 204));
@@ -273,7 +304,7 @@ public class GestorInterfaz implements IGestionInterfaz {
         }
         //String remitente = modelo.buscaContacto(datos[1], datos[2]); // método que retorna el nombre según ip y puerto que voy a buscar? si solo guardo nombre ahora
         String remitente = datos[0];
-        boolean esMensajePropio = datos[1].equals(modelo.getGestored().obtenerIPLocal()) && datos[2].equals(String.valueOf(puertoActual));
+        boolean esMensajePropio = datos[1].equals(gestored.obtenerIPLocal()) && datos[2].equals(String.valueOf(puertoActual));
         ConversacionRenderer renderer = (ConversacionRenderer) initView.getChatList().getCellRenderer();
 
         renderer.setUltimoMensaje(remitente, mensajeTexto, horaMensaje);// actualizo ultimo mensaje y hora
@@ -288,7 +319,7 @@ public class GestorInterfaz implements IGestionInterfaz {
 
     @Override
     public void actualizaChatPanel(String nombre) {
-        List<String> copiamensajes = modelo.getGestormensajes().getMensajesDe(nombre);
+        List<String> copiamensajes = gestormensajes.getMensajesDe(nombre);
         List<String> listamensajes = (copiamensajes != null) ? new ArrayList<>(copiamensajes) : new ArrayList<>();
         getInitView().getChatPanel().removeAll();
         if (listamensajes.isEmpty()) {
@@ -305,7 +336,7 @@ public class GestorInterfaz implements IGestionInterfaz {
 
     @Override
     public void refreshConversaciones() {
-        getInitView().actualizaChats(modelo.getGestored().getListaConexiones());
+        getInitView().actualizaChats(gestored.getListaConexiones());
     }
 
     @Override

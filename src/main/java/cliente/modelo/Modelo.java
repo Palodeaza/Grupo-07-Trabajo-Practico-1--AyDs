@@ -14,36 +14,36 @@ import java.util.Map;
 
 public class Modelo {
     
-    private ArrayList<Contacto> contactos = new ArrayList<>();
-    private ArrayList<String> conexionesActivas = new ArrayList<>();
-    private Map<String, List<String>> mensajes = new HashMap<>(); 
-    private IGestionInterfaz controlador;
-    private Socket socket;
-    private PrintWriter outputStream;
-    private IGestionContactos gestorcontactos = new GestorContactos();
-    private IGestionMensajes gestormensajes = new GestorMensajes();
-    private IGestionRed gestored;
+    //private ArrayList<Contacto> contactos = new ArrayList<>();
+    //private ArrayList<String> conexionesActivas = new ArrayList<>();
+    //private Map<String, List<String>> mensajes = new HashMap<>(); 
+    //private IGestionInterfaz controlador;
+    //private Socket socket;
+    //private PrintWriter outputStream;
+    //private IGestionContactos gestorcontactos = new GestorContactos();
+    //private IGestionMensajes gestormensajes = new GestorMensajes();
+    //private IGestionRed gestored;
 
-    public void setControlador(IGestionInterfaz controlador){
+    /*public void setControlador(IGestionInterfaz controlador){
         this.controlador = controlador;
-    }
+    }*/
     
-    public void setGestorRed(){
+    /*public void setGestorRed(){
         gestored = new GestorRed(controlador, gestorcontactos, gestormensajes);
 
-    }
+    }*/
     
-    public IGestionContactos getGestorContactos(){
-        return this.gestorcontactos;
-    }
+    //public IGestionContactos getGestorContactos(){
+    //    return this.gestorcontactos;
+    //}
 
-    public IGestionMensajes getGestormensajes() {
-        return gestormensajes;
-    }
+    //public IGestionMensajes getGestormensajes() {
+    //    return gestormensajes;
+    //}
 
-    public IGestionRed getGestored() {
-        return gestored;
-    }
+    //public IGestionRed getGestored() {
+    //    return gestored;
+    //}
    
    /* public List<String> getListaConexiones() {
         return this.conexionesActivas; // Devuelve solo los nombres de los contactos
@@ -57,25 +57,26 @@ public class Modelo {
         return this.contactos; // Devuelve solo los nombres de los contactos
     }
     */
-    public boolean validarCredenciales(String usuario, int puerto) {
-        if (usuario.isEmpty() || puerto <= 0) {
-            return false;
-        }
-        ServerSocket testSocket = null;
-        try {
-            testSocket = new ServerSocket(puerto);
-            return true; // Puerto disponible
-        } catch (IOException e) {
-            return false; // Puerto en uso
-        } finally {
-            if (testSocket != null) {
-                try {
-                    testSocket.close();
-                } catch (IOException ignored) {}
-            }
+    
+}
+/*public boolean validarCredenciales(String usuario, int puerto) {
+    if (usuario.isEmpty() || puerto <= 0) {
+        return false;
+    }
+    ServerSocket testSocket = null;
+    try {
+        testSocket = new ServerSocket(puerto);
+        return true; // Puerto disponible
+    } catch (IOException e) {
+        return false; // Puerto en uso
+    } finally {
+        if (testSocket != null) {
+            try {
+                testSocket.close();
+            } catch (IOException ignored) {}
         }
     }
-}
+} */
 
     /*public boolean agregarContacto(String nombre) {
         for (Contacto c: contactos){

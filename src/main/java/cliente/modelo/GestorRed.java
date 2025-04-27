@@ -33,6 +33,15 @@ public class GestorRed implements IGestionRed{
         this.gestorcontactos = gestorcontactos;
         this.gestormensajes = gestormensajes;
     }
+    public GestorRed(IGestionContactos gestorcontactos, IGestionMensajes gestormensajes) {
+        this.controlador=null; //lo debe setear luego
+        this.gestorcontactos = gestorcontactos;
+        this.gestormensajes = gestormensajes;
+    }
+
+    public void setControlador(IGestionInterfaz controlador) {
+        this.controlador = controlador;
+    }
     
     
     @Override
