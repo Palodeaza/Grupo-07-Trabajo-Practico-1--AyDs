@@ -20,7 +20,7 @@ public class ChatRenderer extends JPanel implements ListCellRenderer<String> {
 
         imagenPerfil = new JLabel();
         imagenPerfil.setPreferredSize(new Dimension(32, 32));
-        imagenPerfil.setIcon(redimensionarIcono(new ImageIcon("src\\main\\java\\vistas\\images-removebg-preview.png"), 32, 32));
+        imagenPerfil.setIcon(redimensionarIcono(new ImageIcon("src\\main\\java\\cliente\\vistas\\images-removebg-preview.png"), 32, 32));
 
         nombreContacto = new JLabel();
         nombreContacto.setFont(new Font("Roboto", Font.BOLD, 14));

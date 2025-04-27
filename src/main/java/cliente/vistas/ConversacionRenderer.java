@@ -26,7 +26,7 @@ public class ConversacionRenderer extends JPanel implements ListCellRenderer<Str
         imagenPerfil = new JLabel();
         imagenPerfil.setPreferredSize(new Dimension(32, 32));
         imagenPerfil.setIcon(redimensionarIcono(
-            new ImageIcon("src\\main\\java\\vistas\\images-removebg-preview.png"),
+            new ImageIcon("src\\main\\java\\cliente\\vistas\\images-removebg-preview.png"),
             32, 32));
 
         nombreContacto = new JLabel();

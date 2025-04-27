@@ -15,7 +15,7 @@ public class ServerView extends javax.swing.JFrame {
      */
     public ServerView() {
         initComponents();
-        newContactButton = new vistas.AnimatedLabel("AGREGAR"); 
+        newContactButton = new vistas.AnimatedLabel("Iniciar servidor"); 
         int buttonWidth = 130;
         int buttonHeight = 60;
 

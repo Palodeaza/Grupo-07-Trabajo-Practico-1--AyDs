@@ -1,4 +1,4 @@
-package prueba;
+package server;
 
 import modelo.Server;
 import vistas.ServerView;
