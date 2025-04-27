@@ -64,7 +64,7 @@ public class ClientHandler implements Runnable{
                                 enviaMensaje(partes[3], mensaje); 
                             else{
                                 System.out.println("bien 2");
-                                servidor.guardaMensaje(partes[3], mensaje);
+                                servidor.getgestorMensajesGuardados().guardaMensaje(partes[3], mensaje);
                             } 
                         }
             }

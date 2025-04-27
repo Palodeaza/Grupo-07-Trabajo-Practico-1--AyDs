@@ -10,8 +10,13 @@ import java.util.Map;
 public class Server {
     private ServerSocket serverSocket;
     private ArrayList<Contacto> dir = new ArrayList<>();
-    private Map<String, ArrayList<String>> mensajesGuardados = new HashMap<>();
+    private IGestionMensajesGuardados gestorMensajesGuardados = new GestorMensajesGuardados();
+    //private Map<String, ArrayList<String>> mensajesGuardados = new HashMap<>();
     
+    public IGestionMensajesGuardados getgestorMensajesGuardados(){
+        return this.gestorMensajesGuardados;
+    }
+
     public Server(){
         try {
             serverSocket = new ServerSocket(3333);
@@ -44,9 +49,9 @@ public class Server {
                     
                     new Thread(new ClientHandler(clientSocket, user, this)).start();
                     
-                    if (mensajesGuardados.containsKey(user)){
+                    if (gestorMensajesGuardados.tieneMensajePendiente(user)){
                         PrintWriter outputStream = new PrintWriter(clientSocket.getOutputStream(), true); 
-                        enviaMensajesGuardados(user, outputStream);
+                        gestorMensajesGuardados.enviaMensajesGuardados(user, outputStream);
                     }
                 }
             } catch (IOException e) {
@@ -55,6 +60,7 @@ public class Server {
         }).start();
     }
     
+    /*
     public void guardaMensaje(String receptor, String mensaje){
         System.out.println("bien 3");
         mensajesGuardados.putIfAbsent(receptor, new ArrayList<>());
@@ -66,10 +72,11 @@ public class Server {
     private void enviaMensajesGuardados(String user, PrintWriter outputStream){
         ArrayList<String> nuevosMensajes = mensajesGuardados.get(user);
         for (String mensaje : nuevosMensajes)
-            outputStream.println(mensaje);
+        outputStream.println(mensaje);
         mensajesGuardados.remove(user);
     }
-    
+    */
+
     public ArrayList<Contacto> getDir(){
         return dir;
     }
