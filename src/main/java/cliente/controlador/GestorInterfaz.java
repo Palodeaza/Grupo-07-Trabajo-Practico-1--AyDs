@@ -138,43 +138,6 @@ public class GestorInterfaz implements IGestionInterfaz {
         }
     }
 
-
-    /*
-    public void agregarNuevoContacto() {
-        String nombre = contactView.getNameTxtField().getText().trim();
-        String ip = contactView.getIpTxtField().getText().trim();
-        String puertoStr = contactView.getPortTxtField().getText().trim();
-
-        if (nombre.isEmpty() || ip.isEmpty() || puertoStr.isEmpty()) {
-            JOptionPane.showMessageDialog(contactView, "Todos los campos son obligatorios.");
-            return;
-        }
-
-        try {
-            int puerto = Integer.parseInt(puertoStr);
-            if (puerto < 1 || puerto > 65535) {
-                JOptionPane.showMessageDialog(contactView, "El puerto debe estar entre 1 y 65535.");
-                return;
-            }
-            try {
-                InetAddress.getByName(ip); // Si no lanza excepcion, es valida
-            } catch (UnknownHostException e) {
-                JOptionPane.showMessageDialog(contactView, "La dirección IP no es válida.");
-                return;
-            }
-            if (modelo.agregarContacto(nombre, ip, puerto)) {
-                JOptionPane.showMessageDialog(contactView, "Contacto agregado exitosamente.");
-                actualizaListaContactos();
-                contactView.setVisible(false);
-            } else {
-                JOptionPane.showMessageDialog(contactView, "El contacto ya existe.");
-            }
-            contactView.limpiarTextFields();
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(contactView, "El puerto debe ser un numero válido.");
-        }
-    }
-    */
     @Override
         public void agregarNuevoContacto() {
         String nombre = contactView.getNameTxtField().getText().trim();
@@ -183,24 +146,10 @@ public class GestorInterfaz implements IGestionInterfaz {
             JOptionPane.showMessageDialog(contactView, "El nombre de usuario es obligatorio.");
             return;
         }
-        /*
-        if (!modelo.checkDir(nombre)){
-            JOptionPane.showMessageDialog(contactView, "El contacto ingresado no existe.");
-            return;
-        }
-        */
-        /*if (modelo.agregarContacto(nombre)) {
-            JOptionPane.showMessageDialog(contactView, "Contacto agregado exitosamente.");
-            actualizaListaContactos();
-            contactView.setVisible(false);
-        } else {
-            JOptionPane.showMessageDialog(contactView, "El contacto ya existe.");
-        }
-        contactView.limpiarTextFields();
-        */
-        Contacto c = new Contacto(nombre,"localhost",3333); //hardcodeado, podriamos agarrar de los txt fields igual...
+        Contacto c = new Contacto(nombre,"localhost",3333); 
         gestored.checkDir(c);
     }
+    
     @Override
         public void agregadoExitoso(){
             JOptionPane.showMessageDialog(contactView, "Contacto agregado exitosamente.");
@@ -267,7 +216,6 @@ public class GestorInterfaz implements IGestionInterfaz {
 
         String mensajeFormateado = "texto" + "/" + nombre + ":" + ipEmisor + ":" + puertoActual + ";" + mensajeTexto + ";" + horaActual + ";" + receptor;
 
-       // modelo.getMensajes().computeIfAbsent(receptor, k -> new java.util.ArrayList<>()).add(mensajeFormateado);
        gestormensajes.agregaMensaje(receptor, mensajeFormateado);
        gestored.enviarMensaje(receptor, mensajeFormateado);
         mostrarMensajeEnChat(mensajeFormateado);
@@ -313,7 +261,7 @@ public class GestorInterfaz implements IGestionInterfaz {
             System.err.println("Error: Datos de remitente incompletos.");
             return;
         }
-        //String remitente = modelo.buscaContacto(datos[1], datos[2]); // método que retorna el nombre según ip y puerto que voy a buscar? si solo guardo nombre ahora
+        
         String remitente = datos[0];
         boolean esMensajePropio = datos[1].equals(gestored.obtenerIPLocal()) && datos[2].equals(String.valueOf(puertoActual));
         ConversacionRenderer renderer = (ConversacionRenderer) initView.getChatList().getCellRenderer();

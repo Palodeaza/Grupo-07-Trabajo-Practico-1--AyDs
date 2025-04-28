@@ -9,10 +9,8 @@ import java.util.Map;
 
 public class Server {
     private ServerSocket serverSocket;
-    //private ArrayList<Contacto> dir = new ArrayList<>();
     private IGestionDir gestorDir = new GestorDir();
     private IGestionMensajesGuardados gestorMensajesGuardados = new GestorMensajesGuardados();
-    //private Map<String, ArrayList<String>> mensajesGuardados = new HashMap<>();
     
     public IGestionMensajesGuardados getGestorMensajesGuardados(){
         return this.gestorMensajesGuardados;
@@ -66,29 +64,6 @@ public class Server {
             }
         }).start();
     }
-    
-    /*
-    public void guardaMensaje(String receptor, String mensaje){
-        System.out.println("bien 3");
-        mensajesGuardados.putIfAbsent(receptor, new ArrayList<>());
-        mensajesGuardados.get(receptor).add("texto/" + mensaje);
-        System.out.println("Mensaje guardado para " + receptor + ": " + mensaje);
-        System.out.println(mensajesGuardados);
-    }
-
-    private void enviaMensajesGuardados(String user, PrintWriter outputStream){
-        ArrayList<String> nuevosMensajes = mensajesGuardados.get(user);
-        for (String mensaje : nuevosMensajes)
-        outputStream.println(mensaje);
-        mensajesGuardados.remove(user);
-    }
-    */
-    
-    /*
-    public ArrayList<Contacto> getDir(){
-        return dir;
-    }
-     */
     
     public static void main(String[] args) {
         Server server = new Server();

@@ -88,30 +88,17 @@ public class ClientHandler implements Runnable{
         }
         return false;
     }
-    
-    /*
-    private Contacto buscaDir(String nombre){
-        Contacto found = null;
-        for (Contacto c : servidor.getDir()){
-            if (c.getNombre().equals(nombre)){
-                found = new Contacto(nombre,c.getIp(),c.getPuerto());
-                return found;
-            }
-        }
-        return found;
-    }*/
 
     private void enviaMensaje(String receptor, String mensaje) {
         System.out.println("Receptor: "+receptor+" Mensaje: "+mensaje);
         for (ClientHandler c : ClientHandler.clientHandlers) {
             try {
                 System.out.println("[ClientHandler]: Nombre de cliente:"+c.user);
-                //if (c.user.equals(receptor) && !c.user.equals(user)){ // Faltaria implementar que guarde el mensaje si el receptor no esta conectado
                 if (c.user.equalsIgnoreCase(receptor)){
                     c.outputStream.println("texto/" + mensaje); 
                 }   
             }
-            catch(Exception e){//este catch no funciona
+            catch(Exception e){//este catch funciona?
                 System.err.println("Error al enviar mensaje: " + e.getMessage());
                 cierraConexion(socket, inputStream, outputStream); 
             }

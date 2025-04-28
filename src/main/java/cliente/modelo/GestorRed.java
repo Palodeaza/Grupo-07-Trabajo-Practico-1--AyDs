@@ -168,7 +168,7 @@ public class GestorRed implements IGestionRed{
                             else{
                                     if (gestorcontactos.agregarContacto(datos[0]))//deberia poder pasarle otras cosas...
                                         controlador.agregadoExitoso();
-                                    else // esto queda horrible, nose que se les ocurre para hacer esto en el controlador
+                                    else 
                                         controlador.agregadoRepetido();
                                 }
                         }
