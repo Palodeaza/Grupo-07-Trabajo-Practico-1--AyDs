@@ -1,4 +1,4 @@
-package vistas;
+package cliente.vistas;
 
 import java.awt.*;
 import java.awt.event.*;

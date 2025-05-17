@@ -1,4 +1,4 @@
-package vistas;
+package cliente.vistas;
 
 import java.awt.Color;
 
@@ -30,12 +30,9 @@ public class Login extends javax.swing.JFrame {
         jTextPane1 = new javax.swing.JTextPane();
         bg = new javax.swing.JPanel();
         userTxt = new javax.swing.JTextField();
-        portTxt = new javax.swing.JTextField();
         IniciarSesion = new javax.swing.JLabel();
-        NombreUser = new javax.swing.JLabel();
         Linea = new javax.swing.JLabel();
         Contraseña = new javax.swing.JLabel();
-        lineaPuerto = new javax.swing.JLabel();
         panelNaranja = new javax.swing.JLabel();
         lineaInicioSesion = new javax.swing.JLabel();
 
@@ -61,40 +58,18 @@ public class Login extends javax.swing.JFrame {
                 userTxtActionPerformed(evt);
             }
         });
-        bg.add(userTxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 200, 320, -1));
-
-        portTxt.setForeground(new java.awt.Color(204, 204, 204));
-        portTxt.setText("Ingrese el puerto a escuchar...");
-        portTxt.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        portTxt.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                portTxtMouseClicked(evt);
-            }
-        });
-        portTxt.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                portTxtActionPerformed(evt);
-            }
-        });
-        bg.add(portTxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 300, 320, 20));
+        bg.add(userTxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 250, 320, -1));
 
         IniciarSesion.setFont(new java.awt.Font("Roboto", 1, 24)); // NOI18N
         IniciarSesion.setText("INICIAR SESION");
         bg.add(IniciarSesion, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 120, 230, 20));
 
-        NombreUser.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        NombreUser.setText("Puerto");
-        bg.add(NombreUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 280, -1, -1));
-
         Linea.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        bg.add(Linea, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 220, 320, -1));
+        bg.add(Linea, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 268, 320, -1));
 
         Contraseña.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         Contraseña.setText("Nombre de usuario");
-        bg.add(Contraseña, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 180, -1, -1));
-
-        lineaPuerto.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        bg.add(lineaPuerto, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 320, 320, -1));
+        bg.add(Contraseña, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 230, -1, -1));
 
         panelNaranja.setBackground(new java.awt.Color(0, 0, 102));
         panelNaranja.setForeground(new java.awt.Color(255, 153, 0));
@@ -108,13 +83,13 @@ public class Login extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(bg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(bg, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 6, Short.MAX_VALUE)
-                .addComponent(bg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(bg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -124,31 +99,12 @@ public class Login extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_userTxtActionPerformed
 
-    private void portTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_portTxtActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_portTxtActionPerformed
-
     private void userTxtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_userTxtMouseClicked
        if (getUserTxt().getText().equals("Ingrese su nombre de usuario...")){
             getUserTxt().setText("");
             getUserTxt().setForeground(Color.BLACK);          
        }
-       if (portTxt.getText().isEmpty()){
-           portTxt.setText("Ingrese el puerto a escuchar...");
-           portTxt.setForeground(new Color(204,204,204));
-       }
     }//GEN-LAST:event_userTxtMouseClicked
-
-    private void portTxtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_portTxtMouseClicked
-       if (getPortTxt().getText().equals("Ingrese el puerto a escuchar...")){
-            getPortTxt().setText("");
-            getPortTxt().setForeground(Color.BLACK);          
-       }
-       if (userTxt.getText().isEmpty()){
-           userTxt.setText("Ingrese su nombre de usuario...");
-           userTxt.setForeground(new Color(204,204,204));
-       }
-    }//GEN-LAST:event_portTxtMouseClicked
 
     /**
      * @param args the command line arguments
@@ -189,14 +145,11 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JLabel Contraseña;
     private javax.swing.JLabel IniciarSesion;
     private javax.swing.JLabel Linea;
-    private javax.swing.JLabel NombreUser;
     private javax.swing.JPanel bg;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextPane jTextPane1;
     private javax.swing.JLabel lineaInicioSesion;
-    private javax.swing.JLabel lineaPuerto;
     private javax.swing.JLabel panelNaranja;
-    private javax.swing.JTextField portTxt;
     private javax.swing.JTextField userTxt;
     // End of variables declaration//GEN-END:variables
     private AnimatedButton loginButton;
@@ -211,9 +164,6 @@ public class Login extends javax.swing.JFrame {
     /**
      * @return the portTxt
      */
-    public javax.swing.JTextField getPortTxt() {
-        return portTxt;
-    }
 
     /**
      * @return the userTxt

@@ -2,23 +2,17 @@ package controlador;
 
 import java.awt.Color;
 import java.awt.Point;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import modelo.Contacto;
-import modelo.GestorContactos;
-import modelo.GestorMensajes;
 import modelo.IGestionContactos;
 import modelo.IGestionMensajes;
 import modelo.IGestionRed;
 import vistas.ConversacionRenderer;
 import vistas.Init;
-import vistas.Login;
+import cliente.vistas.Login;
 import vistas.newChat;
 import vistas.newContact;
 
@@ -32,7 +26,6 @@ public class GestorInterfaz implements IGestionInterfaz {
     private IGestionMensajes gestormensajes;
     private IGestionRed gestored;
     private String usuarioActual;
-    private int puertoActual;
 
     public GestorInterfaz(Login login, Init init, newContact contact, newChat chat, IGestionRed gestored, IGestionContactos gestorcontactos, IGestionMensajes gestormensajes) {
         this.loginView = login;
@@ -90,40 +83,23 @@ public class GestorInterfaz implements IGestionInterfaz {
         });
     }
 
-    public boolean validarCredenciales(String usuario, int puerto) {
-        if (usuario.isEmpty() || puerto <= 0) {
-            return false;
-        }
-        ServerSocket testSocket = null;
-        try {
-            testSocket = new ServerSocket(puerto);
-            return true; // Puerto disponible
-        } catch (IOException e) {
-            return false; // Puerto en uso
-        } finally {
-            if (testSocket != null) {
-                try {
-                    testSocket.close();
-                } catch (IOException ignored) {}
-            }
-        }
+    public boolean validarCredenciales(String usuario) {
+        return !usuario.isEmpty();
     }
+    
 
     @Override
     public void autenticarUsuario() {
         String usuario = loginView.getUserTxt().getText().trim();
-        String puertoStr = loginView.getPortTxt().getText().trim();
 
-        if (usuario.isEmpty() || puertoStr.isEmpty() || usuario.equals("Ingrese su nombre de usuario...") || puertoStr.equals("Ingrese el puerto a escuchar...")) {
-            JOptionPane.showMessageDialog(loginView, "Debes ingresar usuario y puerto.");
+        if (usuario.isEmpty() || usuario.equals("Ingrese su nombre de usuario...")) {
+            JOptionPane.showMessageDialog(loginView, "Debes ingresar usuario.");
             return;
         }
 
         try {
-            int puerto = Integer.parseInt(puertoStr);
-            if (validarCredenciales(usuario, puerto)) {
+            if (validarCredenciales(usuario)) {
                 this.usuarioActual = usuario;
-                this.puertoActual = puerto;
 
                 gestored.usuarioOnline(usuario);
                 Point posicionActual = loginView.getLocation();
@@ -139,7 +115,7 @@ public class GestorInterfaz implements IGestionInterfaz {
     }
 
     @Override
-        public void agregarNuevoContacto() {
+    public void agregarNuevoContacto() {
         String nombre = contactView.getNameTxtField().getText().trim();
 
         if (nombre.isEmpty()) {
@@ -214,10 +190,10 @@ public class GestorInterfaz implements IGestionInterfaz {
         String ipEmisor = gestored.obtenerIPLocal();
         String nombre = this.usuarioActual;
 
-        String mensajeFormateado = "texto" + "/" + nombre + ":" + ipEmisor + ":" + puertoActual + ";" + mensajeTexto + ";" + horaActual + ";" + receptor;
+        String mensajeFormateado = "texto" + "/" + nombre + ":" + ipEmisor + ";" + mensajeTexto + ";" + horaActual + ";" + receptor;
 
-       gestormensajes.agregaMensaje(receptor, mensajeFormateado);
-       gestored.enviarMensaje(receptor, mensajeFormateado);
+        gestormensajes.agregaMensaje(receptor, mensajeFormateado);
+        gestored.enviarMensaje(receptor, mensajeFormateado);
         mostrarMensajeEnChat(mensajeFormateado);
         getInitView().getMsgTextField().setText("  Mensaje...");
         getInitView().getMsgTextField().setForeground(new Color(204, 204, 204));
@@ -263,7 +239,7 @@ public class GestorInterfaz implements IGestionInterfaz {
         }
         
         String remitente = datos[0];
-        boolean esMensajePropio = datos[1].equals(gestored.obtenerIPLocal()) && datos[2].equals(String.valueOf(puertoActual));
+        boolean esMensajePropio = datos[1].equals(gestored.obtenerIPLocal()) && remitente.equals(usuarioActual);
         ConversacionRenderer renderer = (ConversacionRenderer) initView.getChatList().getCellRenderer();
 
         renderer.setUltimoMensaje(remitente, mensajeTexto, horaMensaje);// actualizo ultimo mensaje y hora
@@ -312,8 +288,6 @@ public class GestorInterfaz implements IGestionInterfaz {
     public void mostrarCartelErrorUsuarioConectado(){
         JOptionPane.showMessageDialog(chatView, "Usuario ya conectado.");
         initView.setVisible(false);
-        loginView.getPortTxt().setText("Ingrese el puerto a escuchar...");
-        loginView.getPortTxt().setForeground(new Color(204,204,204));
         loginView.getUserTxt().setText("Ingrese su nombre de usuario...");
         loginView.getUserTxt().setForeground(new Color(204,204,204));
         loginView.setVisible(true);

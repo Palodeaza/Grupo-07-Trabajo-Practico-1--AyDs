@@ -4,10 +4,8 @@ import controlador.GestorInterfaz;
 import controlador.IGestionInterfaz;
 import modelo.IGestionContactos;
 import modelo.IGestionMensajes;
-import java.io.PrintWriter;
-import java.net.Socket;
 import vistas.Init;
-import vistas.Login;
+import cliente.vistas.Login;
 import vistas.newChat;
 import vistas.newContact;
 
