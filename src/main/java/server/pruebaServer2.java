@@ -5,8 +5,6 @@ import vistas.ServerView;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
-import java.net.ServerSocket;
 
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -25,14 +23,14 @@ public class pruebaServer {
                 try{
                     int puerto1 = 1111; //HARDCODEADO
                     int puerto2 = 2222; //HARDCODEADO
-                    if (puerto1>0){
+                    if (puerto2>0){
                         txt.setEnabled(false);
                         lbl.setText("Servidor iniciado");
                         lbl.setEnabled(false);
                         lbl.removeMouseListener(this);
 
-                        Server server1 = new Server(puerto);
-                        server1.iniciarServidor(puerto1, puerto2);
+                        Server server2 = new Server(puerto2, puerto1);
+                        server2.iniciarServidor();
                     }
                     else{
                         JOptionPane.showMessageDialog(serverView1, "Puerto invalido.");
@@ -42,23 +40,7 @@ public class pruebaServer {
                 }
             }
         });
+        
 
     }
-
-/*    PARA IMPLEMENTAR
-    public boolean serverPrimario(int puerto) {
-        ServerSocket testSocket = null;
-        try {
-            testSocket = new ServerSocket(puerto);
-            return true; // Puerto disponible
-        } catch (IOException e) {
-            return false; // Puerto en uso
-        } finally {
-            if (testSocket != null) {
-                try {
-                    testSocket.close();
-                } catch (IOException ignored) {}
-            }
-        }
-    }*/
 }

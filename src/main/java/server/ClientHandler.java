@@ -11,16 +11,18 @@ public class ClientHandler implements Runnable{
 
     private Socket socket;
     private BufferedReader inputStream;
+    private PrintWriter outputStreamSinc;
     private PrintWriter outputStream;
     private String user;
     private Server servidor;
     public static ArrayList<ClientHandler> clientHandlers = new ArrayList<>();
     
-    public ClientHandler(Socket socket, String nombre, Server servidor){
+    public ClientHandler(Socket socket, String nombre, Server servidor, PrintWriter outputStreamSinc){
         try {
             this.socket = socket;
             this.inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             this.outputStream = new PrintWriter(socket.getOutputStream(), true); 
+            this.outputStreamSinc = outputStreamSinc; 
             this.user = nombre;
             this.servidor= servidor;
             ClientHandler.clientHandlers.add(this);
@@ -64,7 +66,8 @@ public class ClientHandler implements Runnable{
                                 enviaMensaje(partes[3], mensaje); 
                             else{
                                 System.out.println("bien 2");
-                                servidor.getGestorMensajesGuardados().guardaMensaje(partes[3], mensaje);
+                                servidor.getGestorMensajesGuardados().guardaMensaje(partes[3], mensaje); //receptor y mensaje
+                                outputStreamSinc.println("msjguardar/"+ partes[3] + ";" + mensaje);
                             } 
                         }
             }
