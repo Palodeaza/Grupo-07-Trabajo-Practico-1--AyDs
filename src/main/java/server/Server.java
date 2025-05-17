@@ -64,10 +64,4 @@ public class Server {
             }
         }).start();
     }
-    
-    /*public static void main(String[] args) {
-        Server server = new Server();
-        server.iniciarServidor();
-        System.out.println("Servidor iniciado");
-    }*/
 }

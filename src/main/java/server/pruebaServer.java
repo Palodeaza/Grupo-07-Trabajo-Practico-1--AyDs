@@ -23,8 +23,8 @@ public class pruebaServer {
                 JTextField txt1 = serverView.getPortTextField1();
                 JTextField txt2 = serverView.getPortTextField2();
                 try{
-                    int puerto1 = Integer.parseInt(txt1.getText());
-                    int puerto2 = Integer.parseInt(txt2.getText());
+                    int puerto1 = 3000;
+                    int puerto2 = 3001;
                     if (puerto1>0 && puerto2>0){ //no testea q sean same puerto
                         txt1.setEnabled(false);
                         txt2.setEnabled(false);
