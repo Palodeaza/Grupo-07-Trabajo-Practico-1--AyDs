@@ -20,9 +20,9 @@ public class Server {
         return this.gestorDir;
     }
 
-    public Server(){
+    public Server(int puerto){
         try {
-            serverSocket = new ServerSocket(3333);
+            serverSocket = new ServerSocket(puerto);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -65,9 +65,9 @@ public class Server {
         }).start();
     }
     
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         Server server = new Server();
         server.iniciarServidor();
         System.out.println("Servidor iniciado");
-    }
+    }*/
 }

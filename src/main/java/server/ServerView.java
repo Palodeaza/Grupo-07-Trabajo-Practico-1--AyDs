@@ -4,11 +4,20 @@
  */
 package vistas;
 
+import javax.swing.JTextField;
+import javax.swing.JLabel;
+
 /**
  *
  * @author tomas
  */
 public class ServerView extends javax.swing.JFrame {
+
+    private javax.swing.JTextField portTextField1;
+    private javax.swing.JLabel portLabel1;
+    private javax.swing.JTextField portTextField2;
+    private javax.swing.JLabel portLabel2;
+
 
     /**
      * Creates new form ServerView
@@ -25,6 +34,24 @@ public class ServerView extends javax.swing.JFrame {
         int x = (bgWidth - buttonWidth) / 2;
         int y = (bgHeight - buttonHeight) / 2 + 40; 
         bg.add(newContactButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(x, y, buttonWidth, buttonHeight));
+
+
+        portLabel1 = new javax.swing.JLabel("Puerto 1:");
+        bg.add(portLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 110, 70, 30));
+
+        portTextField1 = new javax.swing.JTextField();
+        portTextField1.setText("1111");
+        portTextField1.setToolTipText("Ingrese el número de puerto");
+        bg.add(portTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 110, 100, 30));
+        //----
+        portLabel2 = new javax.swing.JLabel("Puerto 2:");
+        bg.add(portLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 110, 70, 30));
+
+        portTextField2 = new javax.swing.JTextField();
+        portTextField2.setText("2222");
+        portTextField2.setToolTipText("Ingrese el número de puerto");
+        bg.add(portTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 110, 100, 30));
+
     }
 
     /**
@@ -49,7 +76,7 @@ public class ServerView extends javax.swing.JFrame {
         bg.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Roboto", 0, 36)); // NOI18N
-        jLabel1.setText("Servidor de Mensajeria");
+        jLabel1.setText("Servidores de Mensajeria");
         bg.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 50, -1, 40));
 
         jLabel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 102)));
@@ -123,5 +150,13 @@ public class ServerView extends javax.swing.JFrame {
     
     public AnimatedLabel getNewContactButton() {
         return newContactButton;
+    }
+
+    public javax.swing.JTextField getPortTextField1() {
+        return portTextField1;
+    }
+
+    public javax.swing.JTextField getPortTextField2() {
+        return portTextField2;
     }
 }
