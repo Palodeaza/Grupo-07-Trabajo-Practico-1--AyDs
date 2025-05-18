@@ -13,7 +13,7 @@ import controlador.IGestionInterfaz;
  * @author felis
  */
 public interface IGestionRed {
-    public void usuarioOnline(String emisor);
+    public void usuarioOnline(String emisor, String serverN);
     public void setControlador(IGestionInterfaz controlador);
     public void iniciarConexionCliente(String nombre, String ip, int puerto, String emisor);
     public void cerrarConexion();

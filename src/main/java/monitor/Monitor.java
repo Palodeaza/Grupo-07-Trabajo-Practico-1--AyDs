@@ -1,6 +1,7 @@
 package monitor;
 
 import java.io.BufferedReader;
+import cliente.modelo.ConfigLoader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;

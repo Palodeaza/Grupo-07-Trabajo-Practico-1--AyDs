@@ -15,6 +15,7 @@ import java.util.List;
 
 public class GestorRed implements IGestionRed{
     
+    private int intentos;
     private Socket socket;
     private PrintWriter outputStream;
     private IGestionInterfaz controlador;
@@ -28,12 +29,14 @@ public class GestorRed implements IGestionRed{
         this.controlador = controlador;
         this.gestorcontactos = gestorcontactos;
         this.gestormensajes = gestormensajes;
+        this.intentos=0;
     }
     
     public GestorRed(IGestionContactos gestorcontactos, IGestionMensajes gestormensajes) {
         this.controlador = null; 
         this.gestorcontactos = gestorcontactos;
         this.gestormensajes = gestormensajes;
+        this.intentos=0;
     }
     
     @Override
@@ -46,23 +49,31 @@ public class GestorRed implements IGestionRed{
     }
     
     @Override
-    public void usuarioOnline(String emisor){
+    public void usuarioOnline(String emisor, String serverN){
         try {
             String ip = ConfigLoader.getProperty("server.ip");
-            int puerto = Integer.parseInt(ConfigLoader.getProperty("server1.puerto"));
-            System.out.println("ASDASDASAASD"+ip+ConfigLoader.getProperty("server1.puerto"));
+            int puerto = Integer.parseInt(ConfigLoader.getProperty(serverN+".puerto"));
             /*String ip = "localhost";
             int puerto = 1111;*/
-            this.socket = new Socket(ip, puerto);  
             this.usuario = emisor;
+            this.socket = new Socket(ip, puerto);  
             this.outputStream = new PrintWriter(socket.getOutputStream(), true); 
             outputStream.println(emisor);
             new Thread(new MessageHandler(socket,emisor)).start();
         } catch (IOException e) {
             System.err.println("Error al conectar: " + e.getMessage()); 
-            controlador.mostrarCartelErrorConexion();
+            System.err.println("Intentando reconectar al servidor alternativo...");
+            if (intentos==0) {
+                System.out.println("Reconexion exitosa papu");
+                usuarioOnline(emisor,"server2");
+            } else {
+                this.intentos= this.intentos + 1;
+                System.err.println("No se pudo conectar con el secundario.");
+                controlador.mostrarCartelErrorConexion();
+            }
         }
     }
+
     
     public boolean reconectarBackup() {
         int nuevoServidor = (servidorActivo == 1) ? 2 : 1;
@@ -181,6 +192,7 @@ public class GestorRed implements IGestionRed{
                 String[] datos;
                 while (true) {
                     try {
+
                         String mensaje = inputStream.readLine();
 
                         System.out.println(" SOY " + nombreCliente + " y me llego ->  " + mensaje);
@@ -226,7 +238,7 @@ public class GestorRed implements IGestionRed{
                         System.err.println("Usuario duplicado: " + e.getMessage());
                         controlador.mostrarCartelErrorUsuarioConectado();
                         break;
-                    } catch (IOException e) {
+                    } catch (NullPointerException | IOException e) {
                         e.printStackTrace();
                         if (reconectarBackup()) {
                             System.out.println("Reconexion exitosa al servidor alternativo.");

@@ -101,7 +101,7 @@ public class GestorInterfaz implements IGestionInterfaz {
             if (validarCredenciales(usuario)) {
                 this.usuarioActual = usuario;
 
-                gestored.usuarioOnline(usuario);
+                gestored.usuarioOnline(usuario, "server1");
                 Point posicionActual = loginView.getLocation();
                 loginView.setVisible(false);
                 initView.setLocation(posicionActual);
