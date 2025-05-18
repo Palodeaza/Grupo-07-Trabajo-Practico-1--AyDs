@@ -59,7 +59,7 @@ public class ServerHandler implements Runnable {
             }
             catch(IOException e){
                // cierraConexion(socket, inputStream, outputStream); // aca ejecuta cuando se desconecta un cliente
-                e.printStackTrace();
+                //e.printStackTrace();
                 System.out.println("AHORA ESTOY SOLITO");
                 break;
             }

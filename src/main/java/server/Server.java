@@ -61,6 +61,11 @@ public class Server {
                     Socket clientSocket = serverSocket.accept(); 
                     BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                     String user = input.readLine();
+                    if(user.equals("ping")){
+                        PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+                        out.println("pong");
+                        System.out.println("mande pong");
+                    }else{
                     if (user.equals("admin")){
                         System.out.println("wow me hablo el otro server"); // le tengo que pasar todo, y mantenerlo abierto
                         this.serverSecundario = clientSocket;
@@ -110,6 +115,7 @@ public class Server {
                         }
                     }
                 }
+             }
             } catch (IOException e) {
                 System.err.println("Error en el servidor: " + e.getMessage());
             }
