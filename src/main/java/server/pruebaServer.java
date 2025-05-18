@@ -1,6 +1,5 @@
 package server;
 
-import server.Server;
 import vistas.ServerView;
 
 import java.awt.event.MouseAdapter;
@@ -9,11 +8,12 @@ import java.io.IOException;
 import java.net.ServerSocket;
 
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
 
 import vistas.AnimatedLabel;
+import cliente.modelo.ConfigLoader;
 
 public class pruebaServer {
+
     public static void main(String[] args) {
         ServerView serverView = new ServerView();
         serverView.setVisible(true);
@@ -22,42 +22,42 @@ public class pruebaServer {
             @Override
             public void mouseClicked(MouseEvent e) {
                 AnimatedLabel lbl = serverView.getNewContactButton();
-                try{
-                    int puerto1 = 1111; //HARDCODEADO
-                    int puerto2 = 2222; //HARDCODEADO
-                    if (puerto1>0){
-                        lbl.setText("Servidor iniciado");
-                        lbl.setEnabled(false);
-                        lbl.removeMouseListener(this);
+                try {
+                    int puerto1 = Integer.parseInt(ConfigLoader.getProperty("server1.puerto"));
+                    int puerto2 = Integer.parseInt(ConfigLoader.getProperty("server2.puerto"));
 
-                        Server server1 = new Server(puerto1, puerto2);
-                        server1.iniciarServidor();
+                    int puertoActivo;
+                    int puertoAlternativo;
+
+                    if (puertoDisponible(puerto1)) {
+                        puertoActivo = puerto1;
+                        puertoAlternativo = puerto2;
+                    } else if (puertoDisponible(puerto2)) {
+                        puertoActivo = puerto2;
+                        puertoAlternativo = puerto1;
+                    } else {
+                        JOptionPane.showMessageDialog(serverView, "Ningún puerto disponible. Verifica los puertos en config.properties.");
+                        return;
                     }
-                    else{
-                        JOptionPane.showMessageDialog(serverView, "Puerto invalido.");
-                    }
-                } catch (NumberFormatException i) {
-                JOptionPane.showMessageDialog(serverView, "El puerto debe ser un número válido.");
+
+                    lbl.setText("Puerto " + puertoActivo);
+                    lbl.setEnabled(false);
+                    lbl.removeMouseListener(this);
+                    Server server = new Server(puertoActivo, puertoAlternativo);
+                    server.iniciarServidor();
+
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(serverView, "Los puertos deben ser validos.");
                 }
             }
         });
-
     }
 
-/*    PARA IMPLEMENTAR
-    public boolean serverPrimario(int puerto) {
-        ServerSocket testSocket = null;
-        try {
-            testSocket = new ServerSocket(puerto);
-            return true; // Puerto disponible
+    private static boolean puertoDisponible(int puerto) {
+        try (ServerSocket testSocket = new ServerSocket(puerto)) {
+            return true;
         } catch (IOException e) {
-            return false; // Puerto en uso
-        } finally {
-            if (testSocket != null) {
-                try {
-                    testSocket.close();
-                } catch (IOException ignored) {}
-            }
+            return false;
         }
-    }*/
+    }
 }

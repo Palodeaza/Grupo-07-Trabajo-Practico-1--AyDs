@@ -46,13 +46,14 @@ public class ServerView extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(547, 270));
         setResizable(false);
 
         bg.setBackground(new java.awt.Color(255, 255, 255));
         bg.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Roboto", 0, 36)); // NOI18N
-        jLabel1.setText("Servidores de Mensajeria");
+        jLabel1.setText("Servidor de Mensajeria");
         bg.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 50, -1, 40));
 
         jLabel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 102)));
