@@ -1,5 +1,6 @@
-package server;
+package server.modelo;
 
+import server.modelo.IGestionMensajesGuardados;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;

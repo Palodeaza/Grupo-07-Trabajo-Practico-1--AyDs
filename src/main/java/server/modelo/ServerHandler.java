@@ -1,4 +1,4 @@
-package server;
+package server.modelo;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -36,6 +36,7 @@ public class ServerHandler implements Runnable {
                     break;
                 }
                 String operacion = mensaje.split("/", 2)[0];
+                mensaje = mensaje.split("/",2)[1]; 
                 switch (operacion) {
                     case "diragrega" -> {
                         // Agregar nuevo contacto al directorio
@@ -50,8 +51,7 @@ public class ServerHandler implements Runnable {
                     }
                     case "msjclear" -> {
                         // Eliminar mensajes pendientes de un usuario
-                        String usuario = mensaje.split("/", 2)[1];
-                        servidor.getGestorMensajesGuardados().getMensajesGuardados().remove(usuario);
+                        servidor.getGestorMensajesGuardados().getMensajesGuardados().remove(mensaje);
                     }
                 }
             } catch(IOException e) {

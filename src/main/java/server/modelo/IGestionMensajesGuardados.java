@@ -1,5 +1,5 @@
 
-package server;
+package server.modelo;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;

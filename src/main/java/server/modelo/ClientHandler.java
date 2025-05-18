@@ -1,5 +1,6 @@
-package server;
+package server.modelo;
 
+import server.modelo.Server;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -68,7 +69,8 @@ public class ClientHandler implements Runnable{
                             else{
                                 System.out.println("bien 2");
                                 servidor.getGestorMensajesGuardados().guardaMensaje(partes[3], mensaje); //receptor y mensaje
-                                outputStreamSinc.println("msjguardar/"+ partes[3] + ";" + mensaje);
+                                if (outputStreamSinc!=null)
+                                    outputStreamSinc.println("msjguardar/"+ partes[3] + ";" + mensaje);
                             } 
                         }
             }

@@ -2,7 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package vistas;
+package server.vistas;
+
+import vistas.AnimatedLabel;
 
 /**
  *
@@ -46,7 +48,6 @@ public class ServerView extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(547, 270));
         setResizable(false);
 
         bg.setBackground(new java.awt.Color(255, 255, 255));

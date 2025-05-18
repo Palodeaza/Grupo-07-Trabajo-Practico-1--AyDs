@@ -1,5 +1,6 @@
-package server;
+package server.modelo;
 
+import server.modelo.ServerHandler;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -54,15 +55,15 @@ public class Server {
                     BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                     String user = input.readLine(); // Primer mensaje debe ser el nombre de usuario o "admin"
                     switch (user) {
-                        case "ping":
+                        case "ping" -> {
                             // Se trata de un chequeo de disponibilidad
                             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
                             out.println("pong");
                             System.out.println("Mandé pong");
-                            break;
-                        case "admin":
+                        }
+                        case "admin" -> {
                             // Se conecta el servidor secundario
-                            System.out.println("Se conectó el otro servidor (secundario)");
+                            System.out.println("Se conecto el otro servidor (secundario)");
                             this.serverSecundario = clientSocket;
                             this.outputStreamSecundario = new PrintWriter(serverSecundario.getOutputStream(), true);
                             // Enviar todo el directorio actual al servidor secundario
@@ -76,10 +77,11 @@ public class Server {
                                 for (String mensaje : mensajes) {
                                     this.outputStreamSecundario.println("msjguardar/" + usuario + ";" + mensaje);
                                 }
-                            }   break;
-                        default:
+                            }
+                        }
+                        default -> {
                             // Se conecta un cliente
-                            System.out.println("Se conectó cliente: " + user);
+                            System.out.println("Se conecto cliente: " + user);
                             // Verificar si ya estaba conectado
                             for (ClientHandler c : ClientHandler.clientHandlers) {
                                 if (c.getUser().equals(user)) {
@@ -106,12 +108,12 @@ public class Server {
                             if (gestorMensajesGuardados.tieneMensajePendiente(user)) {
                                 PrintWriter outputStream = new PrintWriter(clientSocket.getOutputStream(), true);
                                 gestorMensajesGuardados.enviaMensajesGuardados(user, outputStream);
-                                
                                 // Limpiamos la lista de mensajes si hay un secundario
                                 if (this.outputStreamSecundario != null) {
                                     outputStreamSecundario.println("msjclear/" + user);
                                 }
-                            }   break;
+                            }
+                        }
                     }
                 }
             } catch (IOException e) {

@@ -1,6 +1,6 @@
-package server;
+package server.prueba;
 
-import vistas.ServerView;
+import server.vistas.ServerView;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 
 import vistas.AnimatedLabel;
 import cliente.modelo.ConfigLoader;
+import server.modelo.Server;
 
 public class pruebaServer {
 
