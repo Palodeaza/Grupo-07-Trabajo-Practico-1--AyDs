@@ -20,7 +20,7 @@ public class GestorMensajesGuardados implements IGestionMensajesGuardados {
     public void guardaMensaje(String receptor, String mensaje){
         System.out.println("bien 3");
         mensajesGuardados.putIfAbsent(receptor, new ArrayList<>());
-        mensajesGuardados.get(receptor).add("texto/" + mensaje);
+        mensajesGuardados.get(receptor).add(mensaje);
         System.out.println("Mensaje guardado para " + receptor + ": " + mensaje);
         System.out.println(mensajesGuardados);
     }
@@ -29,7 +29,7 @@ public class GestorMensajesGuardados implements IGestionMensajesGuardados {
     public void enviaMensajesGuardados(String user, PrintWriter outputStream){
         ArrayList<String> nuevosMensajes = mensajesGuardados.get(user);
         for (String mensaje : nuevosMensajes)
-            outputStream.println(mensaje);
+            outputStream.println("texto/" + mensaje);
         mensajesGuardados.remove(user);
     }
     
