@@ -53,8 +53,6 @@ public class GestorRed implements IGestionRed{
         try {
             String ip = ConfigLoader.getProperty("server.ip");
             int puerto = Integer.parseInt(ConfigLoader.getProperty(serverN+".puerto"));
-            /*String ip = "localhost";
-            int puerto = 1111;*/
             this.usuario = emisor;
             this.socket = new Socket(ip, puerto);  
             this.outputStream = new PrintWriter(socket.getOutputStream(), true); 
@@ -73,7 +71,6 @@ public class GestorRed implements IGestionRed{
             }
         }
     }
-
     
     public boolean reconectarBackup() {
         int nuevoServidor = (servidorActivo == 1) ? 2 : 1;
@@ -168,21 +165,21 @@ public class GestorRed implements IGestionRed{
     }
     
     public class MessageHandler implements Runnable {
-            
         private Socket socket;
         private BufferedReader inputStream;
         private PrintWriter outputStream;
         private String nombreCliente;
-        
         
         public MessageHandler(Socket socket, String nombre) {
             this.socket = socket;
             this.nombreCliente = nombre;
 
         }
+        
         public MessageHandler(Socket socket) {
             this.socket = socket;
         }
+        
         @Override
         public void run() {
             try {
@@ -192,9 +189,7 @@ public class GestorRed implements IGestionRed{
                 String[] datos;
                 while (true) {
                     try {
-
                         String mensaje = inputStream.readLine();
-
                         System.out.println(" SOY " + nombreCliente + " y me llego ->  " + mensaje);
                         String operacion = mensaje.split("/",2)[0];
                         if (operacion.equals("dupe")){
@@ -213,26 +208,26 @@ public class GestorRed implements IGestionRed{
                                 }
                         }
                         else { //me mandaron mensaje de texto
-                        mensaje = mensaje.split("/",2)[1]; // me quedo con todo menos operacion
-                        partes = mensaje.split(";", 4);
-                        if (partes.length == 4){ 
-                            datos = partes[0].split(":", 3);
-                            System.out.println(datos);
-                            System.out.println("me llego mensaje de: " + datos[0]+" "+datos[1]);
-                            nombreCliente = gestorcontactos.buscaContacto(datos[0]);
-                            System.out.println("Su nombre es: " + nombreCliente);
-                            if (nombreCliente==null){                 
-                                gestorcontactos.agregarContacto(datos[0]);
-                                controlador.actualizaListaContactos();
-                                nombreCliente = datos[0];
+                            mensaje = mensaje.split("/",2)[1]; // me quedo con todo menos operacion
+                            partes = mensaje.split(";", 4);
+                            if (partes.length == 4){ 
+                                datos = partes[0].split(":", 3);
+                                System.out.println(datos);
+                                System.out.println("me llego mensaje de: " + datos[0]+" "+datos[1]);
+                                nombreCliente = gestorcontactos.buscaContacto(datos[0]);
+                                System.out.println("Su nombre es: " + nombreCliente);
+                                if (nombreCliente==null){                 
+                                    gestorcontactos.agregarContacto(datos[0]);
+                                    controlador.actualizaListaContactos();
+                                    nombreCliente = datos[0];
+                                }
+                                if (!conexionesActivas.contains(nombreCliente)) {
+                                    conexionesActivas.add(nombreCliente);
+                                    controlador.refreshConversaciones();
+                                }
+                                gestormensajes.agregaMensaje(nombreCliente,mensaje);
+                                controlador.mostrarMensajeEnChat("texto/"+mensaje);  
                             }
-                            if (!conexionesActivas.contains(nombreCliente)) {
-                                conexionesActivas.add(nombreCliente);
-                                controlador.refreshConversaciones();
-                            }
-                            gestormensajes.agregaMensaje(nombreCliente,mensaje);
-                            controlador.mostrarMensajeEnChat("texto/"+mensaje);  
-                        }
                         }
                     } catch (UsuarioDuplicadoException e) {
                         System.err.println("Usuario duplicado: " + e.getMessage());
