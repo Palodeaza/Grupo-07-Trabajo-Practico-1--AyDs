@@ -48,10 +48,11 @@ public class GestorRed implements IGestionRed{
     @Override
     public void usuarioOnline(String emisor){
         try {
-            /*String ip = ConfigLoader.getProperty("server.ip");
-            int puerto = Integer.parseInt(ConfigLoader.getProperty("server1.port"));*/
-            String ip = "localhost";
-            int puerto = 1111;
+            String ip = ConfigLoader.getProperty("server.ip");
+            int puerto = Integer.parseInt(ConfigLoader.getProperty("server1.puerto"));
+            System.out.println("ASDASDASAASD"+ip+ConfigLoader.getProperty("server1.puerto"));
+            /*String ip = "localhost";
+            int puerto = 1111;*/
             this.socket = new Socket(ip, puerto);  
             this.usuario = emisor;
             this.outputStream = new PrintWriter(socket.getOutputStream(), true); 
@@ -66,7 +67,7 @@ public class GestorRed implements IGestionRed{
     public boolean reconectarBackup() {
         int nuevoServidor = (servidorActivo == 1) ? 2 : 1;
         String ip = ConfigLoader.getProperty("server.ip");
-        int puerto = Integer.parseInt(ConfigLoader.getProperty("server" + nuevoServidor + ".port"));
+        int puerto = Integer.parseInt(ConfigLoader.getProperty("server" + nuevoServidor + ".puerto"));
         try {
             System.out.println("Intentando reconectar al servidor" + nuevoServidor);
             Socket nuevoSocket = new Socket(ip, puerto);

@@ -22,14 +22,14 @@ public class Monitor {
     private static final Logger logger = Logger.getLogger(Monitor.class.getName());
 
     public Monitor() {
-        /*this.ip1 = ConfigLoader.getProperty("server.ip");
-        this.puerto1 = Integer.parseInt(ConfigLoader.getProperty("server1.port"));
+        this.ip1 = ConfigLoader.getProperty("server.ip");
+        this.puerto1 = Integer.parseInt(ConfigLoader.getProperty("server1.puerto"));
         this.ip2 = ConfigLoader.getProperty("server.ip");
-        this.puerto2 = Integer.parseInt(ConfigLoader.getProperty("server2.port"));*/
-        this.ip1 = "localhost";
+        this.puerto2 = Integer.parseInt(ConfigLoader.getProperty("server2.puerto"));
+        /*this.ip1 = "localhost";
         this.puerto1 = 1111;
         this.ip2 = "localhost";
-        this.puerto2 = 2222;
+        this.puerto2 = 2222;*/
         //iniciarMonitor();
     }
 
