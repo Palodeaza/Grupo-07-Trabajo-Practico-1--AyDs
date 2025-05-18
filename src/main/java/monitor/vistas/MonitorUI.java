@@ -1,5 +1,6 @@
-package monitor;
+package monitor.vistas;
 
+import monitor.modelo.Monitor;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Timer;

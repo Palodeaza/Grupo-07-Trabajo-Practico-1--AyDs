@@ -1,4 +1,4 @@
-package monitor;
+package monitor.modelo;
 
 import java.io.BufferedReader;
 import cliente.modelo.ConfigLoader;

@@ -4,6 +4,8 @@
  */
 package monitor;
 
+import monitor.vistas.MonitorUI;
+import monitor.modelo.Monitor;
 import javax.swing.SwingUtilities;
 
 public class pruebaMonitor {
