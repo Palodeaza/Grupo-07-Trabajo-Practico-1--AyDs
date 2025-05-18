@@ -44,9 +44,11 @@ public class Server {
             this.outputStreamSinc = new PrintWriter(socketSinc.getOutputStream(), true);  
             //this.inputStreamSinc = new BufferedReader(new InputStreamReader(socketSinc.getInputStream()));
             outputStreamSinc.println("admin"); //ME INTENTO CONECTAR AL SERVER PRINCIPAL (SI ES QUE EXISTE)
+            System.out.println("Me conecte al principal");
             new Thread(new ServerHandler(socketSinc,this)).start();//Server Hanndler se encarga de lidiar con los mensajes que me llegan del principal
         } catch (IOException ex) {
-            ex.printStackTrace();
+            System.out.println("ESTOY SOLITO");
+            //ex.printStackTrace();
         }
     }
     
@@ -55,7 +57,7 @@ public class Server {
         new Thread(() -> {
             try {
                 while (true) {
-                    
+                    System.out.println("Esperando mensaje...");
                     Socket clientSocket = serverSocket.accept(); 
                     BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                     String user = input.readLine();
@@ -65,10 +67,11 @@ public class Server {
                         this.outputStreamSecundario = new PrintWriter(serverSecundario.getOutputStream(), true);   
                         
                         //MANDO TODO EL DIR
-                        
+                        System.out.println("Mando todo el dir...");
                         for (Contacto c : this.gestorDir.getDir()) {
                             this.outputStreamSecundario.print("diragrega/" + c.getNombre() + ";" + c.getIp() + ";" + c.getPuerto());
                         }
+                        System.out.println("Mando todo el el hashmap...");
                         //QUE PAJA MANDAR UN HASHMAP LA PUTA QUE LO PARIO
                         for (String usuario : this.getGestorMensajesGuardados().getMensajesGuardados().keySet()) {
                             ArrayList<String> mensajes = this.getGestorMensajesGuardados().getMensajesGuardados().get(usuario);
@@ -95,15 +98,15 @@ public class Server {
                             int puertoC = clientSocket.getPort();
                             Contacto c = new Contacto(user, ipC, puertoC);
                             getGestorDir().agregaAlDir(c);
-                            outputStreamSinc.println("diragrega/"+ user + ";" + ipC + ";" + puertoC); // CREO QUE ACA HAY QUE CAMBIAR TODO A LO REFERIDO A SOCKET SERVER SECUNDARIO, NO SOCKET SINC
+                            outputStreamSecundario.println("diragrega/"+ user + ";" + ipC + ";" + puertoC); // CREO QUE ACA HAY QUE CAMBIAR TODO A LO REFERIDO A SOCKET SERVER SECUNDARIO, NO SOCKET SINC
                         }
                         
-                        new Thread(new ClientHandler(clientSocket, user, this, outputStreamSinc)).start();
+                        new Thread(new ClientHandler(clientSocket, user, this, outputStreamSecundario)).start();
                         
                         if (gestorMensajesGuardados.tieneMensajePendiente(user)){
                             PrintWriter outputStream = new PrintWriter(clientSocket.getOutputStream(), true); 
                             gestorMensajesGuardados.enviaMensajesGuardados(user, outputStream);
-                            outputStreamSinc.println("msjclear/"+ user);
+                            outputStreamSecundario.println("msjclear/"+ user);
                         }
                     }
                 }

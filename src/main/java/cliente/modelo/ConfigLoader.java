@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class ConfigLoader {
+    
     private static Properties props = new Properties();
 
     static {

@@ -36,9 +36,9 @@ public class GestorContactos implements IGestionContactos {
     }
 
     @Override
-    public String buscaContacto(String ip, String puerto) {
+    public String buscaContacto(String nombre) {
         for (Contacto contacto : this.contactos) {
-            if ((contacto.getIp().equals(ip) || contacto.getIp().equals("localhost")) && String.valueOf(contacto.getPuerto()).equals(puerto)) {
+            if ((contacto.getNombre().equals(nombre))) {
                 return contacto.getNombre();
             }
         }

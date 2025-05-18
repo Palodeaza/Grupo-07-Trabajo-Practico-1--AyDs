@@ -15,7 +15,7 @@ public interface IGestionContactos {
   
     public List<Contacto> getListaContactos();
     public boolean agregarContacto(String nombre);
-    public String buscaContacto(String ip, String puerto);
+    public String buscaContacto(String nombre);
     public String[] obtenerDatosContacto(String contactoSeleccionado);
     
     

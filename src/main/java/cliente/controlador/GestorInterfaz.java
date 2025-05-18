@@ -191,7 +191,7 @@ public class GestorInterfaz implements IGestionInterfaz {
         String nombre = this.usuarioActual;
 
         String mensajeFormateado = "texto" + "/" + nombre + ":" + ipEmisor + ";" + mensajeTexto + ";" + horaActual + ";" + receptor;
-
+        
         gestormensajes.agregaMensaje(receptor, mensajeFormateado);
         gestored.enviarMensaje(receptor, mensajeFormateado);
         mostrarMensajeEnChat(mensajeFormateado);
@@ -225,20 +225,24 @@ public class GestorInterfaz implements IGestionInterfaz {
     @Override
     public void mostrarMensajeEnChat(String mensaje) {
         String receptoractual = getInitView().getChatList().getSelectedValue();
-        String[] partes = mensaje.split(";", 4);
+        String[] partes = mensaje.split(";",4);
         if (partes.length < 3) {
             System.err.println("Error: Formato de mensaje incorrecto.");
             return;
         }
+        
         String mensajeTexto = partes[1];
         String horaMensaje = partes[2];
-        String[] datos = partes[0].split(":", 3); // datos[0]=nombre, datos[1]=ip, datos[2]=puerto
+ 
+        String[] datos1 = partes[0].split("/",2); //LE SACO EL /TEXTO
+        String[] datos = datos1[1].split(":", 2); // datos[0]=nombre, datos[1]=ip
         if (datos.length < 2) {
             System.err.println("Error: Datos de remitente incompletos.");
             return;
         }
         
         String remitente = datos[0];
+        System.out.println(remitente + " <---remitente /// usuarioActual--> " + usuarioActual);
         boolean esMensajePropio = datos[1].equals(gestored.obtenerIPLocal()) && remitente.equals(usuarioActual);
         ConversacionRenderer renderer = (ConversacionRenderer) initView.getChatList().getCellRenderer();
 
@@ -263,7 +267,7 @@ public class GestorInterfaz implements IGestionInterfaz {
             return;
         }
         for (String mensaje : listamensajes) {
-            this.mostrarMensajeEnChat(mensaje);
+            this.mostrarMensajeEnChat("texto/"+mensaje);
         }
         getInitView().getChatPanel().revalidate();
         getInitView().getChatPanel().repaint();

@@ -48,8 +48,10 @@ public class GestorRed implements IGestionRed{
     @Override
     public void usuarioOnline(String emisor){
         try {
-            String ip = ConfigLoader.getProperty("server.ip");
-            int puerto = Integer.parseInt(ConfigLoader.getProperty("server1.port"));
+            /*String ip = ConfigLoader.getProperty("server.ip");
+            int puerto = Integer.parseInt(ConfigLoader.getProperty("server1.port"));*/
+            String ip = "localhost";
+            int puerto = 1111;
             this.socket = new Socket(ip, puerto);  
             this.usuario = emisor;
             this.outputStream = new PrintWriter(socket.getOutputStream(), true); 
@@ -136,6 +138,7 @@ public class GestorRed implements IGestionRed{
         if (this.outputStream != null) {
             try {
                 this.outputStream.println(mensaje);
+
             } catch (Exception e) {
                 System.err.println("Error al enviar mensaje: " + e.getMessage());
                 System.err.println("Intentando reconectar al servidor alternativo...");
@@ -201,8 +204,9 @@ public class GestorRed implements IGestionRed{
                         partes = mensaje.split(";", 4);
                         if (partes.length == 4){ 
                             datos = partes[0].split(":", 3);
+                            System.out.println(datos);
                             System.out.println("me llego mensaje de: " + datos[0]+" "+datos[1]);
-                            nombreCliente = gestorcontactos.buscaContacto(datos[1], datos[2]);
+                            nombreCliente = gestorcontactos.buscaContacto(datos[0]);
                             System.out.println("Su nombre es: " + nombreCliente);
                             if (nombreCliente==null){                 
                                 gestorcontactos.agregarContacto(datos[0]);
@@ -214,7 +218,7 @@ public class GestorRed implements IGestionRed{
                                 controlador.refreshConversaciones();
                             }
                             gestormensajes.agregaMensaje(nombreCliente,mensaje);
-                            controlador.mostrarMensajeEnChat(mensaje);  
+                            controlador.mostrarMensajeEnChat("texto/"+mensaje);  
                         }
                         }
                     } catch (UsuarioDuplicadoException e) {
