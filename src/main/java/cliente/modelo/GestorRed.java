@@ -17,13 +17,14 @@ public class GestorRed implements IGestionRed{
     
     private int intentos;
     private Socket socket;
+    
     private PrintWriter outputStream;
     private IGestionInterfaz controlador;
     private IGestionContactos gestorcontactos;
     private IGestionMensajes gestormensajes;
     private ArrayList<String> conexionesActivas = new ArrayList<>();
     private String usuario;
-    private int servidorActivo = 1;
+    private String servidorActivo;
 
     public GestorRed(IGestionInterfaz controlador, IGestionContactos gestorcontactos, IGestionMensajes gestormensajes) {
         this.controlador = controlador;
@@ -51,8 +52,21 @@ public class GestorRed implements IGestionRed{
     @Override
     public void usuarioOnline(String emisor, String serverN){
         try {
-            String ip = ConfigLoader.getProperty("server.ip");
-            int puerto = Integer.parseInt(ConfigLoader.getProperty(serverN+".puerto"));
+            Socket socketMonitor = new Socket("localhost",1010);
+            PrintWriter outMonitor = new PrintWriter(socketMonitor.getOutputStream(),true);
+            BufferedReader inMonitor = new BufferedReader(new InputStreamReader(socketMonitor.getInputStream()));
+            outMonitor.println("servidoractivo");
+            String servidoractivo = inMonitor.readLine();
+            System.out.println("AL conectar por primera vez, MONITOR ME DIJO QUE SERVIDOR PRINCIPAL ES " + servidoractivo);
+            String ip =  ConfigLoader.getProperty("server.ip");
+            int puerto;
+            if (servidoractivo.equals("1")){
+            puerto = Integer.parseInt(ConfigLoader.getProperty("server1.puerto"));
+            }
+            else{
+                puerto = Integer.parseInt(ConfigLoader.getProperty("server2.puerto"));
+            }            
+
             this.usuario = emisor;
             this.socket = new Socket(ip, puerto);  
             this.outputStream = new PrintWriter(socket.getOutputStream(), true); 
@@ -73,20 +87,25 @@ public class GestorRed implements IGestionRed{
     }
     
     public boolean reconectarBackup() {
-        int nuevoServidor = (servidorActivo == 1) ? 2 : 1;
-        String ip = ConfigLoader.getProperty("server.ip");
-        int puerto = Integer.parseInt(ConfigLoader.getProperty("server" + nuevoServidor + ".puerto"));
         try {
-            System.out.println("Intentando reconectar al servidor" + nuevoServidor);
-            Socket nuevoSocket = new Socket(ip, puerto);
-            this.socket = nuevoSocket;
-            this.outputStream = new PrintWriter(nuevoSocket.getOutputStream(), true);
-            this.outputStream.println(this.usuario);
-            new Thread(new MessageHandler(nuevoSocket, this.usuario)).start();
-            servidorActivo = nuevoServidor;
-            return true;
+        Socket socketMonitor = new Socket("localhost",1010);
+        PrintWriter outMonitor = new PrintWriter(socketMonitor.getOutputStream(),true);
+        BufferedReader inMonitor = new BufferedReader(new InputStreamReader(socketMonitor.getInputStream()));
+        outMonitor.println("servidoractivo");
+        String nuevoServidor = inMonitor.readLine();
+        System.out.println("AL RECONECTAR, MONITOR ME DIJO QUE SERVIDOR PRINCIPAL ES " + nuevoServidor);
+        String ip =  ConfigLoader.getProperty("server.ip");
+        int puerto = Integer.parseInt(ConfigLoader.getProperty("server" + nuevoServidor + ".puerto"));
+        System.out.println("Intentando reconectar al servidor" + nuevoServidor);
+        Socket nuevoSocket = new Socket(ip, puerto);
+        this.socket = nuevoSocket;
+        this.outputStream = new PrintWriter(nuevoSocket.getOutputStream(), true);
+        this.outputStream.println(this.usuario);
+        new Thread(new MessageHandler(nuevoSocket, this.usuario)).start();
+        servidorActivo = nuevoServidor;
+        return true;
         } catch (IOException e) {
-            System.err.println("Fallo al reconectar con servidor" + nuevoServidor);
+            System.err.println("Fallo al reconectar con servidor" );
             return false;
         }
     }

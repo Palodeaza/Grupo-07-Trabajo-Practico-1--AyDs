@@ -4,14 +4,26 @@
  */
 package monitor;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author felis
  */
 public class pruebaMonitor {
     public static void main(String[] args) {
-            Monitor monitor = new Monitor();
+            Monitor monitor;
+
+        try {
+            monitor = new Monitor();
             monitor.iniciarMonitor();
+            monitor.listening();
             System.out.println("YA INICIADO");
+        } catch (IOException ex) {
+            Logger.getLogger(pruebaMonitor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         }
 }
