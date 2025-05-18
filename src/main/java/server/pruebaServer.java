@@ -1,6 +1,6 @@
 package server;
 
-import modelo.Server;
+import server.Server;
 import vistas.ServerView;
 
 import java.awt.event.MouseAdapter;
@@ -21,24 +21,23 @@ public class pruebaServer {
         serverView.getNewContactButton().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                AnimatedLabel lbl = serverView1.getNewContactButton();
+                AnimatedLabel lbl = serverView.getNewContactButton();
                 try{
                     int puerto1 = 1111; //HARDCODEADO
                     int puerto2 = 2222; //HARDCODEADO
                     if (puerto1>0){
-                        txt.setEnabled(false);
                         lbl.setText("Servidor iniciado");
                         lbl.setEnabled(false);
                         lbl.removeMouseListener(this);
 
-                        Server server1 = new Server(puerto);
-                        server1.iniciarServidor(puerto1, puerto2);
+                        Server server1 = new Server(puerto1, puerto2);
+                        server1.iniciarServidor();
                     }
                     else{
-                        JOptionPane.showMessageDialog(serverView1, "Puerto invalido.");
+                        JOptionPane.showMessageDialog(serverView, "Puerto invalido.");
                     }
                 } catch (NumberFormatException i) {
-                JOptionPane.showMessageDialog(serverView1, "El puerto debe ser un número válido.");
+                JOptionPane.showMessageDialog(serverView, "El puerto debe ser un número válido.");
                 }
             }
         });
