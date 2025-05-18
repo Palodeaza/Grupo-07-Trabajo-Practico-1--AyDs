@@ -1,4 +1,4 @@
-package main.java.server;
+package server;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,9 +6,10 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-import modelo.ClientHandler;
+import server.ClientHandler;
 import modelo.Contacto;
-import modelo.Server;
+import server.Server;
+
 
 public class ServerHandler implements Runnable {
 
@@ -21,7 +22,7 @@ public class ServerHandler implements Runnable {
             this.socket = socket;
             this.servidor= servidor;
             this.inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            System.out.println("Inicie conversacion con otro Server!!");
+            System.out.println("Inicie conversacion con Server Principal!!");
         }
         catch(IOException e){
             e.printStackTrace();
@@ -36,13 +37,13 @@ public class ServerHandler implements Runnable {
                 mensaje = inputStream.readLine();
                 System.out.println("[ServerHandler] Me llego el mensaje: "+ mensaje);
                 if (mensaje==null){
-                    cierraConexion(socket, inputStream);
+                    //cierraConexion(socket, inputStream); ESTO REPRESENTA QUE?
                     break;
                 }
                 String operacion = mensaje.split("/",2)[0];
                         if (operacion.equals("diragrega")){
                             String[] partes = mensaje.split(";", 3); // user + ";" + ipC + ";" + puertoC
-                            Contacto c = new Contacto(partes[0],partes[1],partes[2]);
+                            Contacto c = new Contacto(partes[0],partes[1],Integer.parseInt(partes[2]));
                             servidor.getGestorDir().agregaAlDir(c);
                             }
                         else if (operacion.equals("msjguardar")){
@@ -57,7 +58,7 @@ public class ServerHandler implements Runnable {
                         }
             }
             catch(IOException e){
-                cierraConexion(socket, inputStream, outputStream); // aca ejecuta cuando se desconecta un cliente
+               // cierraConexion(socket, inputStream, outputStream); // aca ejecuta cuando se desconecta un cliente
                 e.printStackTrace();
                 break;
             }

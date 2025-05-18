@@ -1,4 +1,4 @@
-package modelo;
+package server;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -6,29 +6,33 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import modelo.Contacto;
 
-import main.java.server.GestorSinc;
-import main.java.server.IGestionSinc;
-import main.java.server.ServerHandler;
+//import main.java.server.GestorSinc;
+//import main.java.server.IGestionSinc;
+import server.ServerHandler;
 import modelo.GestorRed.MessageHandler;
 
 public class Server {
+    
     private ServerSocket serverSocket;
     private Socket socketSinc;
+    private Socket serverSecundario;
     private BufferedReader inputStreamSinc;
     private PrintWriter outputStreamSinc;
+    private PrintWriter outputStreamSecundario;
     private IGestionDir gestorDir = new GestorDir();
-    private IGestionSinc gestorSinc = new GestorSinc();
+    //private IGestionSinc gestorSinc = new GestorSinc();
     private IGestionMensajesGuardados gestorMensajesGuardados = new GestorMensajesGuardados();
     
     public IGestionMensajesGuardados getGestorMensajesGuardados(){
         return this.gestorMensajesGuardados;
     }
 
-    public IGestionMensajesGuardados getGestorSinc(){
+    /*public IGestionMensajesGuardados getGestorSinc(){
         return this.gestorSinc;
     }
-
+    */
     public IGestionDir getGestorDir(){
         return this.gestorDir;
     }
@@ -39,23 +43,40 @@ public class Server {
             this.socketSinc = new Socket("localhost", puertoOtro);   
             this.outputStreamSinc = new PrintWriter(socketSinc.getOutputStream(), true);  
             //this.inputStreamSinc = new BufferedReader(new InputStreamReader(socketSinc.getInputStream()));
-            outputStreamSinc.println("admin");
-            //new Thread(new MessageHandler(socket,emisor)).start();
+            outputStreamSinc.println("admin"); //ME INTENTO CONECTAR AL SERVER PRINCIPAL (SI ES QUE EXISTE)
+            new Thread(new ServerHandler(socketSinc,this)).start();//Server Hanndler se encarga de lidiar con los mensajes que me llegan del principal
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
     
     public void iniciarServidor(){
+        
         new Thread(() -> {
             try {
                 while (true) {
+                    
                     Socket clientSocket = serverSocket.accept(); 
                     BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                     String user = input.readLine();
-                    if (user=="admin"){
-                        System.out.println("wow me hablo el otro server");
-                        new Thread(new ServerHandler(clientSocket, this)).start();
+                    if (user.equals("admin")){
+                        System.out.println("wow me hablo el otro server"); // le tengo que pasar todo, y mantenerlo abierto
+                        this.serverSecundario = clientSocket;
+                        this.outputStreamSecundario = new PrintWriter(serverSecundario.getOutputStream(), true);   
+                        
+                        //MANDO TODO EL DIR
+                        
+                        for (Contacto c : this.gestorDir.getDir()) {
+                            this.outputStreamSecundario.print("diragrega/" + c.getNombre() + ";" + c.getIp() + ";" + c.getPuerto());
+                        }
+                        //QUE PAJA MANDAR UN HASHMAP LA PUTA QUE LO PARIO
+                        for (String usuario : this.getGestorMensajesGuardados().getMensajesGuardados().keySet()) {
+                            ArrayList<String> mensajes = this.getGestorMensajesGuardados().getMensajesGuardados().get(usuario);
+                            for (String mensaje : mensajes) {
+                                this.outputStreamSecundario.print("msjguardar/" + usuario + ";" + mensaje);
+                            }
+                        }
+                        //SI ES LA PRIMERA VEZ QUE SE CONECTAN LOS DOS, ESTA BIEN, LAS LISTAS VAN A ESTAR VACIAS
                     }else{
                         
                         System.out.println("Soy el server y se conecto:" + user);
@@ -70,11 +91,11 @@ public class Server {
                         }      
                         
                         if (!(getGestorDir().tieneEnElDir(user))){ // si user no estaba en dir, lo agrego, se agrego por primera vez!
-                            ipC = clientSocket.getInetAddress().toString();
-                            puertoC = clientSocket.getPort();
+                            String ipC = clientSocket.getInetAddress().toString();
+                            int puertoC = clientSocket.getPort();
                             Contacto c = new Contacto(user, ipC, puertoC);
                             getGestorDir().agregaAlDir(c);
-                            outputStreamSinc.println("diragrega/"+ user + ";" + ipC + ";" + puertoC);
+                            outputStreamSinc.println("diragrega/"+ user + ";" + ipC + ";" + puertoC); // CREO QUE ACA HAY QUE CAMBIAR TODO A LO REFERIDO A SOCKET SERVER SECUNDARIO, NO SOCKET SINC
                         }
                         
                         new Thread(new ClientHandler(clientSocket, user, this, outputStreamSinc)).start();
