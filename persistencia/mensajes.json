@@ -1,0 +1,16 @@
+[
+  {
+    "receptor": "b",
+    "hora": "19:32",
+    "ip": "192.168.100.8",
+    "mensaje": "holaa",
+    "emisor": "texto/a"
+  },
+  {
+    "receptor": "b",
+    "hora": "19:55",
+    "ip": "192.168.100.8",
+    "mensaje": "todo bien?",
+    "emisor": "texto/a"
+  }
+]

@@ -13,8 +13,12 @@ import modelo.IGestionRed;
 import vistas.ConversacionRenderer;
 import vistas.Init;
 import cliente.vistas.Login;
+import java.util.Map;
+import persistencia.FabricaPersistencia;
+import persistencia.GuardadorMensaje;
 import vistas.newChat;
 import vistas.newContact;
+import persistencia.IFabricaPersistencia;
 
 public class GestorInterfaz implements IGestionInterfaz {
 
@@ -91,17 +95,24 @@ public class GestorInterfaz implements IGestionInterfaz {
     @Override
     public void autenticarUsuario() {
         String usuario = loginView.getUserTxt().getText().trim();
-
         if (usuario.isEmpty() || usuario.equals("Ingrese su nombre de usuario...")) {
             JOptionPane.showMessageDialog(loginView, "Debes ingresar usuario.");
             return;
         }
-
         try {
             if (validarCredenciales(usuario)) {
                 this.usuarioActual = usuario;
-
                 gestored.usuarioOnline(usuario, "server1");
+                
+                String formato = loginView.getFormatoComboBox().getSelectedItem().toString().toLowerCase();
+                IFabricaPersistencia fabrica = FabricaPersistencia.obtenerFabrica(formato);
+                GuardadorMensaje guardador = fabrica.crearGuardadorMensaje();
+                gestormensajes.setGuardador(guardador);
+                Map<String, List<String>> mensajesPrevios = guardador.cargarMensajes();
+                gestormensajes.setMensajes(mensajesPrevios);
+                gestorcontactos.cargaContactos(mensajesPrevios);
+                actualizaListaContactos();
+                
                 Point posicionActual = loginView.getLocation();
                 loginView.setVisible(false);
                 initView.setLocation(posicionActual);
@@ -221,7 +232,7 @@ public class GestorInterfaz implements IGestionInterfaz {
         getInitView().getChatPanel().revalidate();
         getInitView().getChatPanel().repaint();
     }
-
+    
     @Override
     public void mostrarMensajeEnChat(String mensaje) {
         String receptoractual = getInitView().getChatList().getSelectedValue();
@@ -230,24 +241,29 @@ public class GestorInterfaz implements IGestionInterfaz {
             System.err.println("Error: Formato de mensaje incorrecto.");
             return;
         }
-        
+
         String mensajeTexto = partes[1];
         String horaMensaje = partes[2];
- 
-        String[] datos1 = partes[0].split("/",2); //LE SACO EL /TEXTO
-        String[] datos = datos1[1].split(":", 2); // datos[0]=nombre, datos[1]=ip
+
+        String textoLimpio = partes[0];
+        while (textoLimpio.startsWith("texto/")) {
+            textoLimpio = textoLimpio.substring("texto/".length());
+        }
+        
+        String[] datos = textoLimpio.split(":", 2);
         if (datos.length < 2) {
             System.err.println("Error: Datos de remitente incompletos.");
             return;
         }
-        
+
         String remitente = datos[0];
-        System.out.println(remitente + " <---remitente /// usuarioActual--> " + usuarioActual);
-        boolean esMensajePropio = datos[1].equals(gestored.obtenerIPLocal()) && remitente.equals(usuarioActual);
+        String ipRemitente = datos[1];
+
+        boolean esMensajePropio = ipRemitente.equals(gestored.obtenerIPLocal()) && remitente.equals(usuarioActual);
         ConversacionRenderer renderer = (ConversacionRenderer) initView.getChatList().getCellRenderer();
 
-        renderer.setUltimoMensaje(remitente, mensajeTexto, horaMensaje);// actualizo ultimo mensaje y hora
-        
+        renderer.setUltimoMensaje(remitente, mensajeTexto, horaMensaje); // actualizo ultimo mensaje y hora
+
         if ((receptoractual != null && receptoractual.equals(remitente)) || esMensajePropio) {
             initView.addChatBubble(mensajeTexto, horaMensaje, esMensajePropio);
         } else {

@@ -35,11 +35,12 @@ public class Login extends javax.swing.JFrame {
         Contraseña = new javax.swing.JLabel();
         panelNaranja = new javax.swing.JLabel();
         lineaInicioSesion = new javax.swing.JLabel();
+        formatoComboBox = new javax.swing.JComboBox<>();
+        jLabel1 = new javax.swing.JLabel();
 
         jScrollPane1.setViewportView(jTextPane1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(700, 500));
         setResizable(false);
 
         bg.setBackground(new java.awt.Color(255, 255, 255));
@@ -79,6 +80,19 @@ public class Login extends javax.swing.JFrame {
         lineaInicioSesion.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 102)));
         bg.add(lineaInicioSesion, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 142, 200, -1));
 
+        formatoComboBox.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+        formatoComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "JSON", "XML", "Texto plano" }));
+        formatoComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                formatoComboBoxActionPerformed(evt);
+            }
+        });
+        bg.add(formatoComboBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 470, 110, -1));
+
+        jLabel1.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        jLabel1.setText("Tipo de Persistencia");
+        bg.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 450, -1, -1));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -105,6 +119,10 @@ public class Login extends javax.swing.JFrame {
             getUserTxt().setForeground(Color.BLACK);          
        }
     }//GEN-LAST:event_userTxtMouseClicked
+
+    private void formatoComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_formatoComboBoxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formatoComboBoxActionPerformed
 
     /**
      * @param args the command line arguments
@@ -146,6 +164,8 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JLabel IniciarSesion;
     private javax.swing.JLabel Linea;
     private javax.swing.JPanel bg;
+    private javax.swing.JComboBox<String> formatoComboBox;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextPane jTextPane1;
     private javax.swing.JLabel lineaInicioSesion;
@@ -170,5 +190,12 @@ public class Login extends javax.swing.JFrame {
      */
     public javax.swing.JTextField getUserTxt() {
         return userTxt;
+    }
+
+    /**
+     * @return the formatoComboBox
+     */
+    public javax.swing.JComboBox<String> getFormatoComboBox() {
+        return formatoComboBox;
     }
 }

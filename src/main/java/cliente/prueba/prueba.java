@@ -30,10 +30,10 @@ import modelo.IGestionRed;
                     e.printStackTrace();
                 }
 
-                //Modelo modelo = new Modelo();
                 IGestionContactos gestorcontactos = new GestorContactos();
                 IGestionMensajes gestormensajes = new GestorMensajes();
                 IGestionRed gestored = new GestorRed(gestorcontactos, gestormensajes);
+
                 Login login = new Login();
                 Init init = new Init();
                 newContact nc = new newContact();

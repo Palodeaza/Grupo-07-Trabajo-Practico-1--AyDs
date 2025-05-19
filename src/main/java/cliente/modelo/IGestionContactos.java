@@ -6,6 +6,7 @@ package modelo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -17,6 +18,6 @@ public interface IGestionContactos {
     public boolean agregarContacto(String nombre);
     public String buscaContacto(String nombre);
     public String[] obtenerDatosContacto(String contactoSeleccionado);
-    
-    
+    public void cargaContactos(Map<String, List<String>> mensajes);
+
 }

@@ -1,16 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package modelo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-/**
- *
- * @author felis
- */
 public class GestorContactos implements IGestionContactos {
     
     public ArrayList<Contacto> contactos = new ArrayList<>();
@@ -54,4 +47,9 @@ public class GestorContactos implements IGestionContactos {
         return null;
     }
     
+    public void cargaContactos(Map<String, List<String>> mensajes) {
+    for (String nombreContacto : mensajes.keySet()) {
+        agregarContacto(nombreContacto); 
+    }
+}
 }
