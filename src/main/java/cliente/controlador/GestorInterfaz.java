@@ -1,5 +1,8 @@
 package controlador;
 
+import cifrado.CifradoAES;
+import cifrado.ContextoCifrado;
+import cliente.modelo.ConfigLoader;
 import java.awt.Color;
 import java.awt.Point;
 import java.util.ArrayList;
@@ -14,6 +17,8 @@ import vistas.ConversacionRenderer;
 import vistas.Init;
 import cliente.vistas.Login;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import persistencia.FabricaPersistencia;
 import persistencia.GuardadorMensaje;
 import vistas.newChat;
@@ -30,6 +35,7 @@ public class GestorInterfaz implements IGestionInterfaz {
     private IGestionMensajes gestormensajes;
     private IGestionRed gestored;
     private String usuarioActual;
+    private ContextoCifrado contextocifrado;
 
     public GestorInterfaz(Login login, Init init, newContact contact, newChat chat, IGestionRed gestored, IGestionContactos gestorcontactos, IGestionMensajes gestormensajes) {
         this.loginView = login;
@@ -39,6 +45,7 @@ public class GestorInterfaz implements IGestionInterfaz {
         this.gestored = gestored;
         this.gestorcontactos = gestorcontactos;
         this.gestormensajes = gestormensajes;
+        this.contextocifrado = new ContextoCifrado(new CifradoAES());
         
         this.loginView.getLoginButton().addActionListener(e -> autenticarUsuario());
         this.contactView.getNewContactButton().addMouseListener(new java.awt.event.MouseAdapter() {
@@ -186,7 +193,8 @@ public class GestorInterfaz implements IGestionInterfaz {
     public void enviarMensaje() {
         String mensajeTexto = getInitView().getMsgTextField().getText().trim();
         String receptor = getInitView().getChatList().getSelectedValue();
-
+        String mensajeEncriptado = "";
+        
         if (receptor == null) {
             JOptionPane.showMessageDialog(getInitView(), "Seleccione un contacto antes de enviar un mensaje.");
             return;
@@ -200,18 +208,23 @@ public class GestorInterfaz implements IGestionInterfaz {
         String horaActual = new java.text.SimpleDateFormat("HH:mm").format(new java.util.Date());
         String ipEmisor = gestored.obtenerIPLocal();
         String nombre = this.usuarioActual;
-
-        String mensajeFormateado = "texto" + "/" + nombre + ":" + ipEmisor + ";" + mensajeTexto + ";" + horaActual + ";" + receptor;
-        
+        try {
+            mensajeEncriptado = this.getContextocifrado().cifrarMensaje(mensajeTexto, this.contextocifrado.crearClave(ConfigLoader.getProperty("clave")));
+            System.out.println("Mensaje cifrado:" + mensajeTexto);
+        } catch (Exception ex) {
+            Logger.getLogger(GestorInterfaz.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        String mensajeFormateado = "texto" + "/" + nombre + ":" + ipEmisor + ";" + mensajeEncriptado + ";" + horaActual + ";" + receptor;
+        //DESPUES LO EMPROLIJO LO JURO
         gestormensajes.agregaMensaje(receptor, mensajeFormateado);
         gestored.enviarMensaje(receptor, mensajeFormateado);
+        mensajeFormateado = "texto" + "/" + nombre + ":" + ipEmisor + ";" + mensajeTexto + ";" + horaActual + ";" + receptor;
         mostrarMensajeEnChat(mensajeFormateado);
         getInitView().getMsgTextField().setText("  Mensaje...");
         getInitView().getMsgTextField().setForeground(new Color(204, 204, 204));
         SwingUtilities.invokeLater(() -> {
             initView.getChatPanel().requestFocusInWindow();
         });
-
     }
 
     @Override
@@ -316,5 +329,12 @@ public class GestorInterfaz implements IGestionInterfaz {
     @Override
     public void mostrarCartelErrorDir(){
         JOptionPane.showMessageDialog(contactView, "Contacto no se encuentra en el directorio");
+    }
+
+    /**
+     * @return the contextocifrado
+     */
+    public ContextoCifrado getContextocifrado() {
+        return contextocifrado;
     }
 }

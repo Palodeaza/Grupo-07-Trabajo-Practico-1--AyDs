@@ -5,6 +5,7 @@
 package controlador;
 
 
+import cifrado.ContextoCifrado;
 import vistas.Init;
 
 /**
@@ -28,4 +29,5 @@ public interface IGestionInterfaz { //gestiona TODOS los eventos producidos por 
     public void mostrarCartelErrorConexion();
     public void mostrarCartelErrorDir();
     public void mostrarCartelErrorUsuarioConectado();
+    public ContextoCifrado getContextocifrado();
 }

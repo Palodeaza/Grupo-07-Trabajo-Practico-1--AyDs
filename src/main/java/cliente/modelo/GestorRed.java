@@ -1,5 +1,7 @@
 package modelo;
 
+import cifrado.CifradoAES;
+import cifrado.ContextoCifrado;
 import cliente.modelo.ConfigLoader;
 import cliente.modelo.UsuarioDuplicadoException;
 import controlador.IGestionInterfaz;
@@ -227,25 +229,38 @@ public class GestorRed implements IGestionRed{
                                 }
                         }
                         else { //me mandaron mensaje de texto
-                            mensaje = mensaje.split("/",2)[1]; // me quedo con todo menos operacion
+                            mensaje = mensaje.split("/", 2)[1]; // me quedo con todo menos operación
                             partes = mensaje.split(";", 4);
-                            if (partes.length == 4){ 
+
+                            if (partes.length == 4) { 
                                 datos = partes[0].split(":", 3);
-                                System.out.println(datos);
-                                System.out.println("me llego mensaje de: " + datos[0]+" "+datos[1]);
+                                System.out.println("me llegó mensaje de: " + datos[0] + " " + datos[1]);
+                                try {
+                                    System.out.println("Mensaje cifrado: " + partes[1]);
+                                    String mensajeDescifrado = controlador.getContextocifrado().descifrarMensaje(partes[1], controlador.getContextocifrado().crearClave(ConfigLoader.getProperty("clave")));
+                                    partes[1] = mensajeDescifrado; 
+                                    System.out.println("Mensaje descifrado: " + partes[1]);
+                                    mensaje = partes[0] + ";" + partes[1] + ";" + partes[2] + ";" + partes[3];
+                                    //hay q hacer la clase mensaje....
+                                } catch (Exception e) {
+                                    System.err.println("Error al descifrar mensaje: " + e.getMessage());
+                                    return; 
+                                }
+
                                 nombreCliente = gestorcontactos.buscaContacto(datos[0]);
-                                System.out.println("Su nombre es: " + nombreCliente);
-                                if (nombreCliente==null){                 
+                                if (nombreCliente == null) {                 
                                     gestorcontactos.agregarContacto(datos[0]);
                                     controlador.actualizaListaContactos();
                                     nombreCliente = datos[0];
                                 }
+
                                 if (!conexionesActivas.contains(nombreCliente)) {
                                     conexionesActivas.add(nombreCliente);
                                     controlador.refreshConversaciones();
                                 }
-                                gestormensajes.agregaMensaje(nombreCliente,mensaje);
-                                controlador.mostrarMensajeEnChat("texto/"+mensaje);  
+
+                                gestormensajes.agregaMensaje(nombreCliente, mensaje);
+                                controlador.mostrarMensajeEnChat("texto/" + mensaje);  
                             }
                         }
                     } catch (UsuarioDuplicadoException e) {

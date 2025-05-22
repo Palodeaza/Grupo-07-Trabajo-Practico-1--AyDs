@@ -32,7 +32,6 @@ public class GuardadorMensajeJson implements GuardadorMensaje {
 
         File archivo = new File(ARCHIVO);
         archivo.getParentFile().mkdirs();
-        System.out.println("Ruta absoluta: " + archivo.getAbsolutePath());
 
         if (archivo.exists()) {
             try (BufferedReader lector = new BufferedReader(new FileReader(archivo))) {
@@ -55,7 +54,7 @@ public class GuardadorMensajeJson implements GuardadorMensaje {
         mensajesExistentes.put(nuevoMensaje);
 
         try (FileWriter escritor = new FileWriter(archivo)) {
-            escritor.write(mensajesExistentes.toString(2)); // indentado
+            escritor.write(mensajesExistentes.toString(2)); 
             System.out.println("[JSON] Mensaje guardado exitosamente.");
         } catch (IOException e) {
             System.out.println("[JSON] Error al guardar el mensaje:");
