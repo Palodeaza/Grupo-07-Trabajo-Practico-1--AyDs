@@ -27,7 +27,7 @@ public class Monitor {
         this.puerto1 = Integer.parseInt(ConfigLoader.getProperty("server1.puerto"));
         this.ip2 = ConfigLoader.getProperty("server.ip");
         this.puerto2 = Integer.parseInt(ConfigLoader.getProperty("server2.puerto"));
-        serverSocket = new ServerSocket(1010);
+        serverSocket = new ServerSocket(1050);
     }
 
     public void iniciarMonitor() {
@@ -35,10 +35,10 @@ public class Monitor {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                System.out.println("ENTRE AL RUN");
+                //System.out.println("ENTRE AL RUN");
                 boolean server1 = estaActivo(getIp1(), getPuerto1());
                 boolean server2 = estaActivo(getIp2(), getPuerto2());
-                System.out.println("SALI DE LOS BOOLEANS");
+                //System.out.println("SALI DE LOS BOOLEANS");
                 if (server1 && getServerPrimario() == 1) {
                     serverPrimario = 1;
                     getLogger().info("Servidor primarioactivo y es el 1.");
@@ -69,7 +69,7 @@ public class Monitor {
         new Thread(() -> {
             try{
                 while (true) {
-                    System.out.println("Esperando mensaje...");
+                    //System.out.println("Esperando mensaje...");
                     Socket clientSocket = getServerSocket().accept(); 
                     BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                     String user = input.readLine();
@@ -77,7 +77,7 @@ public class Monitor {
                         PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
                         boolean server1 = estaActivo(getIp1(), getPuerto1());
                         boolean server2 = estaActivo(getIp2(), getPuerto2());
-                        System.out.println("ME PREGUNTARON CUAL ERA PRIMARIO");
+                        //System.out.println("ME PREGUNTARON CUAL ERA PRIMARIO");
                         if (server1 && getServerPrimario() == 1) {
                             serverPrimario = 1;
                             getLogger().info("Servidor primarioactivo y es el 1.");
@@ -112,17 +112,17 @@ public class Monitor {
     
     public boolean estaActivo(String ip, int puerto) {
         try {
-            System.out.println("ME INTENTO CONECTAR A " + puerto);
+            //System.out.println("ME INTENTO CONECTAR A " + puerto);
             Socket socket = new Socket(ip, puerto);
-            System.out.println("ME CONECTE");
+            //System.out.println("ME CONECTE");
              BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             // Enviar "ping" + salto de línea
             out.println("ping");
-            System.out.println("mande ping");
+            //System.out.println("mande ping");
             // Leer respuesta
             String respuesta = in.readLine();
-            System.out.println("me llego respuesta");
+            //System.out.println("me llego respuesta");
             // Comprobar si la respuesta es "pong"
             return "pong".equalsIgnoreCase(respuesta);
         } catch (IOException e) {

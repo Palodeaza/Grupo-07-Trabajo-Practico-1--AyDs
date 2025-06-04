@@ -16,6 +16,8 @@ import modelo.IGestionRed;
 import vistas.ConversacionRenderer;
 import vistas.Init;
 import cliente.vistas.Login;
+import main.java.cliente.modelo.Mensaje;
+
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -115,7 +117,7 @@ public class GestorInterfaz implements IGestionInterfaz {
                 IFabricaPersistencia fabrica = FabricaPersistencia.obtenerFabrica(formato);
                 GuardadorMensaje guardador = fabrica.crearGuardadorMensaje();
                 gestormensajes.setGuardador(guardador);
-                Map<String, List<String>> mensajesPrevios = guardador.cargarMensajes();
+                Map<String, List<Mensaje>> mensajesPrevios = guardador.cargarMensajes();
                 gestormensajes.setMensajes(mensajesPrevios);
                 gestorcontactos.cargaContactos(mensajesPrevios);
                 actualizaListaContactos();
@@ -191,6 +193,46 @@ public class GestorInterfaz implements IGestionInterfaz {
 
     @Override
     public void enviarMensaje() {
+        Mensaje mensaje = new Mensaje();
+        String mensajeTexto = getInitView().getMsgTextField().getText().trim();
+        mensaje.setReceptor(getInitView().getChatList().getSelectedValue());
+        mensaje.setMensaje("");
+
+        if (mensaje.getReceptor() == null) {
+            JOptionPane.showMessageDialog(getInitView(), "Seleccione un contacto antes de enviar un mensaje.");
+            return;
+        }
+
+        if (mensajeTexto.isEmpty()) {
+            JOptionPane.showMessageDialog(getInitView(), "El mensaje no puede estar vacío.");
+            return;
+        }
+
+        mensaje.setHora(new java.text.SimpleDateFormat("HH:mm").format(new java.util.Date()));
+        mensaje.setIpEmisor(gestored.obtenerIPLocal());
+        mensaje.setNombreEmisor(this.usuarioActual);
+        mensaje.setTipo("texto");
+
+        try {
+            //lo encripta antes de guardar
+            mensaje.setMensaje(this.getContextocifrado().cifrarMensaje(mensajeTexto, this.contextocifrado.crearClave(ConfigLoader.getProperty("clave"))));
+            System.out.println("Mensaje cifrado:" + mensajeTexto);
+        } catch (Exception ex) {
+            Logger.getLogger(GestorInterfaz.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        gestormensajes.agregaMensaje(mensaje.getReceptor() ,mensaje);
+        gestored.enviarMensaje(mensaje);
+        
+        mensaje.setMensaje(mensajeTexto);
+        mostrarMensajeEnChat(mensaje);
+        getInitView().getMsgTextField().setText("  Mensaje...");
+        getInitView().getMsgTextField().setForeground(new Color(204, 204, 204));
+        SwingUtilities.invokeLater(() -> {
+            initView.getChatPanel().requestFocusInWindow();
+        }); 
+        
+        /*
         String mensajeTexto = getInitView().getMsgTextField().getText().trim();
         String receptor = getInitView().getChatList().getSelectedValue();
         String mensajeEncriptado = "";
@@ -224,7 +266,8 @@ public class GestorInterfaz implements IGestionInterfaz {
         getInitView().getMsgTextField().setForeground(new Color(204, 204, 204));
         SwingUtilities.invokeLater(() -> {
             initView.getChatPanel().requestFocusInWindow();
-        });
+        }); 
+        */
     }
 
     @Override
@@ -247,8 +290,24 @@ public class GestorInterfaz implements IGestionInterfaz {
     }
     
     @Override
-    public void mostrarMensajeEnChat(String mensaje) {
+    public void mostrarMensajeEnChat(Mensaje mensaje) {
         String receptoractual = getInitView().getChatList().getSelectedValue();
+        
+        boolean esMensajePropio = mensaje.getIpEmisor().equals(gestored.obtenerIPLocal()) && mensaje.getNombreEmisor().equals(usuarioActual);
+        ConversacionRenderer renderer = (ConversacionRenderer) initView.getChatList().getCellRenderer();
+        
+        renderer.setUltimoMensaje(mensaje.getNombreEmisor(), mensaje.getMensaje(), mensaje.getHora()); // actualizo ultimo mensaje y hora
+
+        if ((receptoractual != null && receptoractual.equals(mensaje.getNombreEmisor())) || esMensajePropio) {
+            initView.addChatBubble(mensaje.getMensaje(), mensaje.getHora(), esMensajePropio);
+        } else {
+            renderer.setMensajeNoLeido(mensaje.getNombreEmisor(), true);
+        }
+        initView.getChatList().repaint();
+        
+        
+        /*
+        
         String[] partes = mensaje.split(";",4);
         if (partes.length < 3) {
             System.err.println("Error: Formato de mensaje incorrecto.");
@@ -283,20 +342,24 @@ public class GestorInterfaz implements IGestionInterfaz {
             renderer.setMensajeNoLeido(remitente, true);
         }
         initView.getChatList().repaint();
+        */
     }
 
     @Override
     public void actualizaChatPanel(String nombre) {
-        List<String> copiamensajes = gestormensajes.getMensajesDe(nombre);
-        List<String> listamensajes = (copiamensajes != null) ? new ArrayList<>(copiamensajes) : new ArrayList<>();
+        System.out.println("AAAAAA CAMBIO DE PESTANIA");
+        List<Mensaje> copiamensajes = gestormensajes.getMensajesDe(nombre);
+        List<Mensaje> listamensajes = (copiamensajes != null) ? new ArrayList<>(copiamensajes) : new ArrayList<>();
         getInitView().getChatPanel().removeAll();
         if (listamensajes.isEmpty()) {
             getInitView().getChatPanel().revalidate();
             getInitView().getChatPanel().repaint();
             return;
         }
-        for (String mensaje : listamensajes) {
-            this.mostrarMensajeEnChat("texto/"+mensaje);
+        System.out.println(listamensajes);
+        for (Mensaje mensaje : listamensajes) {
+            System.out.println("saco 1 mensaje de " + mensaje.getNombreEmisor());
+            this.mostrarMensajeEnChat(mensaje);
         }
         getInitView().getChatPanel().revalidate();
         getInitView().getChatPanel().repaint();

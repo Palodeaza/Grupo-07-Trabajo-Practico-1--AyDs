@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import main.java.cliente.modelo.Mensaje;
+
 public class GuardadorMensajeTexto implements GuardadorMensaje {
 
     private static final String ARCHIVO = "persistencia/mensajes.txt";
@@ -31,26 +33,30 @@ public class GuardadorMensajeTexto implements GuardadorMensaje {
     }
 
     @Override
-    public Map<String, List<String>> cargarMensajes() {
+    public Map<String, List<Mensaje>> cargarMensajes() {
         System.out.println("Cargando mensajes desde archivo de texto...");
 
-        Map<String, List<String>> mensajes = new HashMap<>();
+        Map<String, List<Mensaje>> mensajes = new HashMap<>();
 
         try (BufferedReader lector = new BufferedReader(new FileReader(ARCHIVO))) {
             String linea;
             int contador = 0;
 
             while ((linea = lector.readLine()) != null) {
+                Mensaje mensaje = new Mensaje();
                 // emisor:ip;mensaje;hora;receptor
                 String[] partes = linea.split(";");
                 if (partes.length == 4) {
                     String[] emisorIp = partes[0].split(":");
                     if (emisorIp.length == 2) {
-                        String emisor = emisorIp[0];
-                        String receptor = partes[3];
+                        mensaje.setNombreEmisor(emisorIp[0]);
+                        mensaje.setIpEmisor(emisorIp[1]);
+                        mensaje.setMensaje(partes[1]);
+                        mensaje.setHora(partes[2]);
+                        mensaje.setReceptor(partes[3]);
 
-                        mensajes.computeIfAbsent(receptor, k -> new ArrayList<>()).add(linea);
-                        System.out.println("Mensaje cargado: " + linea);
+                        mensajes.computeIfAbsent(mensaje.getReceptor(), k -> new ArrayList<>()).add(mensaje);
+                        System.out.println("Mensaje cargado: " + mensaje.getOutputString());
                         contador++;
                     } else {
                         System.out.println("Formato incorrecto en línea: " + linea);

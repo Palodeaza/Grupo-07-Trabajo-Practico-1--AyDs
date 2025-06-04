@@ -6,6 +6,7 @@ package controlador;
 
 
 import cifrado.ContextoCifrado;
+import main.java.cliente.modelo.Mensaje;
 import vistas.Init;
 
 /**
@@ -22,7 +23,7 @@ public interface IGestionInterfaz { //gestiona TODOS los eventos producidos por 
     public void enviarMensaje();
     public void borraChat(String contacto);
     public void borraChat();
-    public void mostrarMensajeEnChat(String mensaje);
+    public void mostrarMensajeEnChat(Mensaje mensaje);
     public void actualizaChatPanel(String nombre);
     public void refreshConversaciones();
     public Init getInitView();

@@ -7,6 +7,7 @@ package modelo;
 import java.util.List;
 
 import controlador.IGestionInterfaz;
+import main.java.cliente.modelo.Mensaje;
 
 /**
  *
@@ -22,5 +23,5 @@ public interface IGestionRed {
     public List<String> getListaConexiones();
     public boolean estaConectado(String conexion);
     public String obtenerIPLocal();
-    public void enviarMensaje(String contacto, String mensaje);
+    public void enviarMensaje(Mensaje mensaje);
 }

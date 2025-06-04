@@ -13,6 +13,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.NodeList;
 
+import main.java.cliente.modelo.Mensaje;
+
 public class GuardadorMensajeXml implements GuardadorMensaje {
 
     private static final String ARCHIVO = "persistencia/mensajes.xml";
@@ -43,10 +45,10 @@ public class GuardadorMensajeXml implements GuardadorMensaje {
     }
 
     @Override
-    public Map<String, List<String>> cargarMensajes() {
+    public Map<String, List<Mensaje>> cargarMensajes() {
         System.out.println("Cargando mensajes desde XML...");
 
-        Map<String, List<String>> mensajes = new HashMap<>();
+        Map<String, List<Mensaje>> mensajes = new HashMap<>();
 
         File archivo = new File(ARCHIVO);
         System.out.println("Ruta del archivo XML: " + archivo.getAbsolutePath());
@@ -65,19 +67,19 @@ public class GuardadorMensajeXml implements GuardadorMensaje {
             NodeList nodos = doc.getElementsByTagName("mensaje");
             System.out.println("Mensajes encontrados en el XML: " + nodos.getLength());
 
+            Mensaje mensaje = new Mensaje();
             for (int i = 0; i < nodos.getLength(); i++) {
                 Element elemento = (Element) nodos.item(i);
 
-                String emisor = elemento.getElementsByTagName("emisor").item(0).getTextContent();
-                String ip = elemento.getElementsByTagName("ip").item(0).getTextContent();
-                String contenido = elemento.getElementsByTagName("contenido").item(0).getTextContent();
-                String hora = elemento.getElementsByTagName("hora").item(0).getTextContent();
-                String receptor = elemento.getElementsByTagName("receptor").item(0).getTextContent();
+                mensaje.setNombreEmisor(elemento.getElementsByTagName("emisor").item(0).getTextContent());
+                mensaje.setIpEmisor(elemento.getElementsByTagName("ip").item(0).getTextContent());
+                mensaje.setMensaje(elemento.getElementsByTagName("contenido").item(0).getTextContent());
+                mensaje.setHora(elemento.getElementsByTagName("hora").item(0).getTextContent());
+                mensaje.setReceptor(elemento.getElementsByTagName("receptor").item(0).getTextContent());
 
-                String mensajeFormateado = emisor + ":" + ip + ";" + contenido + ";" + hora + ";" + receptor;
-                System.out.println("Mensaje cargado: " + mensajeFormateado);
+                System.out.println("Mensaje cargado: " + mensaje.getOutputString());
 
-                mensajes.computeIfAbsent(receptor, k -> new ArrayList<>()).add(mensajeFormateado);
+                mensajes.computeIfAbsent(mensaje.getReceptor(), k -> new ArrayList<>()).add(mensaje);
             }
 
         } catch (Exception e) {

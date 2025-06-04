@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import main.java.cliente.modelo.Mensaje;
+
 public class GestorContactos implements IGestionContactos {
     
     public ArrayList<Contacto> contactos = new ArrayList<>();
@@ -47,7 +49,7 @@ public class GestorContactos implements IGestionContactos {
         return null;
     }
     
-    public void cargaContactos(Map<String, List<String>> mensajes) {
+    public void cargaContactos(Map<String, List<Mensaje>> mensajes) {
     for (String nombreContacto : mensajes.keySet()) {
         agregarContacto(nombreContacto); 
     }

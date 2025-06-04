@@ -4,6 +4,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import org.json.JSONObject;
+
+import main.java.cliente.modelo.Mensaje;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -63,10 +66,10 @@ public class GuardadorMensajeJson implements GuardadorMensaje {
     }
 
     @Override
-    public Map<String, List<String>> cargarMensajes() {
+    public Map<String, List<Mensaje>> cargarMensajes() {
         System.out.println("[JSON] Cargando mensajes desde archivo JSON...");
 
-        Map<String, List<String>> mensajes = new HashMap<>();
+        Map<String, List<Mensaje>> mensajes = new HashMap<>();
 
         File archivo = new File(ARCHIVO);
         if (!archivo.exists()) {
@@ -84,19 +87,18 @@ public class GuardadorMensajeJson implements GuardadorMensaje {
             JSONArray jsonMensajes = new JSONArray(sb.toString());
             System.out.println("[JSON] Total de mensajes cargados: " + jsonMensajes.length());
 
+            Mensaje mensaje = new Mensaje();
             for (int i = 0; i < jsonMensajes.length(); i++) {
                 JSONObject obj = jsonMensajes.getJSONObject(i);
 
-                String emisor = obj.getString("emisor");
-                String ip = obj.getString("ip");
-                String mensaje = obj.getString("mensaje");
-                String hora = obj.getString("hora");
-                String receptor = obj.getString("receptor");
+                mensaje.setNombreEmisor(obj.getString("emisor"));
+                mensaje.setIpEmisor(obj.getString("ip"));
+                mensaje.setMensaje(obj.getString("mensaje"));
+                mensaje.setHora(obj.getString("hora"));
+                mensaje.setReceptor(obj.getString("receptor"));
 
-                String mensajeFormateado = emisor + ":" + ip + ";" + mensaje + ";" + hora + ";" + receptor;
-
-                mensajes.computeIfAbsent(receptor, k -> new ArrayList<>()).add(mensajeFormateado);
-                System.out.println("[JSON] Mensaje cargado: " + mensajeFormateado);
+                mensajes.computeIfAbsent(mensaje.getReceptor(), k -> new ArrayList<>()).add(mensaje);
+                System.out.println("[JSON] Mensaje cargado: " + mensaje.getOutputString());
             }
 
         } catch (IOException | JSONException e) {

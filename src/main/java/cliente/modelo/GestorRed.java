@@ -5,6 +5,8 @@ import cifrado.ContextoCifrado;
 import cliente.modelo.ConfigLoader;
 import cliente.modelo.UsuarioDuplicadoException;
 import controlador.IGestionInterfaz;
+import main.java.cliente.modelo.Mensaje;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -54,7 +56,7 @@ public class GestorRed implements IGestionRed{
     @Override
     public void usuarioOnline(String emisor, String serverN){
         try {
-            Socket socketMonitor = new Socket("localhost",1010);
+            Socket socketMonitor = new Socket("localhost",1050);
             PrintWriter outMonitor = new PrintWriter(socketMonitor.getOutputStream(),true);
             BufferedReader inMonitor = new BufferedReader(new InputStreamReader(socketMonitor.getInputStream()));
             outMonitor.println("servidoractivo");
@@ -90,7 +92,7 @@ public class GestorRed implements IGestionRed{
     
     public boolean reconectarBackup() {
         try {
-        Socket socketMonitor = new Socket("localhost",1010);
+        Socket socketMonitor = new Socket("localhost",1050);
         PrintWriter outMonitor = new PrintWriter(socketMonitor.getOutputStream(),true);
         BufferedReader inMonitor = new BufferedReader(new InputStreamReader(socketMonitor.getInputStream()));
         outMonitor.println("servidoractivo");
@@ -164,10 +166,10 @@ public class GestorRed implements IGestionRed{
     }
 
     @Override
-    public void enviarMensaje(String contacto, String mensaje) {
+    public void enviarMensaje(Mensaje mensaje) { //String contacto, String mensaje
         if (this.outputStream != null) {
             try {
-                this.outputStream.println(mensaje);
+                this.outputStream.println(mensaje.getOutputString());
 
             } catch (Exception e) {
                 System.err.println("Error al enviar mensaje: " + e.getMessage());
@@ -175,13 +177,13 @@ public class GestorRed implements IGestionRed{
 
                 if (reconectarBackup()) {
                     System.out.println("Reconexion exitosa papu, reenviando el mensaje...");
-                    enviarMensaje(contacto, mensaje);
+                    enviarMensaje(mensaje);
                 } else {
                     System.err.println("No se pudo reconectar.");
                 }
             }
         } else {
-            System.err.println("No hay conexión activa con " + contacto);
+            System.err.println("No hay conexión activa con " + mensaje.getReceptor());
         }
     }
     
@@ -206,62 +208,55 @@ public class GestorRed implements IGestionRed{
             try {
                 inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 outputStream = new PrintWriter(socket.getOutputStream(), true); 
-                String[] partes;
-                String[] datos;
                 while (true) {
                     try {
                         String mensaje = inputStream.readLine();
                         System.out.println(" SOY " + nombreCliente + " y me llego ->  " + mensaje);
-                        String operacion = mensaje.split("/",2)[0];
-                        if (operacion.equals("dupe")){
+
+                        Mensaje mensajeObjeto = new Mensaje();
+                        mensajeObjeto.setConOutputString(mensaje);
+
+                        if (mensajeObjeto.getTipo().equals("dupe")){
                             throw new UsuarioDuplicadoException("Usuario duplicado detectado.");
                         } 
-                        if (operacion.equals("dir")){ 
-                            datos = mensaje.split("/",2)[1].split(":",3);
-                            if (datos[0].equals("null")){
+                        if (mensajeObjeto.getTipo().equals("dir")){ 
+                            if (mensajeObjeto.getNombreEmisor().equals("null")){
                                 controlador.mostrarCartelErrorDir();
                             }
                             else{
-                                if (gestorcontactos.agregarContacto(datos[0]))
+                                if (gestorcontactos.agregarContacto(mensajeObjeto.getNombreEmisor()))
                                     controlador.agregadoExitoso();
                                 else 
                                     controlador.agregadoRepetido();
                                 }
                         }
                         else { //me mandaron mensaje de texto
-                            mensaje = mensaje.split("/", 2)[1]; // me quedo con todo menos operación
-                            partes = mensaje.split(";", 4);
-
-                            if (partes.length == 4) { 
-                                datos = partes[0].split(":", 3);
-                                System.out.println("me llegó mensaje de: " + datos[0] + " " + datos[1]);
-                                try {
-                                    System.out.println("Mensaje cifrado: " + partes[1]);
-                                    String mensajeDescifrado = controlador.getContextocifrado().descifrarMensaje(partes[1], controlador.getContextocifrado().crearClave(ConfigLoader.getProperty("clave")));
-                                    partes[1] = mensajeDescifrado; 
-                                    System.out.println("Mensaje descifrado: " + partes[1]);
-                                    mensaje = partes[0] + ";" + partes[1] + ";" + partes[2] + ";" + partes[3];
-                                    //hay q hacer la clase mensaje....
+                            try {
+                                    System.out.println("Mensaje cifrado: " + mensajeObjeto.getMensaje());
+                                    String mensajeDescifrado = controlador.getContextocifrado().descifrarMensaje(mensajeObjeto.getMensaje(), controlador.getContextocifrado().crearClave(ConfigLoader.getProperty("clave")));
+                                    mensajeObjeto.setMensaje(mensajeDescifrado);
+                                    System.out.println("Mensaje descifrado: " + mensajeObjeto.getMensaje());
                                 } catch (Exception e) {
                                     System.err.println("Error al descifrar mensaje: " + e.getMessage());
                                     return; 
                                 }
 
-                                nombreCliente = gestorcontactos.buscaContacto(datos[0]);
-                                if (nombreCliente == null) {                 
-                                    gestorcontactos.agregarContacto(datos[0]);
-                                    controlador.actualizaListaContactos();
-                                    nombreCliente = datos[0];
-                                }
-
-                                if (!conexionesActivas.contains(nombreCliente)) {
-                                    conexionesActivas.add(nombreCliente);
-                                    controlador.refreshConversaciones();
-                                }
-
-                                gestormensajes.agregaMensaje(nombreCliente, mensaje);
-                                controlador.mostrarMensajeEnChat("texto/" + mensaje);  
+                            nombreCliente = gestorcontactos.buscaContacto(mensajeObjeto.getNombreEmisor());
+                            if (nombreCliente == null) {                 
+                                gestorcontactos.agregarContacto(mensajeObjeto.getNombreEmisor());
+                                controlador.actualizaListaContactos();
+                                nombreCliente = mensajeObjeto.getNombreEmisor();
                             }
+
+                            if (!conexionesActivas.contains(nombreCliente)) {
+                                conexionesActivas.add(nombreCliente);
+                                controlador.refreshConversaciones();
+                            }
+
+                            mensajeObjeto.setTipo("texto");
+                            gestormensajes.agregaMensaje(nombreCliente ,mensajeObjeto);
+                            controlador.mostrarMensajeEnChat(mensajeObjeto);  
+                        
                         }
                     } catch (UsuarioDuplicadoException e) {
                         System.err.println("Usuario duplicado: " + e.getMessage());
