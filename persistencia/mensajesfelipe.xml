@@ -1,14 +1,25 @@
-<mensaje>
-  <emisor>felipe</emisor>
-  <ip>192.168.0.191</ip>
-  <contenido>hola lau</contenido>
-  <hora>23:15</hora>
-  <receptor>laura</receptor>
-</mensaje>
-<mensaje>
-  <emisor>laura</emisor>
-  <ip>192.168.0.191</ip>
-  <contenido>hola feli</contenido>
-  <hora>23:15</hora>
-  <receptor>felipe</receptor>
-</mensaje>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<mensajes>
+        
+    <mensaje>
+                
+        <emisor>felipe</emisor>
+                
+        <ip>192.168.0.191</ip>
+                
+        <contenido>hola lau...</contenido>
+                
+        <hora>23:41</hora>
+                
+        <receptor>laura</receptor>
+            
+    </mensaje>
+    
+    <mensaje>
+        <emisor>laura</emisor>
+        <ip>192.168.0.191</ip>
+        <contenido>hola feli</contenido>
+        <hora>23:41</hora>
+        <receptor>felipe</receptor>
+    </mensaje>
+</mensajes>

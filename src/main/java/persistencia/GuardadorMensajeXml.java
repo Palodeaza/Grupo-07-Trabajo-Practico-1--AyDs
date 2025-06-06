@@ -11,6 +11,11 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.NodeList;
 
 import main.java.cliente.modelo.Mensaje;
@@ -24,18 +29,18 @@ public class GuardadorMensajeXml implements GuardadorMensaje {
         this.usuario = usuario;
         this.ARCHIVO = "persistencia/mensajes"+usuario+".xml";
     }
-    @Override
+ /*   @Override
     public void guardarMensaje(String emisor, String ip, String mensaje, String hora, String receptor) {
         System.out.println("Intentando guardar mensaje en XML...");
         
         StringBuilder xml = new StringBuilder();
-        xml.append("<mensaje>\n");
-        xml.append("  <emisor>").append(emisor).append("</emisor>\n");
-        xml.append("  <ip>").append(ip).append("</ip>\n");
-        xml.append("  <contenido>").append(mensaje).append("</contenido>\n");
-        xml.append("  <hora>").append(hora).append("</hora>\n");
-        xml.append("  <receptor>").append(receptor).append("</receptor>\n");
-        xml.append("</mensaje>\n");
+        xml.append(" <mensaje>\n");
+        xml.append("   <emisor>").append(emisor).append("</emisor>\n");
+        xml.append("   <ip>").append(ip).append("</ip>\n");
+        xml.append("   <contenido>").append(mensaje).append("</contenido>\n");
+        xml.append("   <hora>").append(hora).append("</hora>\n");
+        xml.append("   <receptor>").append(receptor).append("</receptor>\n");
+        xml.append(" </mensaje>\n");
         
         File archivo = new File(ARCHIVO);
         archivo.getParentFile().mkdirs();
@@ -47,7 +52,67 @@ public class GuardadorMensajeXml implements GuardadorMensaje {
             System.out.println("Error al guardar el mensaje en XML:");
             e.printStackTrace();
         }
+    }*/
+    @Override
+public void guardarMensaje(String emisor, String ip, String mensaje, String hora, String receptor) {
+    System.out.println("Intentando guardar mensaje en XML con raíz...");
+
+    try {
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        DocumentBuilder db = dbf.newDocumentBuilder();
+        Document doc;
+        Element root;
+
+        File archivo = new File(ARCHIVO);
+        archivo.getParentFile().mkdirs();
+
+        if (archivo.exists()) {
+            doc = db.parse(archivo);
+            root = (Element) doc.getDocumentElement(); // <mensajes>
+        } else {
+            doc = db.newDocument();
+            root = doc.createElement("mensajes");
+            doc.appendChild(root);
+        }
+
+        Element mensajeElem = doc.createElement("mensaje");
+
+        Element emisorElem = doc.createElement("emisor");
+        emisorElem.setTextContent(emisor);
+        mensajeElem.appendChild(emisorElem);
+
+        Element ipElem = doc.createElement("ip");
+        ipElem.setTextContent(ip);
+        mensajeElem.appendChild(ipElem);
+
+        Element contenidoElem = doc.createElement("contenido");
+        contenidoElem.setTextContent(mensaje);
+        mensajeElem.appendChild(contenidoElem);
+
+        Element horaElem = doc.createElement("hora");
+        horaElem.setTextContent(hora);
+        mensajeElem.appendChild(horaElem);
+
+        Element receptorElem = doc.createElement("receptor");
+        receptorElem.setTextContent(receptor);
+        mensajeElem.appendChild(receptorElem);
+
+        root.appendChild(mensajeElem);
+
+        // Guardar el XML actualizado
+        TransformerFactory tf = TransformerFactory.newInstance();
+        Transformer transformer = tf.newTransformer();
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        DOMSource source = new DOMSource(doc);
+        StreamResult result = new StreamResult(archivo);
+        transformer.transform(source, result);
+
+        System.out.println("Mensaje guardado exitosamente en XML con raíz.");
+    } catch (Exception e) {
+        System.out.println("Error al guardar el mensaje en XML:");
+        e.printStackTrace();
     }
+}
 
     @Override
     public Map<String, List<Mensaje>> cargarMensajes() {
