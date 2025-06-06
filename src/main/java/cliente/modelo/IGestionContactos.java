@@ -2,13 +2,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
  */
-package modelo;
+package cliente.modelo;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import main.java.cliente.modelo.Mensaje;
+import cliente.modelo.IMensaje;
 
 /**
  *
@@ -20,6 +20,6 @@ public interface IGestionContactos {
     public boolean agregarContacto(String nombre);
     public String buscaContacto(String nombre);
     public String[] obtenerDatosContacto(String contactoSeleccionado);
-    public void cargaContactos(Map<String, List<Mensaje>> mensajes);
+    public void cargaContactos(Map<String, List<IMensaje>> mensajes);
 
 }

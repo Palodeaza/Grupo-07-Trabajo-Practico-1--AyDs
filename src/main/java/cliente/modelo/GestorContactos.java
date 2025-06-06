@@ -1,10 +1,10 @@
-package modelo;
+package cliente.modelo;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import main.java.cliente.modelo.Mensaje;
+import cliente.modelo.IMensaje;
 
 public class GestorContactos implements IGestionContactos {
     
@@ -49,7 +49,7 @@ public class GestorContactos implements IGestionContactos {
         return null;
     }
     
-    public void cargaContactos(Map<String, List<Mensaje>> mensajes) {
+    public void cargaContactos(Map<String, List<IMensaje>> mensajes) {
     for (String nombreContacto : mensajes.keySet()) {
         agregarContacto(nombreContacto); 
     }

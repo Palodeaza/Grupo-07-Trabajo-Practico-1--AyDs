@@ -1,4 +1,4 @@
-package modelo;
+package cliente.modelo;
 
 public class Contacto {
     private String nombre;

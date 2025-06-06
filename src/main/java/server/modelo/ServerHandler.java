@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
-import modelo.Contacto;
+import cliente.modelo.Contacto;
 
 public class ServerHandler implements Runnable {
 

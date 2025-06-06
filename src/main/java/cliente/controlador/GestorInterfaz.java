@@ -1,4 +1,4 @@
-package controlador;
+package cliente.controlador;
 
 import cifrado.CifradoAES;
 import cifrado.ContextoCifrado;
@@ -9,14 +9,16 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
-import modelo.Contacto;
-import modelo.IGestionContactos;
-import modelo.IGestionMensajes;
-import modelo.IGestionRed;
+import cliente.modelo.Contacto;
+import cliente.modelo.FabricaMensajes;
+import cliente.modelo.IGestionContactos;
+import cliente.modelo.IGestionMensajes;
+import cliente.modelo.IGestionRed;
+import cliente.modelo.IMensaje;
 import vistas.ConversacionRenderer;
 import vistas.Init;
 import cliente.vistas.Login;
-import main.java.cliente.modelo.Mensaje;
+import cliente.modelo.Mensaje;
 
 import java.util.Map;
 import java.util.logging.Level;
@@ -117,7 +119,7 @@ public class GestorInterfaz implements IGestionInterfaz {
                 IFabricaPersistencia fabrica = FabricaPersistencia.obtenerFabrica(formato);
                 GuardadorMensaje guardador = fabrica.crearGuardadorMensaje(usuario);
                 gestormensajes.setGuardador(guardador);
-                Map<String, List<Mensaje>> mensajesPrevios = guardador.cargarMensajes();
+                Map<String, List<IMensaje>> mensajesPrevios = guardador.cargarMensajes();
                 gestormensajes.setMensajes(mensajesPrevios);
                 gestorcontactos.cargaContactos(mensajesPrevios);
                 actualizaListaContactos();
@@ -192,7 +194,7 @@ public class GestorInterfaz implements IGestionInterfaz {
 
     @Override
     public void enviarMensaje() {
-        Mensaje mensaje = new Mensaje();
+        IMensaje mensaje = FabricaMensajes.getInstancia().creaMensaje();
         String mensajeTexto = getInitView().getMsgTextField().getText().trim();
         mensaje.setReceptor(getInitView().getChatList().getSelectedValue());
         mensaje.setMensaje(mensajeTexto);
@@ -288,7 +290,7 @@ public class GestorInterfaz implements IGestionInterfaz {
     }
     
     @Override
-    public void mostrarMensajeEnChat(Mensaje mensaje) {
+    public void mostrarMensajeEnChat(IMensaje mensaje) {
         String receptoractual = getInitView().getChatList().getSelectedValue();
         
         boolean esMensajePropio = mensaje.getIpEmisor().equals(gestored.obtenerIPLocal()) && mensaje.getNombreEmisor().equals(usuarioActual);
@@ -346,8 +348,8 @@ public class GestorInterfaz implements IGestionInterfaz {
     @Override
     public void actualizaChatPanel(String nombre) {
         System.out.println("AAAAAA CAMBIO DE PESTANIA");
-        List<Mensaje> copiamensajes = gestormensajes.getMensajesDe(nombre);
-        List<Mensaje> listamensajes = (copiamensajes != null) ? new ArrayList<>(copiamensajes) : new ArrayList<>();
+        List<IMensaje> copiamensajes = gestormensajes.getMensajesDe(nombre);
+        List<IMensaje> listamensajes = (copiamensajes != null) ? new ArrayList<>(copiamensajes) : new ArrayList<>();
         getInitView().getChatPanel().removeAll();
         if (listamensajes.isEmpty()) {
             getInitView().getChatPanel().revalidate();
@@ -355,7 +357,7 @@ public class GestorInterfaz implements IGestionInterfaz {
             return;
         }
         System.out.println(listamensajes);
-        for (Mensaje mensaje : listamensajes) {
+        for (IMensaje mensaje : listamensajes) {
             System.out.println("saco 1 mensaje de " + mensaje.getNombreEmisor());
             this.mostrarMensajeEnChat(mensaje);
         }

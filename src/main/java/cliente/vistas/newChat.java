@@ -3,7 +3,7 @@ package vistas;
 import java.util.List;
 import javax.swing.DefaultListModel;
 
-import modelo.Contacto;
+import cliente.modelo.Contacto;
 
 public class newChat extends javax.swing.JFrame {
 

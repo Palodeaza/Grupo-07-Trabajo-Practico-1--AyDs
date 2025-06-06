@@ -1,5 +1,7 @@
 package persistencia;
 
+import cliente.modelo.FabricaMensajes;
+import cliente.modelo.IMensaje;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -18,7 +20,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.NodeList;
 
-import main.java.cliente.modelo.Mensaje;
+import cliente.modelo.Mensaje;
 
 public class GuardadorMensajeXml implements GuardadorMensaje {
 
@@ -115,10 +117,10 @@ public void guardarMensaje(String emisor, String ip, String mensaje, String hora
 }
 
     @Override
-    public Map<String, List<Mensaje>> cargarMensajes() {
+    public Map<String, List<IMensaje>> cargarMensajes() {
         System.out.println("Cargando mensajes desde XML...");
 
-        Map<String, List<Mensaje>> mensajes = new HashMap<>();
+        Map<String, List<IMensaje>> mensajes = new HashMap<>();
 
         File archivo = new File(ARCHIVO);
         System.out.println("Ruta del archivo XML: " + archivo.getAbsolutePath());
@@ -140,7 +142,7 @@ public void guardarMensaje(String emisor, String ip, String mensaje, String hora
             
             for (int i = 0; i < nodos.getLength(); i++) {
                 Element elemento = (Element) nodos.item(i);
-                Mensaje mensaje = new Mensaje();
+                IMensaje mensaje = FabricaMensajes.getInstancia().creaMensaje();
                 mensaje.setNombreEmisor(elemento.getElementsByTagName("emisor").item(0).getTextContent());
                 mensaje.setIpEmisor(elemento.getElementsByTagName("ip").item(0).getTextContent());
                 mensaje.setMensaje(elemento.getElementsByTagName("contenido").item(0).getTextContent());

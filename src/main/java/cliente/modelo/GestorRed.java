@@ -1,11 +1,11 @@
-package modelo;
+package cliente.modelo;
 
 import cifrado.CifradoAES;
 import cifrado.ContextoCifrado;
 import cliente.modelo.ConfigLoader;
 import cliente.modelo.UsuarioDuplicadoException;
-import controlador.IGestionInterfaz;
-import main.java.cliente.modelo.Mensaje;
+import cliente.controlador.IGestionInterfaz;
+import cliente.modelo.Mensaje;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -166,7 +166,7 @@ public class GestorRed implements IGestionRed{
     }
 
     @Override
-    public void enviarMensaje(Mensaje mensaje) { //String contacto, String mensaje
+    public void enviarMensaje(IMensaje mensaje) { //String contacto, String mensaje
         if (this.outputStream != null) {
             try {
                 this.outputStream.println(mensaje.getOutputString());
@@ -213,7 +213,7 @@ public class GestorRed implements IGestionRed{
                         String mensaje = inputStream.readLine();
                         System.out.println(" SOY " + nombreCliente + " y me llego ->  " + mensaje);
 
-                        Mensaje mensajeObjeto = new Mensaje();
+                        IMensaje mensajeObjeto = FabricaMensajes.getInstancia().creaMensaje();
                         mensajeObjeto.setConOutputString(mensaje);
 
                         if (mensajeObjeto.getTipo().equals("dupe")){

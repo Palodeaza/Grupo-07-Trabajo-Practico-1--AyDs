@@ -2,11 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
  */
-package controlador;
+package cliente.controlador;
 
 
 import cifrado.ContextoCifrado;
-import main.java.cliente.modelo.Mensaje;
+import cliente.modelo.IMensaje;
+import cliente.modelo.Mensaje;
 import vistas.Init;
 
 /**
@@ -23,7 +24,7 @@ public interface IGestionInterfaz { //gestiona TODOS los eventos producidos por 
     public void enviarMensaje();
     public void borraChat(String contacto);
     public void borraChat();
-    public void mostrarMensajeEnChat(Mensaje mensaje);
+    public void mostrarMensajeEnChat(IMensaje mensaje);
     public void actualizaChatPanel(String nombre);
     public void refreshConversaciones();
     public Init getInitView();

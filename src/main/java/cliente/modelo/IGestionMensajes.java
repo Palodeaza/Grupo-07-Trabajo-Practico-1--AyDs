@@ -1,15 +1,15 @@
-package modelo;
+package cliente.modelo;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import main.java.cliente.modelo.Mensaje;
+import cliente.modelo.IMensaje;
 import persistencia.GuardadorMensaje;
 
 public interface IGestionMensajes {
-    public void agregaMensaje(String nombre ,Mensaje mensaje);
-    public List<Mensaje> getMensajesDe(String nombreCliente);
-    public void setMensajes(Map<String, List<Mensaje>> mensajes);
+    public void agregaMensaje(String nombre ,IMensaje mensaje);
+    public List<IMensaje> getMensajesDe(String nombreCliente);
+    public void setMensajes(Map<String, List<IMensaje>> mensajes);
     public void setGuardador(GuardadorMensaje guardador);
 }

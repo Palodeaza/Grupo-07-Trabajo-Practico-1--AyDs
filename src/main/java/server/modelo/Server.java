@@ -7,7 +7,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Map;
 
-import modelo.Contacto;
+import cliente.modelo.Contacto;
 
 public class Server {
 

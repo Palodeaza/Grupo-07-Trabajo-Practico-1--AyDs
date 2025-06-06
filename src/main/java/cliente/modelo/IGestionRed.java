@@ -2,12 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
  */
-package modelo;
+package cliente.modelo;
 
 import java.util.List;
 
-import controlador.IGestionInterfaz;
-import main.java.cliente.modelo.Mensaje;
+import cliente.controlador.IGestionInterfaz;
+import cliente.modelo.IMensaje;
 
 /**
  *
@@ -23,5 +23,5 @@ public interface IGestionRed {
     public List<String> getListaConexiones();
     public boolean estaConectado(String conexion);
     public String obtenerIPLocal();
-    public void enviarMensaje(Mensaje mensaje);
+    public void enviarMensaje(IMensaje mensaje);
 }

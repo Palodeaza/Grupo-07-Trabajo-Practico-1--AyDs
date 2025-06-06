@@ -1,9 +1,9 @@
-package prueba;
+package cliente.prueba;
 
-import controlador.GestorInterfaz;
-import controlador.IGestionInterfaz;
-import modelo.IGestionContactos;
-import modelo.IGestionMensajes;
+import cliente.controlador.GestorInterfaz;
+import cliente.controlador.IGestionInterfaz;
+import cliente.modelo.IGestionContactos;
+import cliente.modelo.IGestionMensajes;
 import vistas.Init;
 import cliente.vistas.Login;
 import vistas.newChat;
@@ -11,10 +11,10 @@ import vistas.newContact;
 
 import javax.swing.*;
 
-import modelo.GestorContactos;
-import modelo.GestorMensajes;
-import modelo.GestorRed;
-import modelo.IGestionRed;
+import cliente.modelo.GestorContactos;
+import cliente.modelo.GestorMensajes;
+import cliente.modelo.GestorRed;
+import cliente.modelo.IGestionRed;
 
     public class prueba {
         public static void main(String[] args) {

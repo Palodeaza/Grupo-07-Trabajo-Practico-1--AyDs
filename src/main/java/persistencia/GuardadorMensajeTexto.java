@@ -10,7 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import main.java.cliente.modelo.Mensaje;
+import cliente.modelo.Mensaje;
+import cliente.modelo.FabricaMensajes;
+import cliente.modelo.IMensaje;
 
 public class GuardadorMensajeTexto implements GuardadorMensaje {
 
@@ -39,17 +41,17 @@ public class GuardadorMensajeTexto implements GuardadorMensaje {
     }
 
     @Override
-    public Map<String, List<Mensaje>> cargarMensajes() {
+    public Map<String, List<IMensaje>> cargarMensajes() {
         System.out.println("Cargando mensajes desde archivo de texto...");
 
-        Map<String, List<Mensaje>> mensajes = new HashMap<>();
+        Map<String, List<IMensaje>> mensajes = new HashMap<>();
 
         try (BufferedReader lector = new BufferedReader(new FileReader(ARCHIVO))) {
             String linea;
             int contador = 0;
 
             while ((linea = lector.readLine()) != null) {
-                Mensaje mensaje = new Mensaje();
+                IMensaje mensaje = FabricaMensajes.getInstancia().creaMensaje();
                 // emisor:ip;mensaje;hora;receptor
                 String[] partes = linea.split(";");
                 if (partes.length == 4) {

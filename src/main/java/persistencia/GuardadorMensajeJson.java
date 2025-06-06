@@ -1,11 +1,13 @@
 package persistencia;
 
+import cliente.modelo.FabricaMensajes;
+import cliente.modelo.IMensaje;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import org.json.JSONObject;
 
-import main.java.cliente.modelo.Mensaje;
+import cliente.modelo.Mensaje;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -69,10 +71,10 @@ public class GuardadorMensajeJson implements GuardadorMensaje {
     }
 
     @Override
-    public Map<String, List<Mensaje>> cargarMensajes() {
+    public Map<String, List<IMensaje>> cargarMensajes() {
         System.out.println("[JSON] Cargando mensajes desde archivo JSON...");
 
-        Map<String, List<Mensaje>> mensajes = new HashMap<>();
+        Map<String, List<IMensaje>> mensajes = new HashMap<>();
 
         File archivo = new File(ARCHIVO);
         if (!archivo.exists()) {
@@ -93,7 +95,7 @@ public class GuardadorMensajeJson implements GuardadorMensaje {
             
             for (int i = 0; i < jsonMensajes.length(); i++) {
                 JSONObject obj = jsonMensajes.getJSONObject(i);
-                Mensaje mensaje = new Mensaje();
+                IMensaje mensaje = FabricaMensajes.getInstancia().creaMensaje();
                 mensaje.setNombreEmisor(obj.getString("emisor"));
                 mensaje.setIpEmisor(obj.getString("ip"));
                 mensaje.setMensaje(obj.getString("mensaje"));
@@ -113,12 +115,12 @@ public class GuardadorMensajeJson implements GuardadorMensaje {
             e.printStackTrace();
         }
         System.out.println("MOSTRANDO MENSAJES ANTES DEL PUTO RETURN");
-        for (Map.Entry<String, List<Mensaje>> entry : mensajes.entrySet()) {
+        for (Map.Entry<String, List<IMensaje>> entry : mensajes.entrySet()) {
         String clave = entry.getKey();
-        List<Mensaje> listaMensajes = entry.getValue();
+        List<IMensaje> listaMensajes = entry.getValue();
 
         System.out.println("Mensajes de " + clave + ":");
-        for (Mensaje mensaje : listaMensajes) {
+        for (IMensaje mensaje : listaMensajes) {
             System.out.println(" - " + mensaje.getMensaje());
         }
         }

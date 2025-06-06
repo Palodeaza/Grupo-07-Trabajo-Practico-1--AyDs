@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
-import modelo.Contacto;
+import cliente.modelo.Contacto;
 
 public class ClientHandler implements Runnable{
 
