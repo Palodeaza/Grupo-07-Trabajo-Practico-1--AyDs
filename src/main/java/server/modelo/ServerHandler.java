@@ -42,16 +42,16 @@ public class ServerHandler implements Runnable {
                         // Agregar nuevo contacto al directorio
                         String[] partesDir = mensaje.split(";", 3);
                         Contacto contacto = new Contacto(partesDir[0], partesDir[1], Integer.parseInt(partesDir[2]));
-                        servidor.getGestorDir().agregaAlDir(contacto);
+                        servidor.agregaContactoAlDir(contacto);
                     }
                     case "msjguardar" -> {
                         // Guardar un mensaje para un usuario
                         String[] partesMsj = mensaje.split(";", 2);
-                        servidor.getGestorMensajesGuardados().guardaMensaje(partesMsj[0], partesMsj[1]);
+                        servidor.guardaMensaje(partesMsj[0], partesMsj[1]);
                     }
                     case "msjclear" -> {
                         // Eliminar mensajes pendientes de un usuario
-                        servidor.getGestorMensajesGuardados().getMensajesGuardados().remove(mensaje);
+                        servidor.getMensajesGuardados().remove(mensaje);
                     }
                 }
             } catch(IOException e) {

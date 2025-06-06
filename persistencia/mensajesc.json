@@ -1,0 +1,30 @@
+[
+  {
+    "receptor": "a",
+    "hora": "12:38",
+    "ip": "127.0.1.1",
+    "mensaje": "responde gil",
+    "emisor": "c"
+  },
+  {
+    "receptor": "c",
+    "hora": "12:40",
+    "ip": "127.0.1.1",
+    "mensaje": "e",
+    "emisor": "a"
+  },
+  {
+    "receptor": "c",
+    "hora": "12:40",
+    "ip": "127.0.1.1",
+    "mensaje": "godd",
+    "emisor": "a"
+  },
+  {
+    "receptor": "c",
+    "hora": "13:21",
+    "ip": "127.0.1.1",
+    "mensaje": "funciona esto?",
+    "emisor": "a"
+  }
+]

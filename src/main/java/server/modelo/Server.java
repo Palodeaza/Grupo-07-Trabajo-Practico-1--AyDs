@@ -5,6 +5,8 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Map;
+
 import modelo.Contacto;
 
 public class Server {
@@ -19,12 +21,36 @@ public class Server {
     private IGestionDir gestorDir = new GestorDir(); // Directorio de contactos
     private IGestionMensajesGuardados gestorMensajesGuardados = new GestorMensajesGuardados(); // Mensajes pendientes
 
-    public IGestionMensajesGuardados getGestorMensajesGuardados(){
-        return this.gestorMensajesGuardados;
+    public ArrayList<Contacto> getDirContactos(){
+        return gestorDir.getDir();
     }
 
-    public IGestionDir getGestorDir(){
-        return this.gestorDir;
+    public boolean tieneMensajePendiente(String user){
+        return gestorMensajesGuardados.tieneMensajePendiente(user);
+    }
+
+    public void enviaMensajesGuardados(String user, PrintWriter outputStream){
+        gestorMensajesGuardados.enviaMensajesGuardados(user, outputStream);
+    }
+
+    public void agregaContactoAlDir(Contacto contacto){
+        gestorDir.agregaAlDir(contacto);
+    }
+
+    public void guardaMensaje(String receptor, String mensaje){
+        gestorMensajesGuardados.guardaMensaje(receptor, mensaje);
+    }
+
+    public Map<String, ArrayList<String>> getMensajesGuardados(){
+        return gestorMensajesGuardados.getMensajesGuardados();
+    }
+
+    public Contacto buscaDirContacto(String nombre){
+        return gestorDir.buscaDir(nombre);
+    }
+
+    public boolean tieneEnElDirContacto(String user){
+        return gestorDir.tieneEnElDir(user);
     }
 
     // Constructor: crea el servidor y se conecta al otro servidor (principal)
@@ -68,12 +94,12 @@ public class Server {
                             this.outputStreamSecundario = new PrintWriter(serverSecundario.getOutputStream(), true);
                             // Enviar todo el directorio actual al servidor secundario
                             System.out.println("Enviando directorio...");
-                            for (Contacto c : this.gestorDir.getDir()) {
+                            for (Contacto c : getDirContactos()) {
                                 this.outputStreamSecundario.println("diragrega/" + c.getNombre() + ";" + c.getIp() + ";" + c.getPuerto());
                             }   // Enviar mensajes guardados también
                             System.out.println("Enviando mensajes guardados...");
-                            for (String usuario : this.getGestorMensajesGuardados().getMensajesGuardados().keySet()) {
-                                ArrayList<String> mensajes = this.getGestorMensajesGuardados().getMensajesGuardados().get(usuario);
+                            for (String usuario : getMensajesGuardados().keySet()) {
+                                ArrayList<String> mensajes = getMensajesGuardados().get(usuario);
                                 for (String mensaje : mensajes) {
                                     this.outputStreamSecundario.println("msjguardar/" + usuario + ";" + mensaje);
                                 }
@@ -92,11 +118,11 @@ public class Server {
                                     break;
                                 }
                             }   // Si es un cliente nuevo, agregar al directorio
-                            if (!getGestorDir().tieneEnElDir(user)) {
+                            if (!tieneEnElDirContacto(user)) {
                                 String ipC = clientSocket.getInetAddress().toString();
                                 int puertoC = clientSocket.getPort();
                                 Contacto c = new Contacto(user, ipC, puertoC);
-                                getGestorDir().agregaAlDir(c);
+                                agregaContactoAlDir(c);
                                 
                                 // También se lo informamos al servidor secundario si existe
                                 if (this.outputStreamSecundario != null) {
@@ -105,9 +131,9 @@ public class Server {
                             }   // Creamos el hilo que manejará al cliente
                             new Thread(new ClientHandler(clientSocket, user, this, outputStreamSecundario)).start();
                             // Si el cliente tenía mensajes pendientes, los enviamos
-                            if (gestorMensajesGuardados.tieneMensajePendiente(user)) {
+                            if (tieneMensajePendiente(user)) {
                                 PrintWriter outputStream = new PrintWriter(clientSocket.getOutputStream(), true);
-                                gestorMensajesGuardados.enviaMensajesGuardados(user, outputStream);
+                                enviaMensajesGuardados(user, outputStream);
                                 // Limpiamos la lista de mensajes si hay un secundario
                                 if (this.outputStreamSecundario != null) {
                                     outputStreamSecundario.println("msjclear/" + user);

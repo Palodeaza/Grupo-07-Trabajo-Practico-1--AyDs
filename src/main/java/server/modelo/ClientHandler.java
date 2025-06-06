@@ -50,7 +50,7 @@ public class ClientHandler implements Runnable{
                 String operacion = mensaje.split("/",2)[0];
                         if (operacion.equals("dir")){
                             String nombre= mensaje.split("/",2)[1]; // yo chequeo si esta el nombre y despues les aviso sus datos
-                            Contacto contacto = servidor.getGestorDir().buscaDir(nombre);
+                            Contacto contacto = servidor.buscaDirContacto(nombre);
                             if (contacto == null)
                             outputStream.println("dir/"+ "null" + ":" + "null" + ":" + "null"); 
                             else
@@ -68,7 +68,7 @@ public class ClientHandler implements Runnable{
                                 enviaMensaje(partes[3], mensaje); 
                             else{
                                 System.out.println("bien 2");
-                                servidor.getGestorMensajesGuardados().guardaMensaje(partes[3], mensaje); //receptor y mensaje
+                                servidor.guardaMensaje(partes[3], mensaje); //receptor y mensaje
                                 if (outputStreamSinc!=null)
                                     outputStreamSinc.println("msjguardar/"+ partes[3] + ";" + mensaje);
                             } 
