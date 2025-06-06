@@ -13,6 +13,15 @@ public class GestorMensajes implements IGestionMensajes{
     @Override
     public void setMensajes(Map<String, List<Mensaje>> mensajes) {
         this.mensajes = mensajes;
+        for (Map.Entry<String, List<Mensaje>> entry : mensajes.entrySet()) {
+        String clave = entry.getKey();
+        List<Mensaje> listaMensajes = entry.getValue();
+
+        System.out.println("Mensajes de " + clave + ":");
+        for (Mensaje mensaje : listaMensajes) {
+            System.out.println(" - " + mensaje.getMensaje());
+        }
+    }
     }
     
     private Map<String, List<Mensaje>> mensajes = new HashMap<>();
@@ -24,8 +33,8 @@ public class GestorMensajes implements IGestionMensajes{
     @Override
     public void agregaMensaje(String nombre, Mensaje mensaje) { //String nombreContacto, String mensaje
         mensajes.computeIfAbsent(nombre, k -> new ArrayList<>()).add(mensaje);
+        System.out.println("Voy a guardar el mensaje: " + mensaje.getMensaje());
         guardador.guardarMensaje(mensaje.getNombreEmisor(), mensaje.getIpEmisor(), mensaje.getMensaje(), mensaje.getHora(), mensaje.getReceptor());
-
     }
 
     @Override

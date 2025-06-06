@@ -3,7 +3,7 @@ package persistencia;
 public class FabricaPersistenciaJson implements IFabricaPersistencia {
 
     @Override
-    public GuardadorMensaje crearGuardadorMensaje() {
-        return new GuardadorMensajeJson();
+    public GuardadorMensaje crearGuardadorMensaje(String usuario) {
+        return new GuardadorMensajeJson(usuario);
     }
 }

@@ -14,8 +14,14 @@ import main.java.cliente.modelo.Mensaje;
 
 public class GuardadorMensajeTexto implements GuardadorMensaje {
 
-    private static final String ARCHIVO = "persistencia/mensajes.txt";
+    private final String ARCHIVO;
+    private final String usuario;
     
+    public GuardadorMensajeTexto(String usuario){
+
+        this.ARCHIVO = "persistencia/mensajes"+usuario+".txt";
+        this.usuario = usuario;
+    }
     @Override
     public void guardarMensaje(String emisor, String ip, String mensaje, String hora, String receptor) {
         System.out.println("Intentando guardar mensaje en archivo de texto...");
@@ -54,8 +60,10 @@ public class GuardadorMensajeTexto implements GuardadorMensaje {
                         mensaje.setMensaje(partes[1]);
                         mensaje.setHora(partes[2]);
                         mensaje.setReceptor(partes[3]);
-
-                        mensajes.computeIfAbsent(mensaje.getReceptor(), k -> new ArrayList<>()).add(mensaje);
+                        String chat = mensaje.getReceptor();
+                        if (chat.equals(usuario))
+                            chat = mensaje.getNombreEmisor();
+                        mensajes.computeIfAbsent(chat, k -> new ArrayList<>()).add(mensaje);
                         System.out.println("Mensaje cargado: " + mensaje.getOutputString());
                         contador++;
                     } else {

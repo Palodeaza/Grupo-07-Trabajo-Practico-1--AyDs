@@ -115,13 +115,12 @@ public class GestorInterfaz implements IGestionInterfaz {
                 
                 String formato = loginView.getFormatoComboBox().getSelectedItem().toString().toLowerCase();
                 IFabricaPersistencia fabrica = FabricaPersistencia.obtenerFabrica(formato);
-                GuardadorMensaje guardador = fabrica.crearGuardadorMensaje();
+                GuardadorMensaje guardador = fabrica.crearGuardadorMensaje(usuario);
                 gestormensajes.setGuardador(guardador);
                 Map<String, List<Mensaje>> mensajesPrevios = guardador.cargarMensajes();
                 gestormensajes.setMensajes(mensajesPrevios);
                 gestorcontactos.cargaContactos(mensajesPrevios);
                 actualizaListaContactos();
-                
                 Point posicionActual = loginView.getLocation();
                 loginView.setVisible(false);
                 initView.setLocation(posicionActual);
@@ -196,7 +195,7 @@ public class GestorInterfaz implements IGestionInterfaz {
         Mensaje mensaje = new Mensaje();
         String mensajeTexto = getInitView().getMsgTextField().getText().trim();
         mensaje.setReceptor(getInitView().getChatList().getSelectedValue());
-        mensaje.setMensaje("");
+        mensaje.setMensaje(mensajeTexto);
 
         if (mensaje.getReceptor() == null) {
             JOptionPane.showMessageDialog(getInitView(), "Seleccione un contacto antes de enviar un mensaje.");
@@ -212,7 +211,7 @@ public class GestorInterfaz implements IGestionInterfaz {
         mensaje.setIpEmisor(gestored.obtenerIPLocal());
         mensaje.setNombreEmisor(this.usuarioActual);
         mensaje.setTipo("texto");
-
+        gestormensajes.agregaMensaje(mensaje.getReceptor() ,mensaje);
         try {
             //lo encripta antes de guardar
             mensaje.setMensaje(this.getContextocifrado().cifrarMensaje(mensajeTexto, this.contextocifrado.crearClave(ConfigLoader.getProperty("clave"))));
@@ -221,7 +220,6 @@ public class GestorInterfaz implements IGestionInterfaz {
             Logger.getLogger(GestorInterfaz.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        gestormensajes.agregaMensaje(mensaje.getReceptor() ,mensaje);
         gestored.enviarMensaje(mensaje);
         
         mensaje.setMensaje(mensajeTexto);

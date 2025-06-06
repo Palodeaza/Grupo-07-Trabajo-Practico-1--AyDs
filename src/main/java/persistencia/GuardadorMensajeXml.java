@@ -17,8 +17,13 @@ import main.java.cliente.modelo.Mensaje;
 
 public class GuardadorMensajeXml implements GuardadorMensaje {
 
-    private static final String ARCHIVO = "persistencia/mensajes.xml";
-
+    private  String ARCHIVO;
+    private final String  usuario;
+    
+    public GuardadorMensajeXml(String usuario){
+        this.usuario = usuario;
+        this.ARCHIVO = "persistencia/mensajes"+usuario+".xml";
+    }
     @Override
     public void guardarMensaje(String emisor, String ip, String mensaje, String hora, String receptor) {
         System.out.println("Intentando guardar mensaje en XML...");
@@ -67,10 +72,10 @@ public class GuardadorMensajeXml implements GuardadorMensaje {
             NodeList nodos = doc.getElementsByTagName("mensaje");
             System.out.println("Mensajes encontrados en el XML: " + nodos.getLength());
 
-            Mensaje mensaje = new Mensaje();
+            
             for (int i = 0; i < nodos.getLength(); i++) {
                 Element elemento = (Element) nodos.item(i);
-
+                Mensaje mensaje = new Mensaje();
                 mensaje.setNombreEmisor(elemento.getElementsByTagName("emisor").item(0).getTextContent());
                 mensaje.setIpEmisor(elemento.getElementsByTagName("ip").item(0).getTextContent());
                 mensaje.setMensaje(elemento.getElementsByTagName("contenido").item(0).getTextContent());
@@ -78,8 +83,12 @@ public class GuardadorMensajeXml implements GuardadorMensaje {
                 mensaje.setReceptor(elemento.getElementsByTagName("receptor").item(0).getTextContent());
 
                 System.out.println("Mensaje cargado: " + mensaje.getOutputString());
-
-                mensajes.computeIfAbsent(mensaje.getReceptor(), k -> new ArrayList<>()).add(mensaje);
+                String chat = mensaje.getReceptor();
+                
+                if (chat.equals(usuario))
+                    chat = mensaje.getNombreEmisor();
+                
+                mensajes.computeIfAbsent(chat, k -> new ArrayList<>()).add(mensaje);
             }
 
         } catch (Exception e) {
