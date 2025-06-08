@@ -106,8 +106,6 @@ public class GuardadorMensajeJson implements GuardadorMensaje {
                 String chat = mensaje.getReceptor();
                 if (mensaje.getReceptor().equals(usuario))
                     chat = mensaje.getNombreEmisor(); 
-               //System.out.println("VOY A LEVANTAR EL MENSAJE: "+mensaje.getMensaje());
-               System.out.println("LE CORRESPONDE A LA LISTA DE " + chat + "EL MENSAJE: "+mensaje.getMensaje());
                 mensajes.computeIfAbsent(chat, k -> new ArrayList<>()).add(mensaje);
                 System.out.println("[JSON] Mensaje cargado: " + mensaje.getOutputString());
             }
@@ -116,7 +114,6 @@ public class GuardadorMensajeJson implements GuardadorMensaje {
             System.out.println("[JSON] Error al cargar mensajes:");
             e.printStackTrace();
         }
-        System.out.println("MOSTRANDO MENSAJES ANTES DEL PUTO RETURN");
         for (Map.Entry<String, List<IMensaje>> entry : mensajes.entrySet()) {
         String clave = entry.getKey();
         List<IMensaje> listaMensajes = entry.getValue();

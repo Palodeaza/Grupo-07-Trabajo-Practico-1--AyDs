@@ -347,7 +347,6 @@ public class GestorInterfaz implements IGestionInterfaz {
 
     @Override
     public void actualizaChatPanel(String nombre) {
-        System.out.println("AAAAAA CAMBIO DE PESTANIA");
         List<IMensaje> copiamensajes = gestormensajes.getMensajesDe(nombre);
         List<IMensaje> listamensajes = (copiamensajes != null) ? new ArrayList<>(copiamensajes) : new ArrayList<>();
         getInitView().getChatPanel().removeAll();
@@ -356,9 +355,7 @@ public class GestorInterfaz implements IGestionInterfaz {
             getInitView().getChatPanel().repaint();
             return;
         }
-        System.out.println(listamensajes);
         for (IMensaje mensaje : listamensajes) {
-            System.out.println("saco 1 mensaje de " + mensaje.getNombreEmisor());
             this.mostrarMensajeEnChat(mensaje);
         }
         getInitView().getChatPanel().revalidate();
