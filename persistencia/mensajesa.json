@@ -1,163 +1,23 @@
 [
   {
     "receptor": "b",
-    "hora": "12:15",
-    "ip": "127.0.1.1",
-    "mensaje": "asd",
+    "hora": "14:01",
+    "ip": "192.168.100.8",
+    "mensaje": "holiss",
     "emisor": "a"
   },
   {
     "receptor": "a",
-    "hora": "12:15",
-    "ip": "127.0.1.1",
-    "mensaje": "a",
+    "hora": "14:01",
+    "ip": "192.168.100.8",
+    "mensaje": "como estas?",
     "emisor": "b"
   },
   {
     "receptor": "b",
-    "hora": "12:15",
-    "ip": "127.0.1.1",
-    "mensaje": "b",
+    "hora": "14:01",
+    "ip": "192.168.100.8",
+    "mensaje": "bien vos?",
     "emisor": "a"
-  },
-  {
-    "receptor": "a",
-    "hora": "12:15",
-    "ip": "127.0.1.1",
-    "mensaje": "c",
-    "emisor": "b"
-  },
-  {
-    "receptor": "b",
-    "hora": "12:16",
-    "ip": "127.0.1.1",
-    "mensaje": "d me voy",
-    "emisor": "a"
-  },
-  {
-    "receptor": "a",
-    "hora": "12:16",
-    "ip": "127.0.1.1",
-    "mensaje": "e",
-    "emisor": "b"
-  },
-  {
-    "receptor": "a",
-    "hora": "12:16",
-    "ip": "127.0.1.1",
-    "mensaje": "noooo volve",
-    "emisor": "b"
-  },
-  {
-    "receptor": "b",
-    "hora": "12:16",
-    "ip": "127.0.1.1",
-    "mensaje": "volvi pero",
-    "emisor": "a"
-  },
-  {
-    "receptor": "a",
-    "hora": "12:16",
-    "ip": "127.0.1.1",
-    "mensaje": "pero que",
-    "emisor": "b"
-  },
-  {
-    "receptor": "b",
-    "hora": "12:16",
-    "ip": "127.0.1.1",
-    "mensaje": "me vuelvo a FUCKIN IR",
-    "emisor": "a"
-  },
-  {
-    "receptor": "a",
-    "hora": "12:17",
-    "ip": "127.0.1.1",
-    "mensaje": "naa pero",
-    "emisor": "b"
-  },
-  {
-    "receptor": "a",
-    "hora": "12:17",
-    "ip": "127.0.1.1",
-    "mensaje": "cabeza de pene",
-    "emisor": "b"
-  },
-  {
-    "receptor": "b",
-    "hora": "12:17",
-    "ip": "127.0.1.1",
-    "mensaje": "increible y si se caen los dos?",
-    "emisor": "a"
-  },
-  {
-    "receptor": "a",
-    "hora": "12:38",
-    "ip": "127.0.1.1",
-    "mensaje": "responde gil",
-    "emisor": "c"
-  },
-  {
-    "receptor": "a",
-    "hora": "12:38",
-    "ip": "127.0.1.1",
-    "mensaje": "no te vayas",
-    "emisor": "d"
-  },
-  {
-    "receptor": "c",
-    "hora": "12:40",
-    "ip": "127.0.1.1",
-    "mensaje": "e",
-    "emisor": "a"
-  },
-  {
-    "receptor": "c",
-    "hora": "12:40",
-    "ip": "127.0.1.1",
-    "mensaje": "godd",
-    "emisor": "a"
-  },
-  {
-    "receptor": "c",
-    "hora": "13:21",
-    "ip": "127.0.1.1",
-    "mensaje": "funciona esto?",
-    "emisor": "a"
-  },
-  {
-    "receptor": "d",
-    "hora": "13:22",
-    "ip": "127.0.1.1",
-    "mensaje": "parece q si",
-    "emisor": "a"
-  },
-  {
-    "receptor": "b",
-    "hora": "13:22",
-    "ip": "127.0.1.1",
-    "mensaje": "hola",
-    "emisor": "a"
-  },
-  {
-    "receptor": "a",
-    "hora": "13:22",
-    "ip": "127.0.1.1",
-    "mensaje": "piola no se rompio nada",
-    "emisor": "b"
-  },
-  {
-    "receptor": "b",
-    "hora": "13:22",
-    "ip": "127.0.1.1",
-    "mensaje": "godd",
-    "emisor": "a"
-  },
-  {
-    "receptor": "a",
-    "hora": "13:23",
-    "ip": "127.0.1.1",
-    "mensaje": "seguro????",
-    "emisor": "b"
   }
 ]

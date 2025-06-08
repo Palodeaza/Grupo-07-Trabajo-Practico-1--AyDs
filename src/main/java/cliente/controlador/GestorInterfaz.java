@@ -116,7 +116,7 @@ public class GestorInterfaz implements IGestionInterfaz {
                 gestored.usuarioOnline(usuario, "server1");
                 
                 String formato = loginView.getFormatoComboBox().getSelectedItem().toString().toLowerCase();
-                IFabricaPersistencia fabrica = FabricaPersistencia.obtenerFabrica(formato);
+                IFabricaPersistencia fabrica = FabricaPersistencia.obtenerFabrica(formato, usuario);
                 GuardadorMensaje guardador = fabrica.crearGuardadorMensaje(usuario);
                 gestormensajes.setGuardador(guardador);
                 Map<String, List<IMensaje>> mensajesPrevios = guardador.cargarMensajes();

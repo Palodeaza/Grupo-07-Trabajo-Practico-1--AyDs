@@ -1,4 +1,0 @@
-felipe:192.168.0.191;laura;23:07;laura
-felipe:192.168.0.191;como estas?;23:07;laura
-laura:192.168.0.191;bien vos ?;23:07;felipe
-felipe:192.168.0.191;bien todo bien;23:11;laura

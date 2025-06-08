@@ -1,25 +1,31 @@
 package persistencia;
 
 public class FabricaPersistencia {
+    
+    public static IFabricaPersistencia obtenerFabrica(String tipo, String usuario) {
+        GuardadorMensaje guardadorNuevo;
+        IFabricaPersistencia fabrica;
 
-    public static IFabricaPersistencia obtenerFabrica(String formato) {
-        if (formato == null) {
-            throw new IllegalArgumentException("El formato no puede ser nulo");
-        }
-        switch (formato.toLowerCase()) {
+        switch (tipo.toLowerCase()) {
             case "json" -> {
-                System.out.println("Creo una fabrica json");
-                return new FabricaPersistenciaJson();
+                fabrica = new FabricaPersistenciaJson();
+                guardadorNuevo = fabrica.crearGuardadorMensaje(usuario);
+                SincronizadorPersistencia.sincronizar(usuario, "json", guardadorNuevo);
+                return fabrica;
             }
             case "xml" -> {
-                System.out.println("Creo una fabrica xml");
-                return new FabricaPersistenciaXml();
+                fabrica = new FabricaPersistenciaXml();
+                guardadorNuevo = fabrica.crearGuardadorMensaje(usuario);
+                SincronizadorPersistencia.sincronizar(usuario, "xml", guardadorNuevo);
+                return fabrica;
             }
             case "texto plano" -> {
-                System.out.println("Creo una fabrica de txt");
-                return new FabricaPersistenciaTexto();
+                fabrica = new FabricaPersistenciaTexto();
+                guardadorNuevo = fabrica.crearGuardadorMensaje(usuario);
+                SincronizadorPersistencia.sincronizar(usuario, "txt", guardadorNuevo);
+                return fabrica;
             }
-            default -> throw new IllegalArgumentException("Formato desconocido: " + formato);
+            default -> throw new IllegalArgumentException("Tipo de persistencia no soportado: " + tipo);
         }
     }
 }

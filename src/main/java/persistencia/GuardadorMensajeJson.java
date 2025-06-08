@@ -21,10 +21,12 @@ import org.json.JSONException;
 public class GuardadorMensajeJson implements GuardadorMensaje {
     private String usuario;
     private final String ARCHIVO ;
+    
     public GuardadorMensajeJson(String usuario){
         this.usuario = usuario;
         this.ARCHIVO = "persistencia/mensajes"+usuario+".json";
     }
+    
     @Override
     public void guardarMensaje(String emisor, String ip, String mensaje, String hora, String receptor) {
         System.out.println("[JSON] Intentando guardar mensaje...");
