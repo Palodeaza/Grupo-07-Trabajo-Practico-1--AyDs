@@ -6,13 +6,13 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import cliente.modelo.Contacto;
 
-public class ServerHandler implements Runnable {
+public class GestorSincronizacion implements Runnable {
 
     private Socket socket;
     private Server servidor;
     private BufferedReader inputStream;
 
-    public ServerHandler(Socket socket, Server servidor){
+    public GestorSincronizacion(Socket socket, Server servidor){
         try {
             this.socket = socket;
             this.servidor = servidor;

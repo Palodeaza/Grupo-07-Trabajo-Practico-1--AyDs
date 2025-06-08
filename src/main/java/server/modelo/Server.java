@@ -1,6 +1,6 @@
 package server.modelo;
 
-import server.modelo.ServerHandler;
+import server.modelo.GestorSincronizacion;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -62,12 +62,10 @@ public class Server {
             
             // Envío mensaje inicial al otro servidor para identificarme como servidor secundario
             outputStreamSinc.println("admin"); 
-            System.out.println("Me conecte al principal");
 
             // Maneja los mensajes que lleguen desde el otro servidor
-            new Thread(new ServerHandler(socketSinc,this)).start();
+            new Thread(new GestorSincronizacion(socketSinc,this)).start();
         } catch (IOException ex) {
-            System.out.println("ESTOY SOLITO (no hay otro servidor disponible)");
         }
     }
 
@@ -85,19 +83,15 @@ public class Server {
                             // Se trata de un chequeo de disponibilidad
                             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
                             out.println("pong");
-                            System.out.println("Mandé pong");
                         }
                         case "admin" -> {
                             // Se conecta el servidor secundario
-                            System.out.println("Se conecto el otro servidor (secundario)");
                             this.serverSecundario = clientSocket;
                             this.outputStreamSecundario = new PrintWriter(serverSecundario.getOutputStream(), true);
                             // Enviar todo el directorio actual al servidor secundario
-                            System.out.println("Enviando directorio...");
                             for (Contacto c : getDirContactos()) {
                                 this.outputStreamSecundario.println("diragrega/" + c.getNombre() + ";" + c.getIp() + ";" + c.getPuerto());
                             }   // Enviar mensajes guardados también
-                            System.out.println("Enviando mensajes guardados...");
                             for (String usuario : getMensajesGuardados().keySet()) {
                                 ArrayList<String> mensajes = getMensajesGuardados().get(usuario);
                                 for (String mensaje : mensajes) {
@@ -109,9 +103,8 @@ public class Server {
                             // Se conecta un cliente
                             System.out.println("Se conecto cliente: " + user);
                             // Verificar si ya estaba conectado
-                            for (ClientHandler c : ClientHandler.clientHandlers) {
+                            for (GestorMensajesClientes c : GestorMensajesClientes.clientHandlers) {
                                 if (c.getUser().equals(user)) {
-                                    System.out.println(user + " ya estaba conectado");
                                     PrintWriter outputStream = new PrintWriter(clientSocket.getOutputStream(), true);
                                     outputStream.println("dupe/dupe"); // Mensaje de conexión duplicada
                                     clientSocket.close();
@@ -129,7 +122,7 @@ public class Server {
                                     outputStreamSecundario.println("diragrega/" + user + ";" + ipC + ";" + puertoC);
                                 }
                             }   // Creamos el hilo que manejará al cliente
-                            new Thread(new ClientHandler(clientSocket, user, this, outputStreamSecundario)).start();
+                            new Thread(new GestorMensajesClientes(clientSocket, user, this, outputStreamSecundario)).start();
                             // Si el cliente tenía mensajes pendientes, los enviamos
                             if (tieneMensajePendiente(user)) {
                                 PrintWriter outputStream = new PrintWriter(clientSocket.getOutputStream(), true);

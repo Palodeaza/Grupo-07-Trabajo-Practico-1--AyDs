@@ -18,7 +18,6 @@ public class GestorMensajesGuardados implements IGestionMensajesGuardados {
 
     @Override
     public void guardaMensaje(String receptor, String mensaje){
-        System.out.println("bien 3");
         mensajesGuardados.putIfAbsent(receptor, new ArrayList<>());
         mensajesGuardados.get(receptor).add(mensaje);
         System.out.println("Mensaje guardado para " + receptor + ": " + mensaje);
