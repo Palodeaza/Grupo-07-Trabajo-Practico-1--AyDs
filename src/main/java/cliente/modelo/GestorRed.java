@@ -61,7 +61,6 @@ public class GestorRed implements IGestionRed{
             BufferedReader inMonitor = new BufferedReader(new InputStreamReader(socketMonitor.getInputStream()));
             outMonitor.println("servidoractivo");
             String servidoractivo = inMonitor.readLine();
-            System.out.println("AL conectar por primera vez, MONITOR ME DIJO QUE SERVIDOR PRINCIPAL ES " + servidoractivo);
             String ip =  ConfigLoader.getProperty("server.ip");
             int puerto;
             if (servidoractivo.equals("1")){
@@ -80,7 +79,6 @@ public class GestorRed implements IGestionRed{
             System.err.println("Error al conectar: " + e.getMessage()); 
             System.err.println("Intentando reconectar al servidor alternativo...");
             if (intentos==0) {
-                System.out.println("Reconexion exitosa papu");
                 usuarioOnline(emisor,"server2");
             } else {
                 this.intentos= this.intentos + 1;
@@ -97,7 +95,6 @@ public class GestorRed implements IGestionRed{
         BufferedReader inMonitor = new BufferedReader(new InputStreamReader(socketMonitor.getInputStream()));
         outMonitor.println("servidoractivo");
         String nuevoServidor = inMonitor.readLine();
-        System.out.println("AL RECONECTAR, MONITOR ME DIJO QUE SERVIDOR PRINCIPAL ES " + nuevoServidor);
         String ip =  ConfigLoader.getProperty("server.ip");
         int puerto = Integer.parseInt(ConfigLoader.getProperty("server" + nuevoServidor + ".puerto"));
         System.out.println("Intentando reconectar al servidor" + nuevoServidor);
@@ -176,7 +173,6 @@ public class GestorRed implements IGestionRed{
                 System.err.println("Intentando reconectar al servidor alternativo...");
 
                 if (reconectarBackup()) {
-                    System.out.println("Reconexion exitosa papu, reenviando el mensaje...");
                     enviarMensaje(mensaje);
                 } else {
                     System.err.println("No se pudo reconectar.");
@@ -211,7 +207,6 @@ public class GestorRed implements IGestionRed{
                 while (true) {
                     try {
                         String mensaje = inputStream.readLine();
-                        System.out.println(" SOY " + nombreCliente + " y me llego ->  " + mensaje);
 
                         IMensaje mensajeObjeto = FabricaMensajes.getInstancia().creaMensaje();
                         mensajeObjeto.setConOutputString(mensaje);
