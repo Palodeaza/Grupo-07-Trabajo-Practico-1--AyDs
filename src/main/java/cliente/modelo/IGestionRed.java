@@ -8,6 +8,7 @@ import java.util.List;
 
 import cliente.controlador.IGestionInterfaz;
 import cliente.modelo.IMensaje;
+import java.util.ArrayList;
 
 /**
  *
@@ -24,4 +25,6 @@ public interface IGestionRed {
     public boolean estaConectado(String conexion);
     public String obtenerIPLocal();
     public void enviarMensaje(IMensaje mensaje);
+
+    public void setConexionesActivas(ArrayList<String> arrayList);
 }

@@ -6,4 +6,9 @@ public class FabricaPersistenciaXml implements IFabricaPersistencia {
     public GuardadorMensaje crearGuardadorMensaje(String usuario) {
         return new GuardadorMensajeXml(usuario);
     }
+    
+    @Override
+    public GuardadorContacto crearGuardadorContacto(String usuario) {
+        return new GuardadorContactoXml(usuario);
+    }
 }

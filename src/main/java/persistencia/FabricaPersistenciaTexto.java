@@ -6,4 +6,9 @@ public class FabricaPersistenciaTexto implements IFabricaPersistencia {
     public GuardadorMensaje crearGuardadorMensaje(String usuario) {
         return new GuardadorMensajeTexto(usuario);
     }
+    
+    @Override
+    public GuardadorContacto crearGuardadorContacto(String usuario) {
+        return new GuardadorContactoTexto(usuario);
+    }
 }

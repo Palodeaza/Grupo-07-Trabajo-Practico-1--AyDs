@@ -277,4 +277,11 @@ public class GestorRed implements IGestionRed{
             }
         }
     }
+
+    /**
+     * @param conexionesActivas the conexionesActivas to set
+     */
+    public void setConexionesActivas(ArrayList<String> conexionesActivas) {
+        this.conexionesActivas = conexionesActivas;
+    }
 }

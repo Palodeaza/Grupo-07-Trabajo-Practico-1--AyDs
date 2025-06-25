@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import cliente.modelo.IMensaje;
+import persistencia.GuardadorContacto;
 
 /**
  *
@@ -21,5 +22,9 @@ public interface IGestionContactos {
     public String buscaContacto(String nombre);
     public String[] obtenerDatosContacto(String contactoSeleccionado);
     public void cargaContactos(Map<String, List<IMensaje>> mensajes);
+
+    public void setContactos(List<Contacto> contactos);
+
+    public void setGuardador(GuardadorContacto guardadorContacto);
 
 }

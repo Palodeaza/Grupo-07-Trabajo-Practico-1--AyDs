@@ -5,10 +5,12 @@ import java.util.List;
 import java.util.Map;
 
 import cliente.modelo.IMensaje;
+import persistencia.GuardadorContacto;
 
 public class GestorContactos implements IGestionContactos {
     
-    public ArrayList<Contacto> contactos = new ArrayList<>();
+    private List<Contacto> contactos = new ArrayList<>();
+    private GuardadorContacto guardadorContacto;
     
     @Override
     public List<Contacto> getListaContactos() {
@@ -17,16 +19,27 @@ public class GestorContactos implements IGestionContactos {
 
     public GestorContactos() {
     }
-
+    
+    public void setContactos(List<Contacto> contactos) {
+        this.contactos = contactos;
+    }
+    
+    public void setGuardador(GuardadorContacto guardador) {
+        this.guardadorContacto = guardador;
+    }
+    
     @Override
     public boolean agregarContacto(String nombre) {
-        for (Contacto c: contactos){
-            if (c.getNombre().equalsIgnoreCase(nombre)){
+        for (Contacto c : contactos) {
+            if (c.getNombre().equalsIgnoreCase(nombre)) {
                 return false;
             }
         }
-        Contacto c = new Contacto(nombre,"localhost",3333);
+        Contacto c = new Contacto(nombre, "localhost", 3333);
         contactos.add(c);
+        if (guardadorContacto != null) {
+            guardadorContacto.guardarContacto(c);
+        }
         return true;
     }
 

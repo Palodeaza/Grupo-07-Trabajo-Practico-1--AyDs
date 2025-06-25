@@ -23,11 +23,17 @@ public class CifradoAES implements EstrategiaCifrado {
     }
     
     @Override
-    public String descifrar(String mensajeCifrado, SecretKeySpec clave) throws Exception {              
-        Cipher cipher = Cipher.getInstance("AES");           
-        cipher.init(Cipher.DECRYPT_MODE, clave);               
-        byte[] mensajeBytes = Base64.getDecoder().decode(mensajeCifrado);  
-        byte[] mensajeDescifrado = cipher.doFinal(mensajeBytes);           
-        return new String(mensajeDescifrado, "UTF-8");        
+    public String descifrar(String mensajeCifrado, SecretKeySpec clave) {
+        try {
+            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+            cipher.init(Cipher.DECRYPT_MODE, clave);
+            byte[] mensajeBytes = Base64.getDecoder().decode(mensajeCifrado);
+            byte[] mensajeDescifrado = cipher.doFinal(mensajeBytes);
+            return new String(mensajeDescifrado, "UTF-8");
+        } catch (javax.crypto.BadPaddingException | javax.crypto.IllegalBlockSizeException e) {
+            return "CLAVE DE CIFRADO ERRÓNEA";
+        } catch (Exception e) {
+            return "ERROR AL DESCIFRAR MENSAJE";
+        }
     }
 }

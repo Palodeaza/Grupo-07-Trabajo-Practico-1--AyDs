@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<mensajes>
+            
+    
+    <mensaje>
+                        
+        
+        <emisor>a</emisor>
+                        
+        
+        <ip>192.168.100.8</ip>
+                        
+        
+        <contenido>CLAVE DE CIFRADO ERRÓNEA</contenido>
+                        
+        
+        <hora>20:25</hora>
+                        
+        
+        <receptor>b</receptor>
+                    
+    
+    </mensaje>
+        
+    
+    <mensaje>
+                
+        <emisor>a</emisor>
+                
+        <ip>192.168.100.8</ip>
+                
+        <contenido>CLAVE DE CIFRADO ERRÓNEA</contenido>
+                
+        <hora>20:26</hora>
+                
+        <receptor>b</receptor>
+            
+    </mensaje>
+    
+    <mensaje>
+        <emisor>c</emisor>
+        <ip>192.168.100.8</ip>
+        <contenido>holaaa</contenido>
+        <hora>20:28</hora>
+        <receptor>b</receptor>
+    </mensaje>
+</mensajes>

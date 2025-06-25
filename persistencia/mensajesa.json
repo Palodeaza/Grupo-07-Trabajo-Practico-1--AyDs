@@ -1,93 +1,30 @@
 [
   {
     "receptor": "b",
-    "hora": "14:01",
+    "hora": "20:22",
     "ip": "192.168.100.8",
-    "mensaje": "holiss",
-    "emisor": "a"
-  },
-  {
-    "receptor": "a",
-    "hora": "14:01",
-    "ip": "192.168.100.8",
-    "mensaje": "como estas?",
-    "emisor": "b"
-  },
-  {
-    "receptor": "b",
-    "hora": "14:01",
-    "ip": "192.168.100.8",
-    "mensaje": "bien vos?",
+    "mensaje": "holiosss",
     "emisor": "a"
   },
   {
     "receptor": "b",
-    "hora": "09:42",
-    "ip": "127.0.1.1",
-    "mensaje": "asd",
+    "hora": "20:25",
+    "ip": "192.168.100.8",
+    "mensaje": "uolaaa",
     "emisor": "a"
   },
   {
     "receptor": "b",
-    "hora": "10:36",
-    "ip": "127.0.1.1",
-    "mensaje": "asd",
-    "emisor": "a"
-  },
-  {
-    "receptor": "a",
-    "hora": "10:36",
-    "ip": "127.0.1.1",
-    "mensaje": "god",
-    "emisor": "b"
-  },
-  {
-    "receptor": "asd",
-    "hora": "10:46",
-    "ip": "127.0.1.1",
-    "mensaje": "aaaa",
-    "emisor": "a"
-  },
-  {
-    "receptor": "a",
-    "hora": "10:46",
-    "ip": "127.0.1.1",
-    "mensaje": "amazing",
-    "emisor": "asd"
-  },
-  {
-    "receptor": "aaasd",
-    "hora": "10:57",
-    "ip": "127.0.1.1",
-    "mensaje": "d",
+    "hora": "20:26",
+    "ip": "192.168.100.8",
+    "mensaje": "hola?",
     "emisor": "a"
   },
   {
     "receptor": "c",
-    "hora": "10:58",
-    "ip": "127.0.1.1",
-    "mensaje": "asd",
-    "emisor": "a"
-  },
-  {
-    "receptor": "b",
-    "hora": "10:58",
-    "ip": "127.0.1.1",
-    "mensaje": "dddd",
-    "emisor": "a"
-  },
-  {
-    "receptor": "b",
-    "hora": "10:59",
-    "ip": "127.0.1.1",
-    "mensaje": "asdsd",
-    "emisor": "a"
-  },
-  {
-    "receptor": "b",
-    "hora": "11:00",
-    "ip": "127.0.1.1",
-    "mensaje": "asds",
+    "hora": "20:27",
+    "ip": "192.168.100.8",
+    "mensaje": "holiiss",
     "emisor": "a"
   }
 ]

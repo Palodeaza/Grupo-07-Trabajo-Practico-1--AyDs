@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<contactos>
+        
+    <contacto>
+                
+        <nombre>a</nombre>
+                
+        <ip>localhost</ip>
+                
+        <puerto>3333</puerto>
+            
+    </contacto>
+    
+    <contacto>
+        <nombre>c</nombre>
+        <ip>localhost</ip>
+        <puerto>3333</puerto>
+    </contacto>
+</contactos>
