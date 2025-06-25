@@ -24,8 +24,10 @@ public class pruebaServer {
             public void mouseClicked(MouseEvent e) {
                 AnimatedLabel lbl = serverView.getNewContactButton();
                 try {
-                    int puerto1 = Integer.parseInt(ConfigLoader.getProperty("server1.puerto"));
-                    int puerto2 = Integer.parseInt(ConfigLoader.getProperty("server2.puerto"));
+                    //int puerto1 = Integer.parseInt(ConfigLoader.getProperty("server1.puerto"));
+                    //int puerto2 = Integer.parseInt(ConfigLoader.getProperty("server2.puerto"));
+                    int puerto1 = 1111;
+                    int puerto2 = 2222;
 
                     int puertoActivo;
                     int puertoAlternativo;

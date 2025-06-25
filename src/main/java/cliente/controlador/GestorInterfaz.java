@@ -216,7 +216,7 @@ public class GestorInterfaz implements IGestionInterfaz {
         gestormensajes.agregaMensaje(mensaje.getReceptor() ,mensaje);
         try {
             //lo encripta antes de guardar
-            mensaje.setMensaje(this.getContextocifrado().cifrarMensaje(mensajeTexto, this.contextocifrado.crearClave(ConfigLoader.getProperty("clave"))));
+            mensaje.setMensaje(this.getContextocifrado().cifrarMensaje(mensajeTexto, this.contextocifrado.crearClave(ConfigLoader.getProperty(usuarioActual,"clave"))));
             System.out.println("Mensaje cifrado:" + mensajeTexto);
         } catch (Exception ex) {
             Logger.getLogger(GestorInterfaz.class.getName()).log(Level.SEVERE, null, ex);

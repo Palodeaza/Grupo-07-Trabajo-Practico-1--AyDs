@@ -61,13 +61,13 @@ public class GestorRed implements IGestionRed{
             BufferedReader inMonitor = new BufferedReader(new InputStreamReader(socketMonitor.getInputStream()));
             outMonitor.println("servidoractivo");
             String servidoractivo = inMonitor.readLine();
-            String ip =  ConfigLoader.getProperty("server.ip");
+            String ip =  ConfigLoader.getProperty(emisor,"server.ip");
             int puerto;
             if (servidoractivo.equals("1")){
-            puerto = Integer.parseInt(ConfigLoader.getProperty("server1.puerto"));
+            puerto = Integer.parseInt(ConfigLoader.getProperty(emisor,"server1.puerto"));
             }
             else{
-                puerto = Integer.parseInt(ConfigLoader.getProperty("server2.puerto"));
+                puerto = Integer.parseInt(ConfigLoader.getProperty(emisor,"server2.puerto"));
             }            
 
             this.usuario = emisor;
@@ -95,8 +95,8 @@ public class GestorRed implements IGestionRed{
         BufferedReader inMonitor = new BufferedReader(new InputStreamReader(socketMonitor.getInputStream()));
         outMonitor.println("servidoractivo");
         String nuevoServidor = inMonitor.readLine();
-        String ip =  ConfigLoader.getProperty("server.ip");
-        int puerto = Integer.parseInt(ConfigLoader.getProperty("server" + nuevoServidor + ".puerto"));
+        String ip =  ConfigLoader.getProperty(this.usuario,"server.ip");
+        int puerto = Integer.parseInt(ConfigLoader.getProperty(this.usuario,"server" + nuevoServidor + ".puerto"));
         System.out.println("Intentando reconectar al servidor" + nuevoServidor);
         Socket nuevoSocket = new Socket(ip, puerto);
         this.socket = nuevoSocket;
@@ -228,7 +228,7 @@ public class GestorRed implements IGestionRed{
                         else { //me mandaron mensaje de texto
                             try {
                                     System.out.println("Mensaje cifrado: " + mensajeObjeto.getMensaje());
-                                    String mensajeDescifrado = controlador.getContextocifrado().descifrarMensaje(mensajeObjeto.getMensaje(), controlador.getContextocifrado().crearClave(ConfigLoader.getProperty("clave")));
+                                    String mensajeDescifrado = controlador.getContextocifrado().descifrarMensaje(mensajeObjeto.getMensaje(), controlador.getContextocifrado().crearClave(ConfigLoader.getProperty(this.nombreCliente,"clave")));
                                     mensajeObjeto.setMensaje(mensajeDescifrado);
                                     System.out.println("Mensaje descifrado: " + mensajeObjeto.getMensaje());
                                 } catch (Exception e) {

@@ -23,10 +23,14 @@ public class Monitor {
     private static final Logger logger = Logger.getLogger(Monitor.class.getName());
 
     public Monitor() throws IOException {
-        this.ip1 = ConfigLoader.getProperty("server.ip");
-        this.puerto1 = Integer.parseInt(ConfigLoader.getProperty("server1.puerto"));
-        this.ip2 = ConfigLoader.getProperty("server.ip");
-        this.puerto2 = Integer.parseInt(ConfigLoader.getProperty("server2.puerto"));
+        //this.ip1 = ConfigLoader.getProperty("server.ip");
+        //this.puerto1 = Integer.parseInt(ConfigLoader.getProperty("server1.puerto"));
+        //this.ip2 = ConfigLoader.getProperty("server.ip");
+        //this.puerto2 = Integer.parseInt(ConfigLoader.getProperty("server2.puerto"));
+        this.ip1 = "localhost";
+        this.puerto1 = 1111;
+        this.ip2 = "localhost";
+        this.puerto2 = 2222;
         serverSocket = new ServerSocket(1050);
     }
 

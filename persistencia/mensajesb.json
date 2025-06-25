@@ -19,5 +19,33 @@
     "ip": "192.168.100.8",
     "mensaje": "bien vos?",
     "emisor": "a"
+  },
+  {
+    "receptor": "b",
+    "hora": "09:42",
+    "ip": "127.0.1.1",
+    "mensaje": "asd",
+    "emisor": "a"
+  },
+  {
+    "receptor": "b",
+    "hora": "10:36",
+    "ip": "127.0.1.1",
+    "mensaje": "asd",
+    "emisor": "a"
+  },
+  {
+    "receptor": "a",
+    "hora": "10:36",
+    "ip": "127.0.1.1",
+    "mensaje": "god",
+    "emisor": "b"
+  },
+  {
+    "receptor": "b",
+    "hora": "10:47",
+    "ip": "127.0.1.1",
+    "mensaje": "holaa",
+    "emisor": "asd"
   }
 ]
