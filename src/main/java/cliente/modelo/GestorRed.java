@@ -188,10 +188,11 @@ public class GestorRed implements IGestionRed{
         private BufferedReader inputStream;
         private PrintWriter outputStream;
         private String nombreCliente;
+        private String nombreUsuario;
         
         public MessageHandler(Socket socket, String nombre) {
             this.socket = socket;
-            this.nombreCliente = nombre;
+            this.nombreUsuario = nombre;
 
         }
         
@@ -228,7 +229,7 @@ public class GestorRed implements IGestionRed{
                         else { //me mandaron mensaje de texto
                             try {
                                     System.out.println("Mensaje cifrado: " + mensajeObjeto.getMensaje());
-                                    String mensajeDescifrado = controlador.getContextocifrado().descifrarMensaje(mensajeObjeto.getMensaje(), controlador.getContextocifrado().crearClave(ConfigLoader.getProperty(this.nombreCliente,"clave")));
+                                    String mensajeDescifrado = controlador.getContextocifrado().descifrarMensaje(mensajeObjeto.getMensaje(), controlador.getContextocifrado().crearClave(ConfigLoader.getProperty(this.nombreUsuario,"clave")));
                                     mensajeObjeto.setMensaje(mensajeDescifrado);
                                     System.out.println("Mensaje descifrado: " + mensajeObjeto.getMensaje());
                                 } catch (Exception e) {
