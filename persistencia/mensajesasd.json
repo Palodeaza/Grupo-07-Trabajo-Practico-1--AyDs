@@ -1,0 +1,16 @@
+[
+  {
+    "receptor": "asd",
+    "hora": "20:57",
+    "ip": "127.0.1.1",
+    "mensaje": "ddd",
+    "emisor": "b"
+  },
+  {
+    "receptor": "asd",
+    "hora": "20:58",
+    "ip": "127.0.1.1",
+    "mensaje": "ddddd",
+    "emisor": "b"
+  }
+]
