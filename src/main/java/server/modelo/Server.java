@@ -20,6 +20,7 @@ public class Server {
 
     private IGestionDir gestorDir = new GestorDir(); // Directorio de contactos
     private IGestionMensajesGuardados gestorMensajesGuardados = new GestorMensajesGuardados(); // Mensajes pendientes
+    private IValidador validadorDeActividad = new ValidadorDeActividad();
 
     public ArrayList<Contacto> getDirContactos(){
         return gestorDir.getDir();
@@ -81,8 +82,7 @@ public class Server {
                     switch (user) {
                         case "ping" -> {
                             // Se trata de un chequeo de disponibilidad
-                            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-                            out.println("pong");
+                            validadorDeActividad.validacion(clientSocket);
                         }
                         case "admin" -> {
                             // Se conecta el servidor secundario
