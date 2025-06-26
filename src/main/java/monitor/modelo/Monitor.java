@@ -11,7 +11,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
 
-public class Monitor {
+public class Monitor implements IMonitor{
 
     private int serverPrimario = 1; // 1 = primario, 2 = secundario
     private String ip1;
@@ -78,8 +78,10 @@ public class Monitor {
                     BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                     String user = input.readLine();
                     if(user.equals("servidoractivo")){
+                        
                         PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-                        boolean server1 = estaActivo(getIp1(), getPuerto1());
+                        servidorActivo(out);
+                        /*boolean server1 = estaActivo(getIp1(), getPuerto1());
                         boolean server2 = estaActivo(getIp2(), getPuerto2());
                         //System.out.println("ME PREGUNTARON CUAL ERA PRIMARIO");
                         if (server1 && getServerPrimario() == 1) {
@@ -104,7 +106,7 @@ public class Monitor {
                                 }
                             }
                         }
-                        out.println(getServerPrimario());
+                        out.println(getServerPrimario());*/
                         }
                     }            
                 }
@@ -185,5 +187,35 @@ public class Monitor {
      */
     public static Logger getLogger() {
         return logger;
+    }
+
+    @Override
+    public void servidorActivo(PrintWriter out){
+        boolean server1 = estaActivo(getIp1(), getPuerto1());
+        boolean server2 = estaActivo(getIp2(), getPuerto2());
+        //System.out.println("ME PREGUNTARON CUAL ERA PRIMARIO");
+        if (server1 && getServerPrimario() == 1) {
+            serverPrimario = 1;
+            getLogger().info("Servidor primarioactivo y es el 1.");
+        } else {
+            if (server2 && getServerPrimario() == 2) {
+            serverPrimario = 2;
+                getLogger().info("Servidor primarioactivo y es el 2.");
+            } else {
+                getLogger().warning("Servidor primario caído.");
+                if (server2) {
+                    serverPrimario = 2;
+                    getLogger().info(" Usando servidor secundario. Primario es ahora 2");
+                } else {
+                    if (server1){
+                        serverPrimario = 1;
+                        getLogger().info(" Usando servidor secundario. Primario es ahora 1");
+                    } else{
+                        getLogger().severe("Ambos servidores están caídos.");
+                    }
+                }
+            }
+        }
+        out.println(getServerPrimario());
     }
 }

@@ -1,0 +1,30 @@
+[
+  {
+    "receptor": "juju",
+    "hora": "17:30",
+    "ip": "192.168.0.190",
+    "mensaje": "juju ?",
+    "emisor": "feli"
+  },
+  {
+    "receptor": "juju",
+    "hora": "17:30",
+    "ip": "192.168.0.190",
+    "mensaje": "estas ahi juju?",
+    "emisor": "feli"
+  },
+  {
+    "receptor": "feli",
+    "hora": "17:30",
+    "ip": "192.168.0.190",
+    "mensaje": "yeah bro sup",
+    "emisor": "juju"
+  },
+  {
+    "receptor": "feli",
+    "hora": "17:30",
+    "ip": "192.168.0.190",
+    "mensaje": "oksonn",
+    "emisor": "juju"
+  }
+]

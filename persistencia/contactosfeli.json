@@ -2,11 +2,11 @@
   {
     "puerto": 3333,
     "ip": "localhost",
-    "nombre": "a"
+    "nombre": "lau"
   },
   {
     "puerto": 3333,
     "ip": "localhost",
-    "nombre": "b"
+    "nombre": "juju"
   }
 ]
