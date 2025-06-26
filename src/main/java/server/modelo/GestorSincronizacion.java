@@ -6,13 +6,13 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import cliente.modelo.Contacto;
 
-public class GestorSincronizacion implements Runnable {
+public class GestorSincronizacion implements Runnable, IGestionSincronizacion {
 
     private Socket socket;
     private Server servidor;
     private BufferedReader inputStream;
 
-    public GestorSincronizacion(Socket socket, Server servidor){
+    public GestorSincronizacion(Socket socket, Server servidor) {
         try {
             this.socket = socket;
             this.servidor = servidor;
@@ -42,16 +42,19 @@ public class GestorSincronizacion implements Runnable {
                         // Agregar nuevo contacto al directorio
                         String[] partesDir = mensaje.split(";", 3);
                         Contacto contacto = new Contacto(partesDir[0], partesDir[1], Integer.parseInt(partesDir[2]));
-                        servidor.agregaContactoAlDir(contacto);
+                        diragrega(contacto);
+                        //servidor.agregaContactoAlDir(contacto);
                     }
                     case "msjguardar" -> {
                         // Guardar un mensaje para un usuario
                         String[] partesMsj = mensaje.split(";", 2);
-                        servidor.guardaMensaje(partesMsj[0], partesMsj[1]);
+                        msjguardar(partesMsj[0],partesMsj[1]);
+                        //servidor.guardaMensaje(partesMsj[0], partesMsj[1]);
                     }
                     case "msjclear" -> {
                         // Eliminar mensajes pendientes de un usuario
-                        servidor.getMensajesGuardados().remove(mensaje);
+                        msjclear(mensaje);
+                        //servidor.getMensajesGuardados().remove(mensaje);
                     }
                 }
             } catch(IOException e) {
@@ -59,5 +62,20 @@ public class GestorSincronizacion implements Runnable {
                 break;
             }
         }
+    }
+
+    @Override
+    public void diragrega(Contacto contacto) {
+        servidor.agregaContactoAlDir(contacto);
+    }
+
+    @Override
+    public void msjguardar(String parte1, String parte2) {
+        servidor.guardaMensaje(parte1, parte2);
+    }
+
+    @Override
+    public void msjclear(String mensaje) {
+        servidor.getMensajesGuardados().remove(mensaje);
     }
 }
