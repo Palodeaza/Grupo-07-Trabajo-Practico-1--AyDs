@@ -3,7 +3,10 @@ package cliente.modelo;
 import cifrado.CifradoAES;
 import cifrado.ContextoCifrado;
 import cliente.modelo.ConfigLoader;
+import cliente.modelo.IGestionReconexion;
 import cliente.modelo.UsuarioDuplicadoException;
+//import main.java.cliente.modelo.IMensaje;
+import cliente.modelo.IMensaje;
 import cliente.controlador.IGestionInterfaz;
 import cliente.modelo.Mensaje;
 
@@ -26,21 +29,24 @@ public class GestorRed implements IGestionRed{
     private IGestionInterfaz controlador;
     private IGestionContactos gestorcontactos;
     private IGestionMensajes gestormensajes;
+    private IGestionReconexion gestorReconexion;
     private ArrayList<String> conexionesActivas = new ArrayList<>();
     private String usuario;
     private String servidorActivo;
 
-    public GestorRed(IGestionInterfaz controlador, IGestionContactos gestorcontactos, IGestionMensajes gestormensajes) {
+    public GestorRed(IGestionInterfaz controlador, IGestionContactos gestorcontactos, IGestionMensajes gestormensajes, IGestionReconexion gestorReconexion) {
         this.controlador = controlador;
         this.gestorcontactos = gestorcontactos;
         this.gestormensajes = gestormensajes;
+        this.gestorReconexion = gestorReconexion;
         this.intentos=0;
     }
     
-    public GestorRed(IGestionContactos gestorcontactos, IGestionMensajes gestormensajes) {
+    public GestorRed(IGestionContactos gestorcontactos, IGestionMensajes gestormensajes, IGestionReconexion gestorReconexion) {
         this.controlador = null; 
         this.gestorcontactos = gestorcontactos;
         this.gestormensajes = gestormensajes;
+        this.gestorReconexion = gestorReconexion;
         this.intentos=0;
     }
     
@@ -51,64 +57,6 @@ public class GestorRed implements IGestionRed{
 
     public void setControlador(IGestionInterfaz controlador) {
         this.controlador = controlador;
-    }
-    
-    @Override
-    public void usuarioOnline(String emisor, String serverN){
-        try {
-            Socket socketMonitor = new Socket("localhost",1050);
-            PrintWriter outMonitor = new PrintWriter(socketMonitor.getOutputStream(),true);
-            BufferedReader inMonitor = new BufferedReader(new InputStreamReader(socketMonitor.getInputStream()));
-            outMonitor.println("servidoractivo");
-            String servidoractivo = inMonitor.readLine();
-            String ip =  ConfigLoader.getProperty(emisor,"server.ip");
-            int puerto;
-            if (servidoractivo.equals("1")){
-            puerto = Integer.parseInt(ConfigLoader.getProperty(emisor,"server1.puerto"));
-            }
-            else{
-                puerto = Integer.parseInt(ConfigLoader.getProperty(emisor,"server2.puerto"));
-            }            
-
-            this.usuario = emisor;
-            this.socket = new Socket(ip, puerto);  
-            this.outputStream = new PrintWriter(socket.getOutputStream(), true); 
-            outputStream.println(emisor);
-            new Thread(new MessageHandler(socket,emisor)).start();
-        } catch (IOException e) {
-            System.err.println("Error al conectar: " + e.getMessage()); 
-            System.err.println("Intentando reconectar al servidor alternativo...");
-            if (intentos==0) {
-                usuarioOnline(emisor,"server2");
-            } else {
-                this.intentos= this.intentos + 1;
-                System.err.println("No se pudo conectar con el secundario.");
-                controlador.mostrarCartelErrorConexion();
-            }
-        }
-    }
-    
-    public boolean reconectarBackup() {
-        try {
-        Socket socketMonitor = new Socket("localhost",1050);
-        PrintWriter outMonitor = new PrintWriter(socketMonitor.getOutputStream(),true);
-        BufferedReader inMonitor = new BufferedReader(new InputStreamReader(socketMonitor.getInputStream()));
-        outMonitor.println("servidoractivo");
-        String nuevoServidor = inMonitor.readLine();
-        String ip =  ConfigLoader.getProperty(this.usuario,"server.ip");
-        int puerto = Integer.parseInt(ConfigLoader.getProperty(this.usuario,"server" + nuevoServidor + ".puerto"));
-        System.out.println("Intentando reconectar al servidor" + nuevoServidor);
-        Socket nuevoSocket = new Socket(ip, puerto);
-        this.socket = nuevoSocket;
-        this.outputStream = new PrintWriter(nuevoSocket.getOutputStream(), true);
-        this.outputStream.println(this.usuario);
-        new Thread(new MessageHandler(nuevoSocket, this.usuario)).start();
-        servidorActivo = nuevoServidor;
-        return true;
-        } catch (IOException e) {
-            System.err.println("Fallo al reconectar con servidor" );
-            return false;
-        }
     }
 
     @Override
@@ -121,6 +69,15 @@ public class GestorRed implements IGestionRed{
             System.err.println("Error al conectar con el contacto: " + e.getMessage()); 
             controlador.mostrarCartelErrorConexion();
         }
+    }
+
+    @Override
+    public void iniciarMessageHandler(Socket socket, String usuario) {
+        new Thread(new MessageHandler(socket, usuario)).start();
+    }
+
+    public boolean reconectarBackup(){
+        return gestorReconexion.reconectarBackup(this);
     }
     
     @Override
@@ -283,5 +240,77 @@ public class GestorRed implements IGestionRed{
      */
     public void setConexionesActivas(ArrayList<String> conexionesActivas) {
         this.conexionesActivas = conexionesActivas;
+    }
+
+    public int getIntentos() {
+        return intentos;
+    }
+
+    public void setIntentos(int intentos) {
+        this.intentos = intentos;
+    }
+
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public void setSocket(Socket socket) {
+        this.socket = socket;
+    }
+
+    public PrintWriter getOutputStream() {
+        return outputStream;
+    }
+
+    public void setOutputStream(PrintWriter outputStream) {
+        this.outputStream = outputStream;
+    }
+
+    public IGestionInterfaz getControlador() {
+        return controlador;
+    }
+
+    public IGestionContactos getGestorcontactos() {
+        return gestorcontactos;
+    }
+
+    public void setGestorcontactos(IGestionContactos gestorcontactos) {
+        this.gestorcontactos = gestorcontactos;
+    }
+
+    public IGestionMensajes getGestormensajes() {
+        return gestormensajes;
+    }
+
+    public void setGestormensajes(IGestionMensajes gestormensajes) {
+        this.gestormensajes = gestormensajes;
+    }
+
+    public IGestionReconexion getGestorReconexion() {
+        return gestorReconexion;
+    }
+
+    public void setGestorReconexion(IGestionReconexion gestorReconexion) {
+        this.gestorReconexion = gestorReconexion;
+    }
+
+    public ArrayList<String> getConexionesActivas() {
+        return conexionesActivas;
+    }
+
+    public String getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
+    }
+
+    public String getServidorActivo() {
+        return servidorActivo;
+    }
+
+    public void setServidorActivo(String servidorActivo) {
+        this.servidorActivo = servidorActivo;
     }
 }

@@ -13,6 +13,7 @@ import cliente.modelo.Contacto;
 import cliente.modelo.FabricaMensajes;
 import cliente.modelo.IGestionContactos;
 import cliente.modelo.IGestionMensajes;
+import cliente.modelo.IGestionReconexion;
 import cliente.modelo.IGestionRed;
 import cliente.modelo.IMensaje;
 import vistas.ConversacionRenderer;
@@ -41,13 +42,15 @@ public class GestorInterfaz implements IGestionInterfaz {
     private IGestionRed gestored;
     private String usuarioActual;
     private ContextoCifrado contextocifrado;
+    private IGestionReconexion gestorReconexion;
 
-    public GestorInterfaz(Login login, Init init, newContact contact, newChat chat, IGestionRed gestored, IGestionContactos gestorcontactos, IGestionMensajes gestormensajes) {
+    public GestorInterfaz(Login login, Init init, newContact contact, newChat chat, IGestionRed gestored, IGestionContactos gestorcontactos, IGestionMensajes gestormensajes, IGestionReconexion gestorReconexion) {
         this.loginView = login;
         this.initView = init;
         this.contactView = contact;
         this.chatView = chat;
         this.gestored = gestored;
+        this.gestorReconexion = gestorReconexion;
         this.gestorcontactos = gestorcontactos;
         this.gestormensajes = gestormensajes;
         this.contextocifrado = new ContextoCifrado(new CifradoAES());
@@ -114,8 +117,9 @@ public class GestorInterfaz implements IGestionInterfaz {
         try {
             if (validarCredenciales(usuario)) {
                 this.usuarioActual = usuario;
-                gestored.usuarioOnline(usuario, "server1");
-                
+                //gestored.usuarioOnline(usuario, "server1");
+                gestorReconexion.usuarioOnline(this, gestored, usuario, "server1");
+
                 String formato = loginView.getFormatoComboBox().getSelectedItem().toString().toLowerCase();
                 IFabricaPersistencia fabrica = FabricaPersistencia.obtenerFabrica(formato, usuario);
 
