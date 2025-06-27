@@ -1,12 +1,1 @@
-[
-  {
-    "puerto": 3333,
-    "ip": "localhost",
-    "nombre": "a"
-  },
-  {
-    "puerto": 3333,
-    "ip": "localhost",
-    "nombre": "asd"
-  }
-]
+[{"nombre": "asd"}]

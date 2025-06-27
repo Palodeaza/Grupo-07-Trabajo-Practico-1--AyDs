@@ -20,7 +20,7 @@ public class GuardadorContactoTexto implements GuardadorContacto {
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(archivo, true))) {
             // Formato: nombre;ip;puerto
-            String linea = contacto.getNombre() + ";" + contacto.getIp() + ";" + contacto.getPuerto();
+            String linea = contacto.getNombre() + ";"+";" ;
             bw.write(linea);
             bw.newLine();
         } catch (IOException e) {
@@ -46,7 +46,7 @@ public class GuardadorContactoTexto implements GuardadorContacto {
                     String nombre = partes[0];
                     String ip = partes[1];
                     int puerto = Integer.parseInt(partes[2]);
-                    contactos.add(new Contacto(nombre, ip, puerto));
+                    contactos.add(new Contacto(nombre, "127.0.1.1", 3333));
                 }
             }
         } catch (IOException | NumberFormatException e) {

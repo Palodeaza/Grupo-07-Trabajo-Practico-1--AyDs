@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<mensajes>
+                
+    
+    
+    <mensaje>
+                                
+        
+        
+        <emisor>qqq</emisor>
+                                
+        
+        
+        <contenido>aaaa</contenido>
+                                
+        
+        
+        <hora>21:44</hora>
+                                
+        
+        
+        <receptor>asd</receptor>
+                            
+    
+    
+    </mensaje>
+            
+    
+    
+    <mensaje>
+                        
+        
+        <emisor>b</emisor>
+                        
+        
+        <contenido>uenasss</contenido>
+                        
+        
+        <hora>21:44</hora>
+                        
+        
+        <receptor>asd</receptor>
+                    
+    
+    </mensaje>
+        
+    
+    <mensaje>
+                
+        <emisor>asd</emisor>
+                
+        <contenido>que onda</contenido>
+                
+        <hora>21:44</hora>
+                
+        <receptor>qqq</receptor>
+            
+    </mensaje>
+    
+    <mensaje>
+        <emisor>asd</emisor>
+        <contenido>gato</contenido>
+        <hora>21:44</hora>
+        <receptor>b</receptor>
+    </mensaje>
+</mensajes>

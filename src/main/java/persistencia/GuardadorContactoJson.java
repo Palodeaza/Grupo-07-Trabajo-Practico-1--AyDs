@@ -33,8 +33,8 @@ public class GuardadorContactoJson implements GuardadorContacto {
 
         JSONObject nuevo = new JSONObject();
         nuevo.put("nombre", contacto.getNombre());
-        nuevo.put("ip", contacto.getIp());
-        nuevo.put("puerto", contacto.getPuerto());
+        //nuevo.put("ip", contacto.getIp());
+        //nuevo.put("puerto", contacto.getPuerto());
 
         contactos.put(nuevo);
 
@@ -59,7 +59,7 @@ public class GuardadorContactoJson implements GuardadorContacto {
             JSONArray arr = new JSONArray(sb.toString());
             for (int i = 0; i < arr.length(); i++) {
                 JSONObject obj = arr.getJSONObject(i);
-                Contacto c = new Contacto(obj.getString("nombre"), obj.getString("ip"), obj.getInt("puerto"));
+                Contacto c = new Contacto(obj.getString("nombre"), "127.0.1.1", 3333);
                 lista.add(c);
             }
         } catch (IOException | JSONException e) {

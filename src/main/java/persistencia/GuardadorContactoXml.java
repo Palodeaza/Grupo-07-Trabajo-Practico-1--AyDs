@@ -47,13 +47,13 @@ public class GuardadorContactoXml implements GuardadorContacto {
             nombre.appendChild(doc.createTextNode(contacto.getNombre()));
             contactoElem.appendChild(nombre);
 
-            Element ip = doc.createElement("ip");
-            ip.appendChild(doc.createTextNode(contacto.getIp()));
-            contactoElem.appendChild(ip);
+            //Element ip = doc.createElement("ip");
+            //ip.appendChild(doc.createTextNode(contacto.getIp()));
+            //contactoElem.appendChild(ip);
 
-            Element puerto = doc.createElement("puerto");
-            puerto.appendChild(doc.createTextNode(String.valueOf(contacto.getPuerto())));
-            contactoElem.appendChild(puerto);
+            //Element puerto = doc.createElement("puerto");
+            //puerto.appendChild(doc.createTextNode(String.valueOf(contacto.getPuerto())));
+            //contactoElem.appendChild(puerto);
 
             root.appendChild(contactoElem);
 
@@ -86,8 +86,8 @@ public class GuardadorContactoXml implements GuardadorContacto {
             for (int i = 0; i < nodos.getLength(); i++) {
                 Element elem = (Element) nodos.item(i);
                 String nombre = elem.getElementsByTagName("nombre").item(0).getTextContent();
-                String ip = elem.getElementsByTagName("ip").item(0).getTextContent();
-                int puerto = Integer.parseInt(elem.getElementsByTagName("puerto").item(0).getTextContent());
+                String ip = "127.0.1.1";
+                int puerto = 3333;
 
                 contactos.add(new Contacto(nombre, ip, puerto));
             }
