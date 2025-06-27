@@ -28,12 +28,11 @@ public class GuardadorMensajeJson implements GuardadorMensaje {
     }
     
     @Override
-    public void guardarMensaje(String emisor, String ip, String mensaje, String hora, String receptor) {
+    public void guardarMensaje(String emisor, String mensaje, String hora, String receptor) {
         System.out.println("[JSON] Intentando guardar mensaje...");
 
         JSONObject nuevoMensaje = new JSONObject();
         nuevoMensaje.put("emisor", emisor);
-        nuevoMensaje.put("ip", ip);
         nuevoMensaje.put("mensaje", mensaje);
         nuevoMensaje.put("hora", hora);
         nuevoMensaje.put("receptor", receptor);
@@ -99,7 +98,7 @@ public class GuardadorMensajeJson implements GuardadorMensaje {
                 JSONObject obj = jsonMensajes.getJSONObject(i);
                 IMensaje mensaje = FabricaMensajes.getInstancia().creaMensaje();
                 mensaje.setNombreEmisor(obj.getString("emisor"));
-                mensaje.setIpEmisor(obj.getString("ip"));
+                mensaje.setIpEmisor("127.0.1.1");
                 mensaje.setMensaje(obj.getString("mensaje"));
                 mensaje.setHora(obj.getString("hora"));
                 mensaje.setReceptor(obj.getString("receptor"));

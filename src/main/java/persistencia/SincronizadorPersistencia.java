@@ -25,7 +25,6 @@ public class SincronizadorPersistencia {
                             for (IMensaje m : lista) {
                                 guardadorNuevo.guardarMensaje(
                                         m.getNombreEmisor(),
-                                        m.getIpEmisor(),
                                         m.getMensaje(),
                                         m.getHora(),
                                         m.getReceptor()

@@ -25,10 +25,10 @@ public class GuardadorMensajeTexto implements GuardadorMensaje {
         this.usuario = usuario;
     }
     @Override
-    public void guardarMensaje(String emisor, String ip, String mensaje, String hora, String receptor) {
+    public void guardarMensaje(String emisor, String mensaje, String hora, String receptor) {
         System.out.println("Intentando guardar mensaje en archivo de texto...");
 
-        String linea = emisor + ":" + ip + ";" + mensaje + ";" + hora + ";" + receptor;
+        String linea = emisor + ":" + ";" + mensaje + ";" + hora + ";" + receptor;
         File archivo = new File(ARCHIVO);
         archivo.getParentFile().mkdirs();
         try (FileWriter escritor = new FileWriter(archivo, true)) {
@@ -58,7 +58,7 @@ public class GuardadorMensajeTexto implements GuardadorMensaje {
                     String[] emisorIp = partes[0].split(":");
                     if (emisorIp.length == 2) {
                         mensaje.setNombreEmisor(emisorIp[0]);
-                        mensaje.setIpEmisor(emisorIp[1]);
+                        mensaje.setIpEmisor("127.0.1.1");
                         mensaje.setMensaje(partes[1]);
                         mensaje.setHora(partes[2]);
                         mensaje.setReceptor(partes[3]);

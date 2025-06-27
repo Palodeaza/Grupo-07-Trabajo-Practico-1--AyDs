@@ -50,6 +50,10 @@ public class Server {
         return gestorDir.buscaDir(nombre);
     }
 
+    public PrintWriter getOutputStreamSecundario(){
+        return outputStreamSecundario;
+    }
+
     public boolean tieneEnElDirContacto(String user){
         return gestorDir.tieneEnElDir(user);
     }
@@ -122,7 +126,7 @@ public class Server {
                                     outputStreamSecundario.println("diragrega/" + user + ";" + ipC + ";" + puertoC);
                                 }
                             }   // Creamos el hilo que manejará al cliente
-                            new Thread(new GestorMensajesClientes(clientSocket, user, this, outputStreamSecundario)).start();
+                            new Thread(new GestorMensajesClientes(clientSocket, user, this)).start();
                             // Si el cliente tenía mensajes pendientes, los enviamos
                             if (tieneMensajePendiente(user)) {
                                 PrintWriter outputStream = new PrintWriter(clientSocket.getOutputStream(), true);

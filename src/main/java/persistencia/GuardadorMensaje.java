@@ -7,6 +7,6 @@ import java.util.Map;
 import cliente.modelo.IMensaje;
 
 public interface GuardadorMensaje {
-    void guardarMensaje(String emisor, String ip, String mensaje, String hora, String receptor);
+    void guardarMensaje(String emisor, String mensaje, String hora, String receptor);
     Map<String, List<IMensaje>> cargarMensajes();
 }

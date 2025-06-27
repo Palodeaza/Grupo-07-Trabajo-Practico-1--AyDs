@@ -56,7 +56,7 @@ public class GuardadorMensajeXml implements GuardadorMensaje {
         }
     }*/
     @Override
-public void guardarMensaje(String emisor, String ip, String mensaje, String hora, String receptor) {
+public void guardarMensaje(String emisor, String mensaje, String hora, String receptor) {
     System.out.println("Intentando guardar mensaje en XML con raíz...");
 
     try {
@@ -82,10 +82,6 @@ public void guardarMensaje(String emisor, String ip, String mensaje, String hora
         Element emisorElem = doc.createElement("emisor");
         emisorElem.setTextContent(emisor);
         mensajeElem.appendChild(emisorElem);
-
-        Element ipElem = doc.createElement("ip");
-        ipElem.setTextContent(ip);
-        mensajeElem.appendChild(ipElem);
 
         Element contenidoElem = doc.createElement("contenido");
         contenidoElem.setTextContent(mensaje);
@@ -144,7 +140,7 @@ public void guardarMensaje(String emisor, String ip, String mensaje, String hora
                 Element elemento = (Element) nodos.item(i);
                 IMensaje mensaje = FabricaMensajes.getInstancia().creaMensaje();
                 mensaje.setNombreEmisor(elemento.getElementsByTagName("emisor").item(0).getTextContent());
-                mensaje.setIpEmisor(elemento.getElementsByTagName("ip").item(0).getTextContent());
+                mensaje.setIpEmisor("127.0.1.1");
                 mensaje.setMensaje(elemento.getElementsByTagName("contenido").item(0).getTextContent());
                 mensaje.setHora(elemento.getElementsByTagName("hora").item(0).getTextContent());
                 mensaje.setReceptor(elemento.getElementsByTagName("receptor").item(0).getTextContent());

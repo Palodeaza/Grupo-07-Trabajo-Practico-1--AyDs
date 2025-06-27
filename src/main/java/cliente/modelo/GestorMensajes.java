@@ -36,7 +36,7 @@ public class GestorMensajes implements IGestionMensajes{
     public void agregaMensaje(String nombre, IMensaje mensaje) { //String nombreContacto, String mensaje
         mensajes.computeIfAbsent(nombre, k -> new ArrayList<>()).add(mensaje);
         System.out.println("Voy a guardar el mensaje: " + mensaje.getMensaje());
-        guardador.guardarMensaje(mensaje.getNombreEmisor(), mensaje.getIpEmisor(), mensaje.getMensaje(), mensaje.getHora(), mensaje.getReceptor());
+        guardador.guardarMensaje(mensaje.getNombreEmisor(), mensaje.getMensaje(), mensaje.getHora(), mensaje.getReceptor());
     }
 
     @Override

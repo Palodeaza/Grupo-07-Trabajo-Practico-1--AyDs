@@ -1,0 +1,14 @@
+[
+  {
+    "receptor": "a",
+    "hora": "20:52",
+    "mensaje": "CLAVE DE CIFRADO ERRÓNEA",
+    "emisor": "b"
+  },
+  {
+    "receptor": "b",
+    "hora": "21:11",
+    "mensaje": "1",
+    "emisor": "a"
+  }
+]

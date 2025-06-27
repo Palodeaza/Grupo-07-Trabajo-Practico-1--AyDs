@@ -13,18 +13,16 @@ public class GestorMensajesClientes implements Runnable{
 
     private Socket socket;
     private BufferedReader inputStream;
-    private PrintWriter outputStreamSinc;
     private PrintWriter outputStream;
     private String user;
     private Server servidor;
     public static ArrayList<GestorMensajesClientes> clientHandlers = new ArrayList<>();
     
-    public GestorMensajesClientes(Socket socket, String nombre, Server servidor, PrintWriter outputStreamSinc){
+    public GestorMensajesClientes(Socket socket, String nombre, Server servidor){
         try {
             this.socket = socket;
             this.inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             this.outputStream = new PrintWriter(socket.getOutputStream(), true); 
-            this.outputStreamSinc = outputStreamSinc; 
             this.user = nombre;
             this.servidor= servidor;
             GestorMensajesClientes.clientHandlers.add(this);
@@ -66,8 +64,8 @@ public class GestorMensajesClientes implements Runnable{
                             else{
                                 System.out.println("bien 2");
                                 servidor.guardaMensaje(partes[3], mensaje); //receptor y mensaje
-                                if (outputStreamSinc!=null)
-                                    outputStreamSinc.println("msjguardar/"+ partes[3] + ";" + mensaje);
+                                if (servidor.getOutputStreamSecundario()!=null)
+                                    servidor.getOutputStreamSecundario().println("msjguardar/"+ partes[3] + ";" + mensaje);
                             } 
                         }
             }
